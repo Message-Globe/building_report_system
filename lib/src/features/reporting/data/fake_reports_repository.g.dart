@@ -22,7 +22,7 @@ final reportsRepositoryProvider =
 );
 
 typedef ReportsRepositoryRef = AutoDisposeProviderRef<FakeReportsRepository>;
-String _$reportsListFutureHash() => r'5fa9185dc8dd5d92f3cffd3fd44dce0ea06a9476';
+String _$reportsListFutureHash() => r'13c8e5eca7a138a7a931efb724228028003c14f9';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -59,11 +59,13 @@ class ReportsListFutureFamily extends Family<AsyncValue<List<Report>>> {
     bool showCompleted = false,
     bool showDeleted = false,
     bool reverseOrder = false,
+    String? buildingId,
   }) {
     return ReportsListFutureProvider(
       showCompleted: showCompleted,
       showDeleted: showDeleted,
       reverseOrder: reverseOrder,
+      buildingId: buildingId,
     );
   }
 
@@ -75,6 +77,7 @@ class ReportsListFutureFamily extends Family<AsyncValue<List<Report>>> {
       showCompleted: provider.showCompleted,
       showDeleted: provider.showDeleted,
       reverseOrder: provider.reverseOrder,
+      buildingId: provider.buildingId,
     );
   }
 
@@ -101,12 +104,14 @@ class ReportsListFutureProvider
     bool showCompleted = false,
     bool showDeleted = false,
     bool reverseOrder = false,
+    String? buildingId,
   }) : this._internal(
           (ref) => reportsListFuture(
             ref as ReportsListFutureRef,
             showCompleted: showCompleted,
             showDeleted: showDeleted,
             reverseOrder: reverseOrder,
+            buildingId: buildingId,
           ),
           from: reportsListFutureProvider,
           name: r'reportsListFutureProvider',
@@ -120,6 +125,7 @@ class ReportsListFutureProvider
           showCompleted: showCompleted,
           showDeleted: showDeleted,
           reverseOrder: reverseOrder,
+          buildingId: buildingId,
         );
 
   ReportsListFutureProvider._internal(
@@ -132,11 +138,13 @@ class ReportsListFutureProvider
     required this.showCompleted,
     required this.showDeleted,
     required this.reverseOrder,
+    required this.buildingId,
   }) : super.internal();
 
   final bool showCompleted;
   final bool showDeleted;
   final bool reverseOrder;
+  final String? buildingId;
 
   @override
   Override overrideWith(
@@ -154,6 +162,7 @@ class ReportsListFutureProvider
         showCompleted: showCompleted,
         showDeleted: showDeleted,
         reverseOrder: reverseOrder,
+        buildingId: buildingId,
       ),
     );
   }
@@ -168,7 +177,8 @@ class ReportsListFutureProvider
     return other is ReportsListFutureProvider &&
         other.showCompleted == showCompleted &&
         other.showDeleted == showDeleted &&
-        other.reverseOrder == reverseOrder;
+        other.reverseOrder == reverseOrder &&
+        other.buildingId == buildingId;
   }
 
   @override
@@ -177,6 +187,7 @@ class ReportsListFutureProvider
     hash = _SystemHash.combine(hash, showCompleted.hashCode);
     hash = _SystemHash.combine(hash, showDeleted.hashCode);
     hash = _SystemHash.combine(hash, reverseOrder.hashCode);
+    hash = _SystemHash.combine(hash, buildingId.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -191,6 +202,9 @@ mixin ReportsListFutureRef on AutoDisposeFutureProviderRef<List<Report>> {
 
   /// The parameter `reverseOrder` of this provider.
   bool get reverseOrder;
+
+  /// The parameter `buildingId` of this provider.
+  String? get buildingId;
 }
 
 class _ReportsListFutureProviderElement
@@ -204,6 +218,8 @@ class _ReportsListFutureProviderElement
   bool get showDeleted => (origin as ReportsListFutureProvider).showDeleted;
   @override
   bool get reverseOrder => (origin as ReportsListFutureProvider).reverseOrder;
+  @override
+  String? get buildingId => (origin as ReportsListFutureProvider).buildingId;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

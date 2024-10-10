@@ -39,5 +39,39 @@ final showDeletedFilterProvider =
 );
 
 typedef _$ShowDeletedFilter = AutoDisposeNotifier<bool>;
+String _$reverseOrderFilterHash() =>
+    r'05173ed24b0b8bdf48c54a85c37ab4c0351e0d57';
+
+/// See also [ReverseOrderFilter].
+@ProviderFor(ReverseOrderFilter)
+final reverseOrderFilterProvider =
+    AutoDisposeNotifierProvider<ReverseOrderFilter, bool>.internal(
+  ReverseOrderFilter.new,
+  name: r'reverseOrderFilterProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$reverseOrderFilterHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ReverseOrderFilter = AutoDisposeNotifier<bool>;
+String _$selectedBuildingFilterHash() =>
+    r'b829c60f0b6963ebbf2e5e252f7e1239981fae8a';
+
+/// See also [SelectedBuildingFilter].
+@ProviderFor(SelectedBuildingFilter)
+final selectedBuildingFilterProvider =
+    AutoDisposeNotifierProvider<SelectedBuildingFilter, String?>.internal(
+  SelectedBuildingFilter.new,
+  name: r'selectedBuildingFilterProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$selectedBuildingFilterHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$SelectedBuildingFilter = AutoDisposeNotifier<String?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

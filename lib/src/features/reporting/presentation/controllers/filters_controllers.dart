@@ -25,3 +25,27 @@ class ShowDeletedFilter extends _$ShowDeletedFilter {
     state = newState;
   }
 }
+
+@riverpod
+class ReverseOrderFilter extends _$ReverseOrderFilter {
+  @override
+  bool build() {
+    return false;
+  }
+
+  void toggle() {
+    state = !state;
+  }
+}
+
+@riverpod
+class SelectedBuildingFilter extends _$SelectedBuildingFilter {
+  @override
+  String? build() {
+    return null;
+  }
+
+  void update(String? buildingId) {
+    state = buildingId;
+  }
+}

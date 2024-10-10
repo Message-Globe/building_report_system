@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 enum ReportStatus {
@@ -8,12 +7,16 @@ enum ReportStatus {
 }
 
 class Report {
+  final String userId;
+  final String buildingId;
   final String title;
   final String description;
   final ReportStatus status;
   final DateTime date;
 
   Report({
+    required this.userId,
+    required this.buildingId,
     required this.title,
     required this.description,
     required this.status,
@@ -21,12 +24,16 @@ class Report {
   });
 
   Report copyWith({
+    String? userId,
+    String? buildingId,
     String? title,
     String? description,
     ReportStatus? status,
     DateTime? date,
   }) {
     return Report(
+      userId: userId ?? this.userId,
+      buildingId: buildingId ?? this.buildingId,
       title: title ?? this.title,
       description: description ?? this.description,
       status: status ?? this.status,
@@ -36,6 +43,8 @@ class Report {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'userId': userId,
+      'buildingId': buildingId,
       'title': title,
       'description': description,
       'status': status.name,
@@ -45,9 +54,11 @@ class Report {
 
   factory Report.fromMap(Map<String, dynamic> map) {
     return Report(
+      userId: map['userId'] as String,
+      buildingId: map['buildingId'] as String,
       title: map['title'] as String,
       description: map['description'] as String,
-      status: ReportStatus.values.byName((map['status'])),
+      status: ReportStatus.values.byName(map['status']),
       date: DateTime.fromMillisecondsSinceEpoch(map['date'] as int),
     );
   }
@@ -59,14 +70,16 @@ class Report {
 
   @override
   String toString() {
-    return 'Report(title: $title, description: $description, status: $status, date: $date)';
+    return 'Report(userId: $userId, buildingId: $buildingId, title: $title, description: $description, status: $status, date: $date)';
   }
 
   @override
   bool operator ==(covariant Report other) {
     if (identical(this, other)) return true;
 
-    return other.title == title &&
+    return other.userId == userId &&
+        other.buildingId == buildingId &&
+        other.title == title &&
         other.description == description &&
         other.status == status &&
         other.date == date;
@@ -74,6 +87,11 @@ class Report {
 
   @override
   int get hashCode {
-    return title.hashCode ^ description.hashCode ^ status.hashCode ^ date.hashCode;
+    return userId.hashCode ^
+        buildingId.hashCode ^
+        title.hashCode ^
+        description.hashCode ^
+        status.hashCode ^
+        date.hashCode;
   }
 }

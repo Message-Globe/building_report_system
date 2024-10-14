@@ -4,12 +4,14 @@ class BuildingFilterDropdown extends StatelessWidget {
   final List<String> buildingIds;
   final String? selectedBuilding;
   final Function(String?) onBuildingSelected;
+  final bool showAllBuildings;
 
   const BuildingFilterDropdown({
+    super.key,
     required this.buildingIds,
     required this.selectedBuilding,
     required this.onBuildingSelected,
-    super.key,
+    this.showAllBuildings = true,
   });
 
   @override
@@ -21,10 +23,11 @@ class BuildingFilterDropdown extends StatelessWidget {
         onBuildingSelected(newValue);
       },
       items: [
-        const DropdownMenuItem<String>(
-          value: null,
-          child: Text('All Buildings'),
-        ),
+        if (showAllBuildings)
+          const DropdownMenuItem<String>(
+            value: null,
+            child: Text('All Buildings'),
+          ),
         ...buildingIds.map<DropdownMenuItem<String>>(
           (String value) {
             return DropdownMenuItem<String>(

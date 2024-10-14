@@ -17,7 +17,7 @@ const List<UserProfile> kTestUsers = <UserProfile>[
       email: 'operator@example.com',
     ),
     name: 'Jane Operator',
-    buildingsIds: ['building3', 'building4'],
+    buildingsIds: ['building1', 'building2'],
     role: UserRole.operator,
   ),
   UserProfile(

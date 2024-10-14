@@ -3,7 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'filters_controllers.g.dart';
 
 @riverpod
-class ShowCompletedFilter extends _$ShowCompletedFilter {
+class ShowworkedFilter extends _$ShowworkedFilter {
   @override
   bool build() {
     return false;

@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:building_report_system/src/features/reporting/presentation/controllers/filters_controllers.dart';
 import 'package:building_report_system/src/features/reporting/presentation/widgets/building_filter_dropdown.dart';
 
-class FiltersButton extends StatelessWidget {
+class FiltersButton extends ConsumerWidget {
   final List<String> buildingsIds;
 
   const FiltersButton({
@@ -13,23 +13,47 @@ class FiltersButton extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.filter_list),
-      onPressed: () {
-        _showFilterOptions(context);
-      },
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Controlla se ci sono filtri attivi
+    final bool showWorked = ref.watch(showworkedFilterProvider);
+    final bool showDeleted = ref.watch(showDeletedFilterProvider);
+    final String? selectedBuilding = ref.watch(selectedBuildingFilterProvider);
+
+    // Se uno dei filtri è attivo, mostra il badge
+    bool isFilterActive = showWorked || showDeleted || selectedBuilding != null;
+
+    return Stack(
+      children: [
+        IconButton(
+          icon: const Icon(Icons.filter_list),
+          onPressed: () {
+            _showFilterOptions(context, ref);
+          },
+        ),
+        if (isFilterActive)
+          Positioned(
+            right: 10,
+            top: 10,
+            child: Container(
+              padding: const EdgeInsets.all(3),
+              decoration: const BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+      ],
     );
   }
 
-  void _showFilterOptions(BuildContext context) {
+  void _showFilterOptions(BuildContext context, WidgetRef ref) {
     showDialog(
       context: context,
       builder: (context) {
         return Consumer(
           builder: (_, ref, __) {
             // Usa variabili temporanee per i filtri
-            bool tempShowCompleted = ref.watch(showCompletedFilterProvider);
+            bool tempShowworked = ref.watch(showworkedFilterProvider);
             bool tempShowDeleted = ref.watch(showDeletedFilterProvider);
             String? tempSelectedBuilding = ref.watch(selectedBuildingFilterProvider);
 
@@ -51,13 +75,13 @@ class FiltersButton extends StatelessWidget {
                           });
                         },
                       ),
-                      // Checkbox per "Show Completed Reports"
+                      // Checkbox per "Show worked Reports"
                       CheckboxListTile(
-                        title: const Text('Show Completed Reports'),
-                        value: tempShowCompleted,
+                        title: const Text('Show worked Reports'),
+                        value: tempShowworked,
                         onChanged: (value) {
                           setDialogState(() {
-                            tempShowCompleted = value ?? false;
+                            tempShowworked = value ?? false;
                           });
                         },
                       ),
@@ -76,6 +100,17 @@ class FiltersButton extends StatelessWidget {
                   actions: [
                     TextButton(
                       onPressed: () {
+                        // Reset di tutti i filtri
+                        setDialogState(() {
+                          tempShowworked = false;
+                          tempShowDeleted = false;
+                          tempSelectedBuilding = null;
+                        });
+                      },
+                      child: const Text('Clear'),
+                    ),
+                    TextButton(
+                      onPressed: () {
                         goRouter.pop();
                       },
                       child: const Text('Cancel'),
@@ -84,8 +119,8 @@ class FiltersButton extends StatelessWidget {
                       onPressed: () {
                         // Applica i filtri solo quando si preme "Apply"
                         ref
-                            .read(showCompletedFilterProvider.notifier)
-                            .update(tempShowCompleted);
+                            .read(showworkedFilterProvider.notifier)
+                            .update(tempShowworked);
                         ref
                             .read(showDeletedFilterProvider.notifier)
                             .update(tempShowDeleted);

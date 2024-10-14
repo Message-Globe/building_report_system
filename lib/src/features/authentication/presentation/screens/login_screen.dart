@@ -17,6 +17,7 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> with EmailPasswordValidators {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  var _passwordVisible = false;
   var _submitted = false;
 
   @override
@@ -80,8 +81,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with EmailPasswordVal
                   labelText: 'Password',
                   errorText:
                       _submitted ? passwordErrorText(_passwordController.text) : null,
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                    ),
+                    onPressed: () => setState(() => _passwordVisible = !_passwordVisible),
+                  ),
                 ),
-                obscureText: true,
+                obscureText: !_passwordVisible,
                 textInputAction: TextInputAction.done,
                 onEditingComplete: _submit,
               ),

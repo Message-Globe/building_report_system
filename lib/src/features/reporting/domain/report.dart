@@ -1,7 +1,11 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
 enum ReportStatus {
-  active,
+  open,
+  worked,
   completed,
   deleted,
 }
@@ -13,6 +17,7 @@ class Report {
   final String description;
   final ReportStatus status;
   final DateTime date;
+  final List<String> photoUrls;
 
   Report({
     required this.userId,
@@ -21,6 +26,7 @@ class Report {
     required this.description,
     required this.status,
     required this.date,
+    required this.photoUrls,
   });
 
   Report copyWith({
@@ -30,6 +36,7 @@ class Report {
     String? description,
     ReportStatus? status,
     DateTime? date,
+    List<String>? photoUrls,
   }) {
     return Report(
       userId: userId ?? this.userId,
@@ -38,6 +45,7 @@ class Report {
       description: description ?? this.description,
       status: status ?? this.status,
       date: date ?? this.date,
+      photoUrls: photoUrls ?? this.photoUrls,
     );
   }
 
@@ -49,6 +57,7 @@ class Report {
       'description': description,
       'status': status.name,
       'date': date.millisecondsSinceEpoch,
+      'photoUrls': photoUrls,
     };
   }
 
@@ -60,6 +69,9 @@ class Report {
       description: map['description'] as String,
       status: ReportStatus.values.byName(map['status']),
       date: DateTime.fromMillisecondsSinceEpoch(map['date'] as int),
+      photoUrls: List<String>.from(
+        (map['photoUrls'] as List<String>),
+      ),
     );
   }
 
@@ -70,7 +82,7 @@ class Report {
 
   @override
   String toString() {
-    return 'Report(userId: $userId, buildingId: $buildingId, title: $title, description: $description, status: $status, date: $date)';
+    return 'Report(userId: $userId, buildingId: $buildingId, title: $title, description: $description, status: $status, date: $date, photoUrls: $photoUrls)';
   }
 
   @override
@@ -82,7 +94,8 @@ class Report {
         other.title == title &&
         other.description == description &&
         other.status == status &&
-        other.date == date;
+        other.date == date &&
+        listEquals(other.photoUrls, photoUrls);
   }
 
   @override
@@ -92,6 +105,7 @@ class Report {
         title.hashCode ^
         description.hashCode ^
         status.hashCode ^
-        date.hashCode;
+        date.hashCode ^
+        photoUrls.hashCode;
   }
 }

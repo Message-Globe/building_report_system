@@ -6,23 +6,22 @@ part of 'filters_controllers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$showCompletedFilterHash() =>
-    r'b604f98508a8f2226dd3b550d611a4fdef900562';
+String _$showworkedFilterHash() => r'a0409ec64012563837639671cf4c9ca2576891f2';
 
-/// See also [ShowCompletedFilter].
-@ProviderFor(ShowCompletedFilter)
-final showCompletedFilterProvider =
-    AutoDisposeNotifierProvider<ShowCompletedFilter, bool>.internal(
-  ShowCompletedFilter.new,
-  name: r'showCompletedFilterProvider',
+/// See also [ShowworkedFilter].
+@ProviderFor(ShowworkedFilter)
+final showworkedFilterProvider =
+    AutoDisposeNotifierProvider<ShowworkedFilter, bool>.internal(
+  ShowworkedFilter.new,
+  name: r'showworkedFilterProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$showCompletedFilterHash,
+      : _$showworkedFilterHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ShowCompletedFilter = AutoDisposeNotifier<bool>;
+typedef _$ShowworkedFilter = AutoDisposeNotifier<bool>;
 String _$showDeletedFilterHash() => r'aad047a947ebad759cd031ba27a5168e8ebfc7f2';
 
 /// See also [ShowDeletedFilter].

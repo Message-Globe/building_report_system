@@ -12,10 +12,15 @@ class ReportStatusIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     switch (status) {
-      case ReportStatus.active:
+      case ReportStatus.open:
         return const Icon(
           Icons.report,
           color: Colors.red,
+        );
+      case ReportStatus.worked:
+        return const Icon(
+          Icons.check_circle,
+          color: Colors.green,
         );
       case ReportStatus.completed:
         return const Icon(

@@ -22,7 +22,7 @@ final reportsRepositoryProvider =
 );
 
 typedef ReportsRepositoryRef = AutoDisposeProviderRef<ReportsRepository>;
-String _$reportsListFutureHash() => r'da1d2d515e53b198fc06771a8427ed2208b2664c';
+String _$reportsListFutureHash() => r'70a7bc3d624c10ca05c5f94eaa140d30b6c14e43';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -56,13 +56,13 @@ class ReportsListFutureFamily extends Family<AsyncValue<List<Report>>> {
 
   /// See also [reportsListFuture].
   ReportsListFutureProvider call({
-    bool showworked = false,
+    bool showCompleted = false,
     bool showDeleted = false,
     bool reverseOrder = false,
     String? buildingId,
   }) {
     return ReportsListFutureProvider(
-      showworked: showworked,
+      showCompleted: showCompleted,
       showDeleted: showDeleted,
       reverseOrder: reverseOrder,
       buildingId: buildingId,
@@ -74,7 +74,7 @@ class ReportsListFutureFamily extends Family<AsyncValue<List<Report>>> {
     covariant ReportsListFutureProvider provider,
   ) {
     return call(
-      showworked: provider.showworked,
+      showCompleted: provider.showCompleted,
       showDeleted: provider.showDeleted,
       reverseOrder: provider.reverseOrder,
       buildingId: provider.buildingId,
@@ -101,14 +101,14 @@ class ReportsListFutureProvider
     extends AutoDisposeFutureProvider<List<Report>> {
   /// See also [reportsListFuture].
   ReportsListFutureProvider({
-    bool showworked = false,
+    bool showCompleted = false,
     bool showDeleted = false,
     bool reverseOrder = false,
     String? buildingId,
   }) : this._internal(
           (ref) => reportsListFuture(
             ref as ReportsListFutureRef,
-            showworked: showworked,
+            showCompleted: showCompleted,
             showDeleted: showDeleted,
             reverseOrder: reverseOrder,
             buildingId: buildingId,
@@ -122,7 +122,7 @@ class ReportsListFutureProvider
           dependencies: ReportsListFutureFamily._dependencies,
           allTransitiveDependencies:
               ReportsListFutureFamily._allTransitiveDependencies,
-          showworked: showworked,
+          showCompleted: showCompleted,
           showDeleted: showDeleted,
           reverseOrder: reverseOrder,
           buildingId: buildingId,
@@ -135,13 +135,13 @@ class ReportsListFutureProvider
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.showworked,
+    required this.showCompleted,
     required this.showDeleted,
     required this.reverseOrder,
     required this.buildingId,
   }) : super.internal();
 
-  final bool showworked;
+  final bool showCompleted;
   final bool showDeleted;
   final bool reverseOrder;
   final String? buildingId;
@@ -159,7 +159,7 @@ class ReportsListFutureProvider
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        showworked: showworked,
+        showCompleted: showCompleted,
         showDeleted: showDeleted,
         reverseOrder: reverseOrder,
         buildingId: buildingId,
@@ -175,7 +175,7 @@ class ReportsListFutureProvider
   @override
   bool operator ==(Object other) {
     return other is ReportsListFutureProvider &&
-        other.showworked == showworked &&
+        other.showCompleted == showCompleted &&
         other.showDeleted == showDeleted &&
         other.reverseOrder == reverseOrder &&
         other.buildingId == buildingId;
@@ -184,7 +184,7 @@ class ReportsListFutureProvider
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, showworked.hashCode);
+    hash = _SystemHash.combine(hash, showCompleted.hashCode);
     hash = _SystemHash.combine(hash, showDeleted.hashCode);
     hash = _SystemHash.combine(hash, reverseOrder.hashCode);
     hash = _SystemHash.combine(hash, buildingId.hashCode);
@@ -194,8 +194,8 @@ class ReportsListFutureProvider
 }
 
 mixin ReportsListFutureRef on AutoDisposeFutureProviderRef<List<Report>> {
-  /// The parameter `showworked` of this provider.
-  bool get showworked;
+  /// The parameter `showCompleted` of this provider.
+  bool get showCompleted;
 
   /// The parameter `showDeleted` of this provider.
   bool get showDeleted;
@@ -213,7 +213,7 @@ class _ReportsListFutureProviderElement
   _ReportsListFutureProviderElement(super.provider);
 
   @override
-  bool get showworked => (origin as ReportsListFutureProvider).showworked;
+  bool get showCompleted => (origin as ReportsListFutureProvider).showCompleted;
   @override
   bool get showDeleted => (origin as ReportsListFutureProvider).showDeleted;
   @override
@@ -222,7 +222,7 @@ class _ReportsListFutureProviderElement
   String? get buildingId => (origin as ReportsListFutureProvider).buildingId;
 }
 
-String _$reportsListStreamHash() => r'9e674c3fa450ee4b59ec327ec0e5bf95d2f0bef5';
+String _$reportsListStreamHash() => r'73a688ace1cd11f091c55a3c56ee581b7175a24b';
 
 /// See also [reportsListStream].
 @ProviderFor(reportsListStream)
@@ -235,13 +235,13 @@ class ReportsListStreamFamily extends Family<AsyncValue<List<Report>>> {
 
   /// See also [reportsListStream].
   ReportsListStreamProvider call({
-    bool showworked = false,
+    bool showCompleted = false,
     bool showDeleted = false,
     bool reverseOrder = false,
     String? buildingId,
   }) {
     return ReportsListStreamProvider(
-      showworked: showworked,
+      showCompleted: showCompleted,
       showDeleted: showDeleted,
       reverseOrder: reverseOrder,
       buildingId: buildingId,
@@ -253,7 +253,7 @@ class ReportsListStreamFamily extends Family<AsyncValue<List<Report>>> {
     covariant ReportsListStreamProvider provider,
   ) {
     return call(
-      showworked: provider.showworked,
+      showCompleted: provider.showCompleted,
       showDeleted: provider.showDeleted,
       reverseOrder: provider.reverseOrder,
       buildingId: provider.buildingId,
@@ -280,14 +280,14 @@ class ReportsListStreamProvider
     extends AutoDisposeStreamProvider<List<Report>> {
   /// See also [reportsListStream].
   ReportsListStreamProvider({
-    bool showworked = false,
+    bool showCompleted = false,
     bool showDeleted = false,
     bool reverseOrder = false,
     String? buildingId,
   }) : this._internal(
           (ref) => reportsListStream(
             ref as ReportsListStreamRef,
-            showworked: showworked,
+            showCompleted: showCompleted,
             showDeleted: showDeleted,
             reverseOrder: reverseOrder,
             buildingId: buildingId,
@@ -301,7 +301,7 @@ class ReportsListStreamProvider
           dependencies: ReportsListStreamFamily._dependencies,
           allTransitiveDependencies:
               ReportsListStreamFamily._allTransitiveDependencies,
-          showworked: showworked,
+          showCompleted: showCompleted,
           showDeleted: showDeleted,
           reverseOrder: reverseOrder,
           buildingId: buildingId,
@@ -314,13 +314,13 @@ class ReportsListStreamProvider
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.showworked,
+    required this.showCompleted,
     required this.showDeleted,
     required this.reverseOrder,
     required this.buildingId,
   }) : super.internal();
 
-  final bool showworked;
+  final bool showCompleted;
   final bool showDeleted;
   final bool reverseOrder;
   final String? buildingId;
@@ -338,7 +338,7 @@ class ReportsListStreamProvider
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        showworked: showworked,
+        showCompleted: showCompleted,
         showDeleted: showDeleted,
         reverseOrder: reverseOrder,
         buildingId: buildingId,
@@ -354,7 +354,7 @@ class ReportsListStreamProvider
   @override
   bool operator ==(Object other) {
     return other is ReportsListStreamProvider &&
-        other.showworked == showworked &&
+        other.showCompleted == showCompleted &&
         other.showDeleted == showDeleted &&
         other.reverseOrder == reverseOrder &&
         other.buildingId == buildingId;
@@ -363,7 +363,7 @@ class ReportsListStreamProvider
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, showworked.hashCode);
+    hash = _SystemHash.combine(hash, showCompleted.hashCode);
     hash = _SystemHash.combine(hash, showDeleted.hashCode);
     hash = _SystemHash.combine(hash, reverseOrder.hashCode);
     hash = _SystemHash.combine(hash, buildingId.hashCode);
@@ -373,8 +373,8 @@ class ReportsListStreamProvider
 }
 
 mixin ReportsListStreamRef on AutoDisposeStreamProviderRef<List<Report>> {
-  /// The parameter `showworked` of this provider.
-  bool get showworked;
+  /// The parameter `showCompleted` of this provider.
+  bool get showCompleted;
 
   /// The parameter `showDeleted` of this provider.
   bool get showDeleted;
@@ -392,7 +392,7 @@ class _ReportsListStreamProviderElement
   _ReportsListStreamProviderElement(super.provider);
 
   @override
-  bool get showworked => (origin as ReportsListStreamProvider).showworked;
+  bool get showCompleted => (origin as ReportsListStreamProvider).showCompleted;
   @override
   bool get showDeleted => (origin as ReportsListStreamProvider).showDeleted;
   @override
@@ -401,7 +401,7 @@ class _ReportsListStreamProviderElement
   String? get buildingId => (origin as ReportsListStreamProvider).buildingId;
 }
 
-String _$openReportsCountHash() => r'3381314b989ac98eab5bfaf8f5fad591505ba229';
+String _$openReportsCountHash() => r'ce414c8e666e7cfe91c2731cb07118fcf5b4ee5e';
 
 /// See also [openReportsCount].
 @ProviderFor(openReportsCount)

@@ -35,5 +35,19 @@ final authStateProvider = AutoDisposeStreamProvider<UserProfile?>.internal(
 );
 
 typedef AuthStateRef = AutoDisposeStreamProviderRef<UserProfile?>;
+String _$userRoleHash() => r'dda5b6095590019b5919171fa5aca2c9094b243b';
+
+/// See also [userRole].
+@ProviderFor(userRole)
+final userRoleProvider = AutoDisposeProvider<UserRole>.internal(
+  userRole,
+  name: r'userRoleProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$userRoleHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef UserRoleRef = AutoDisposeProviderRef<UserRole>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

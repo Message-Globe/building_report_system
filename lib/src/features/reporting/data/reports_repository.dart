@@ -1,5 +1,5 @@
-import 'package:building_report_system/src/features/authentication/domain/user_profile.dart';
-import 'package:building_report_system/src/features/reporting/domain/report.dart';
+import '../../authentication/domain/user_profile.dart';
+import '../domain/report.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../authentication/data/auth_repository.dart';
@@ -8,30 +8,34 @@ import 'fake_reports_repository.dart';
 part 'reports_repository.g.dart';
 
 abstract class ReportsRepository {
-  /// Recupera la lista dei report, con filtri per:
-  /// - [showworked]: mostra report completati
-  /// - [showDeleted]: mostra report eliminati
-  /// - [reverseOrder]: ordine inverso per data
-  /// - [userProfile]: il profilo dell'utente corrente, utilizzato per filtrare i report in base al ruolo
-  /// - [buildingId]: opzionale, filtra per edificio specifico
+  Stream<List<Report>> get reportsStream;
+
   Future<List<Report>> fetchReportsList({
-    required bool showworked,
+    required bool showCompleted,
     required bool showDeleted,
     required bool reverseOrder,
-    required UserProfile userProfile, // Profilo utente obbligatorio
-    String? buildingId, // Filtro opzionale per edificio
+    required UserProfile userProfile,
+    String? buildingId,
   });
 
-  /// Aggiunge un nuovo report
-  Future<void> addReport({
+  Stream<List<Report>> watchReportsList({
+    required bool showCompleted,
+    required bool showDeleted,
+    required bool reverseOrder,
     required UserProfile userProfile,
+    String? buildingId,
+  });
+
+  Future<void> addReport({
+    required String userId,
     required String buildingId,
     required String title,
     required String description,
-    required List<String> photoUrls,
+    required List<String>? photoUrls,
   });
 
-  /// Modifica un report esistente
+  Future<void> deleteReport(Report report);
+
   Future<void> updateReport({
     required Report report,
     String? title,
@@ -40,10 +44,14 @@ abstract class ReportsRepository {
     List<String>? photoUrls,
   });
 
-  /// Elimina un report (cambia il suo stato in deleted)
-  Future<void> deleteReport(Report report);
+  Future<void> assignReportToOperator({
+    required Report report,
+    required String operatorId,
+  });
 
-  Stream<List<Report>> get reportsStream;
+  Future<void> unassignReportFromOperator(Report report);
+
+  Future<void> completeReport(Report report);
 }
 
 @riverpod
@@ -54,83 +62,48 @@ ReportsRepository reportsRepository(ReportsRepositoryRef ref) {
 @riverpod
 Future<List<Report>> reportsListFuture(
   ReportsListFutureRef ref, {
-  bool showworked = false,
+  bool showCompleted = false,
   bool showDeleted = false,
   bool reverseOrder = false,
   String? buildingId,
 }) {
   final reportsRepository = ref.watch(reportsRepositoryProvider);
-
-  // Ottieni l'utente corrente dal provider di autenticazione
-  final userProfile = ref.watch(authStateProvider).asData?.value;
-
-  if (userProfile == null) {
-    throw Exception("User not authenticated");
-  }
+  final userProfile = ref.watch(authStateProvider).asData!.value!;
 
   return reportsRepository.fetchReportsList(
-    showworked: showworked,
+    showCompleted: showCompleted,
     showDeleted: showDeleted,
     reverseOrder: reverseOrder,
-    userProfile: userProfile, // Passa il profilo utente per gestire i filtri
-    buildingId: buildingId, // Filtro opzionale edificio
+    userProfile: userProfile,
+    buildingId: buildingId,
   );
 }
 
 @riverpod
 Stream<List<Report>> reportsListStream(
   ReportsListStreamRef ref, {
-  bool showworked = false,
+  bool showCompleted = false,
   bool showDeleted = false,
   bool reverseOrder = false,
   String? buildingId,
 }) {
   final reportsRepository = ref.watch(reportsRepositoryProvider);
+  final userProfile = ref.watch(authStateProvider).asData!.value!;
 
-  // Ottieni l'utente corrente dal provider di autenticazione
-  final userProfile = ref.watch(authStateProvider).asData?.value;
-
-  if (userProfile == null) {
-    throw Exception("User not authenticated");
-  }
-
-  // Applica i filtri e restituisci lo stream filtrato
-  return reportsRepository.reportsStream.map((reports) {
-    List<Report> filteredReports = reports.where((report) {
-      // Applica i filtri basati sul ruolo dell'utente
-      if (userProfile.role == UserRole.reporter) {
-        if (report.userId != userProfile.appUser.uid) return false;
-      } else if (userProfile.role == UserRole.operator) {
-        if (!userProfile.buildingsIds.contains(report.buildingId)) return false;
-      }
-
-      // Filtro per edificio
-      if (buildingId != null && report.buildingId != buildingId) return false;
-
-      // Filtro per stato
-      if (report.status == ReportStatus.open) return true;
-      if (report.status == ReportStatus.worked && showworked) return true;
-      if (report.status == ReportStatus.deleted && showDeleted) return true;
-
-      return false;
-    }).toList();
-
-    // Ordina i report per data
-    if (reverseOrder) {
-      filteredReports.sort((a, b) => b.date.compareTo(a.date));
-    } else {
-      filteredReports.sort((a, b) => a.date.compareTo(b.date));
-    }
-
-    return filteredReports;
-  });
+  return reportsRepository.watchReportsList(
+    showCompleted: showCompleted,
+    showDeleted: showDeleted,
+    reverseOrder: reverseOrder,
+    userProfile: userProfile,
+    buildingId: buildingId,
+  );
 }
 
 @riverpod
 Future<int> openReportsCount(OpenReportsCountRef ref) async {
   final reports = await ref.watch(
     reportsListFutureProvider(
-      showworked: false,
+      showCompleted: false,
       showDeleted: false,
       reverseOrder: false,
     ).future,

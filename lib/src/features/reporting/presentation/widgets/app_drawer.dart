@@ -1,6 +1,6 @@
-import 'package:building_report_system/src/constants/app_sizes.dart';
-import 'package:building_report_system/src/features/authentication/data/auth_repository.dart';
-import 'package:building_report_system/src/routing/app_router.dart';
+import '../../../../constants/app_sizes.dart';
+import '../../../authentication/data/auth_repository.dart';
+import '../../../../routing/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

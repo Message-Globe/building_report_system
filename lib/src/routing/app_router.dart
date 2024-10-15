@@ -1,12 +1,12 @@
-import 'package:building_report_system/src/features/reporting/domain/report.dart';
-import 'package:building_report_system/src/features/reporting/presentation/screens/create_report_screen.dart';
-import 'package:building_report_system/src/features/reporting/presentation/screens/edit_report_screen.dart';
-import 'package:building_report_system/src/features/reporting/presentation/screens/photo_view_gallery_screen.dart';
-import 'package:building_report_system/src/features/reporting/presentation/screens/reports_list_screen.dart';
+import '../features/reporting/domain/report.dart';
+import '../features/reporting/presentation/screens/create_report_screen.dart';
+import '../features/reporting/presentation/screens/edit_report_screen.dart';
+import '../features/reporting/presentation/screens/photo_view_gallery_screen.dart';
+import '../features/reporting/presentation/screens/reports_list_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'package:building_report_system/src/features/authentication/data/auth_repository.dart';
+import '../features/authentication/data/auth_repository.dart';
 
 import '../features/authentication/presentation/screens/login_screen.dart';
 
@@ -70,6 +70,7 @@ GoRouter goRouter(GoRouterRef ref) {
                   final args = state.extra as PhotoViewGalleryArgs;
                   return PhotoViewGalleryScreen(
                     imageUrls: args.imageUrls,
+                    imageFiles: args.imageFiles,
                     initialIndex: args.initialIndex,
                   );
                 },

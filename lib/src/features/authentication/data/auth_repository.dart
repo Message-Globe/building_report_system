@@ -1,5 +1,5 @@
-import 'package:building_report_system/src/features/authentication/data/fake_auth_repository.dart';
-import 'package:building_report_system/src/features/authentication/domain/user_profile.dart';
+import 'fake_auth_repository.dart';
+import '../domain/user_profile.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_repository.g.dart';
@@ -20,4 +20,10 @@ AuthRepository authRepository(AuthRepositoryRef ref) {
 Stream<UserProfile?> authState(AuthStateRef ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   return authRepository.authStateChanges;
+}
+
+@riverpod
+UserRole userRole(UserRoleRef ref) {
+  final userProfile = ref.watch(authStateProvider).asData!.value!;
+  return userProfile.role;
 }

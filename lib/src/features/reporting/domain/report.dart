@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 
 enum ReportStatus {
   open,
-  worked,
+  assigned,
   completed,
   deleted,
 }
@@ -18,6 +18,9 @@ class Report {
   final ReportStatus status;
   final DateTime date;
   final List<String> photoUrls;
+  final String operatorId;
+  final String repairDescription;
+  final List<String> repairPhotosUrls;
 
   Report({
     required this.userId,
@@ -27,6 +30,9 @@ class Report {
     required this.status,
     required this.date,
     required this.photoUrls,
+    required this.operatorId,
+    required this.repairDescription,
+    required this.repairPhotosUrls,
   });
 
   Report copyWith({
@@ -37,6 +43,9 @@ class Report {
     ReportStatus? status,
     DateTime? date,
     List<String>? photoUrls,
+    String? operatorId,
+    String? repairDescription,
+    List<String>? repairPhotosUrls,
   }) {
     return Report(
       userId: userId ?? this.userId,
@@ -46,6 +55,9 @@ class Report {
       status: status ?? this.status,
       date: date ?? this.date,
       photoUrls: photoUrls ?? this.photoUrls,
+      operatorId: operatorId ?? this.operatorId,
+      repairDescription: repairDescription ?? this.repairDescription,
+      repairPhotosUrls: repairPhotosUrls ?? this.repairPhotosUrls,
     );
   }
 
@@ -58,6 +70,9 @@ class Report {
       'status': status.name,
       'date': date.millisecondsSinceEpoch,
       'photoUrls': photoUrls,
+      'operatorId': operatorId,
+      'repairDescription': repairDescription,
+      'repairPhotosUrls': repairPhotosUrls,
     };
   }
 
@@ -69,9 +84,10 @@ class Report {
       description: map['description'] as String,
       status: ReportStatus.values.byName(map['status']),
       date: DateTime.fromMillisecondsSinceEpoch(map['date'] as int),
-      photoUrls: List<String>.from(
-        (map['photoUrls'] as List<String>),
-      ),
+      photoUrls: List<String>.from((map['photoUrls'] as List<String>)),
+      operatorId: map['operatorId'] as String,
+      repairDescription: map['repairDescription'] as String,
+      repairPhotosUrls: List<String>.from((map['repairPhotosUrls'] as List<String>)),
     );
   }
 
@@ -82,7 +98,7 @@ class Report {
 
   @override
   String toString() {
-    return 'Report(userId: $userId, buildingId: $buildingId, title: $title, description: $description, status: $status, date: $date, photoUrls: $photoUrls)';
+    return 'Report(userId: $userId, buildingId: $buildingId, title: $title, description: $description, status: $status, date: $date, photoUrls: $photoUrls, operatorId: $operatorId, repairDescription: $repairDescription, repairPhotosUrls: $repairPhotosUrls)';
   }
 
   @override
@@ -95,7 +111,10 @@ class Report {
         other.description == description &&
         other.status == status &&
         other.date == date &&
-        listEquals(other.photoUrls, photoUrls);
+        listEquals(other.photoUrls, photoUrls) &&
+        other.operatorId == operatorId &&
+        other.repairDescription == repairDescription &&
+        listEquals(other.repairPhotosUrls, repairPhotosUrls);
   }
 
   @override
@@ -106,6 +125,9 @@ class Report {
         description.hashCode ^
         status.hashCode ^
         date.hashCode ^
-        photoUrls.hashCode;
+        photoUrls.hashCode ^
+        operatorId.hashCode ^
+        repairDescription.hashCode ^
+        repairPhotosUrls.hashCode;
   }
 }

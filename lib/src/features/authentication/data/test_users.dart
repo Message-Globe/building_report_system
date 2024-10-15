@@ -1,5 +1,5 @@
-import 'package:building_report_system/src/features/authentication/domain/user_profile.dart';
-import 'package:building_report_system/src/features/authentication/domain/app_user.dart';
+import '../domain/user_profile.dart';
+import '../domain/app_user.dart';
 
 const List<UserProfile> kTestUsers = <UserProfile>[
   UserProfile(

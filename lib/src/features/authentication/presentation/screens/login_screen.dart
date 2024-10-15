@@ -1,8 +1,8 @@
-import 'package:building_report_system/src/constants/app_sizes.dart';
-import 'package:building_report_system/src/routing/app_router.dart';
+import '../../../../constants/app_sizes.dart';
+import '../../../../routing/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:building_report_system/src/utils/async_value_ui.dart';
+import '../../../../utils/async_value_ui.dart';
 
 import '../controller/login_screen_controller.dart';
 import '../email_password_validators.dart';

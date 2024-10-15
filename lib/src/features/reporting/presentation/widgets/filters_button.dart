@@ -1,16 +1,13 @@
-import 'package:building_report_system/src/routing/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:building_report_system/src/features/reporting/presentation/controllers/filters_controllers.dart';
-import 'package:building_report_system/src/features/reporting/presentation/widgets/building_filter_dropdown.dart';
+
+import '../../../../routing/app_router.dart';
+import '../../../authentication/data/auth_repository.dart';
+import '../controllers/filters_controllers.dart';
+import 'building_filter_dropdown.dart';
 
 class FiltersButton extends ConsumerWidget {
-  final List<String> buildingsIds;
-
-  const FiltersButton({
-    super.key,
-    required this.buildingsIds,
-  });
+  const FiltersButton({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -61,13 +58,15 @@ class FiltersButton extends ConsumerWidget {
 
             return StatefulBuilder(
               builder: (context, setDialogState) {
+                final userProfile = ref.watch(authStateProvider).asData!.value!;
+
                 return AlertDialog(
                   title: const Text('Filter Reports'),
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       BuildingFilterDropdown(
-                        buildingIds: buildingsIds,
+                        buildingIds: userProfile.buildingsIds,
                         selectedBuilding: tempSelectedBuilding,
                         onBuildingSelected: (newValue) {
                           setDialogState(() {
@@ -75,9 +74,9 @@ class FiltersButton extends ConsumerWidget {
                           });
                         },
                       ),
-                      // Checkbox per "Show worked Reports"
+                      // Checkbox per "Show completed Reports"
                       CheckboxListTile(
-                        title: const Text('Show worked Reports'),
+                        title: const Text('Show completed Reports'),
                         value: tempShowworked,
                         onChanged: (value) {
                           setDialogState(() {

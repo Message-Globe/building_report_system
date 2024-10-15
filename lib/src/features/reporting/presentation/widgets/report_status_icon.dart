@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:building_report_system/src/features/reporting/domain/report.dart';
+import '../../domain/report.dart';
 
 class ReportStatusIcon extends StatelessWidget {
   final ReportStatus status;
@@ -17,10 +17,10 @@ class ReportStatusIcon extends StatelessWidget {
           Icons.report,
           color: Colors.red,
         );
-      case ReportStatus.worked:
+      case ReportStatus.assigned:
         return const Icon(
-          Icons.check_circle,
-          color: Colors.green,
+          Icons.handyman,
+          color: Colors.amber,
         );
       case ReportStatus.completed:
         return const Icon(

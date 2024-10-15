@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:building_report_system/src/localization/string_hardcoded.dart';
-import 'package:building_report_system/src/routing/app_router.dart';
+import '../localization/string_hardcoded.dart';
+import '../routing/app_router.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

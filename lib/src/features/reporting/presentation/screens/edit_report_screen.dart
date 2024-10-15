@@ -1,19 +1,16 @@
-import 'package:building_report_system/src/features/authentication/data/auth_repository.dart';
-import 'package:building_report_system/src/routing/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:building_report_system/src/utils/date_formatter.dart';
-
 import '../../../../constants/app_sizes.dart';
+import '../../../authentication/data/auth_repository.dart';
+import '../../../../routing/app_router.dart';
+import '../../../../utils/date_formatter.dart';
 import '../../../authentication/domain/user_profile.dart';
-import '../widgets/building_filter_dropdown.dart';
 import '../../domain/report.dart';
-import 'photo_view_gallery_screen.dart';
+import '../widgets/combined_image_gallery.dart';
 
 class EditReportScreen extends ConsumerStatefulWidget {
-  final Report report; // Passa il report da modificare
+  final Report report;
 
   const EditReportScreen({super.key, required this.report});
 
@@ -24,19 +21,23 @@ class EditReportScreen extends ConsumerStatefulWidget {
 class _EditReportScreenState extends ConsumerState<EditReportScreen> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _repairDescriptionController = TextEditingController(); // Per operator
-  final List<File> _newImages = []; // Immagini aggiunte dall'operatore
-  String? _selectedBuilding;
+  final List<File> _localImages = [];
+  final List<String> _remoteImages = [];
+  final _repairDescriptionController = TextEditingController();
+  final List<File> _repairLocalImages = [];
+  final List<String> _repairRemoteImages = [];
 
-  final ImagePicker _picker = ImagePicker();
+  late ReportStatus _reportStatus;
 
   @override
   void initState() {
     super.initState();
-    // Popola i campi con i dati esistenti del report
     _titleController.text = widget.report.title;
     _descriptionController.text = widget.report.description;
-    _selectedBuilding = widget.report.buildingId;
+    _remoteImages.addAll(widget.report.photoUrls);
+    _repairDescriptionController.text = widget.report.repairDescription;
+    _repairRemoteImages.addAll(widget.report.repairPhotosUrls);
+    _reportStatus = widget.report.status; // Imposta lo stato iniziale del report
   }
 
   @override
@@ -47,47 +48,43 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
     super.dispose();
   }
 
-  Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
-    if (pickedFile != null) {
-      setState(() {
-        _newImages.add(File(pickedFile.path));
-      });
-    }
-  }
-
-  void _submitReport() {
+  // Invio del report modificato (converti nuovamente i file in URL)
+  void _submitReport() async {
     final title = _titleController.text;
     final description = _descriptionController.text;
 
     if (title.isEmpty || description.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please complete all fields')),
+        const SnackBar(
+          content: Text('Please complete all fields'),
+        ),
       );
       return;
     }
 
-    // TODO: Logica per inviare il report modificato con i dati aggiornati e le nuove foto
+    // TODO: Logica per caricare le immagini su un server e ottenere gli URL
+
     ref.read(goRouterProvider).pop();
   }
 
   void _completeReport() {
-    // Funzionalità specifica per gli operatori per completare il report
     final repairDescription = _repairDescriptionController.text;
     if (repairDescription.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please provide repair details')),
+        const SnackBar(
+          content: Text('Please provide repair details'),
+        ),
       );
       return;
     }
-
-    // TODO: Logica per segnare il report come completato e inviare il report con le foto aggiornate
+    // TODO: Logica per completare il report e inviare le nuove immagini
     ref.read(goRouterProvider).pop();
   }
 
-  void _openPhotoViewGallery(List<String> imageUrls, int initialIndex) {
-    final args = PhotoViewGalleryArgs(imageUrls: imageUrls, initialIndex: initialIndex);
-    ref.read(goRouterProvider).pushNamed(AppRoute.photoGallery.name, extra: args);
+  void _updateReportStatus(ReportStatus newStatus) {
+    setState(() {
+      _reportStatus = newStatus;
+    });
   }
 
   @override
@@ -102,23 +99,17 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
       appBar: AppBar(
         title: const Text('Edit Report'),
         actions: [
-          if (isOperator) // Se è un operatore, mostra il pulsante "Complete"
-            IconButton(
-              icon: const Icon(Icons.check),
-              onPressed: _completeReport,
-            ),
-          if (isReporter && reportEditable) // Se è un reporter e il report è attivo
-            IconButton(
-              icon: const Icon(Icons.save),
-              onPressed: _submitReport,
-            ),
+          if (isOperator)
+            IconButton(icon: const Icon(Icons.check), onPressed: _completeReport),
+          if (isReporter && reportEditable)
+            IconButton(icon: const Icon(Icons.save), onPressed: _submitReport),
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(Sizes.p16),
         child: ListView(
           children: [
-            // Campo per il titolo, modificabile solo per il reporter
+            // Titolo
             if (isReporter && reportEditable)
               TextField(
                 controller: _titleController,
@@ -128,17 +119,17 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
                 ),
               )
             else
-              Text('Title: ${widget.report.title}'), // Solo visualizzazione per operatori
+              Text('Title: ${widget.report.title}'),
             const SizedBox(height: Sizes.p16),
 
-            // Data (mostrata, non modificabile)
+            // Data
             Text(
               'Date: ${dateFormatter.format(widget.report.date)}',
               style: const TextStyle(fontSize: Sizes.p16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: Sizes.p16),
 
-            // Campo per la descrizione, modificabile solo per il reporter
+            // Descrizione
             if (isReporter && reportEditable)
               TextField(
                 controller: _descriptionController,
@@ -149,60 +140,34 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
                 ),
               )
             else
-              Text('Description: ${widget.report.description}'), // Solo visualizzazione
+              Text('Description: ${widget.report.description}'),
             const SizedBox(height: Sizes.p16),
 
-            // Dropdown per selezionare l'edificio, modificabile solo per il reporter
-            if (isReporter && reportEditable)
-              BuildingFilterDropdown(
-                buildingIds: userProfile.buildingsIds,
-                selectedBuilding: _selectedBuilding,
-                onBuildingSelected: (newBuilding) {
-                  setState(() {
-                    _selectedBuilding = newBuilding;
-                  });
-                },
-                showAllBuildings: false,
-              )
-            else
-              Text('Building: ${widget.report.buildingId}'), // Solo visualizzazione
-            const SizedBox(height: Sizes.p16),
+            // Galleria combinata (locali e remote)
+            CombinedImageGallery(
+              localImages: _localImages,
+              remoteImages: _remoteImages,
+              canEdit: isReporter,
+              onRemoveLocal: (file) {
+                setState(() {
+                  _localImages.remove(file); // Rimuovi immagine locale
+                });
+              },
+              onRemoveRemote: (url) {
+                setState(() {
+                  _remoteImages.remove(url); // Rimuovi immagine remota
+                });
+              },
+            ),
 
-            // Visualizza le immagini già associate al report
-            if (widget.report.photoUrls.isNotEmpty)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Report Photos:',
-                    style: TextStyle(fontSize: Sizes.p16, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: Sizes.p8),
-                  Wrap(
-                    spacing: Sizes.p12,
-                    runSpacing: Sizes.p12,
-                    children: widget.report.photoUrls.map(
-                      (url) {
-                        final index = widget.report.photoUrls.indexOf(url);
-                        return GestureDetector(
-                          onTap: () =>
-                              _openPhotoViewGallery(widget.report.photoUrls, index),
-                          child: Image.network(
-                            url,
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          ),
-                        );
-                      },
-                    ).toList(),
-                  ),
-                ],
-              ),
-            const SizedBox(height: Sizes.p16),
+            if (isOperator) ...[
+              const SizedBox(height: Sizes.p8),
+              const Divider(),
+              const SizedBox(height: Sizes.p8),
+            ],
 
-            // Se è un operatore, aggiungi il campo per descrivere i lavori svolti
-            if (isOperator)
+            // Descrizione dei lavori (solo per operator)
+            if (isOperator) ...[
               TextField(
                 controller: _repairDescriptionController,
                 maxLines: 3,
@@ -211,47 +176,62 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
                   border: OutlineInputBorder(),
                 ),
               ),
-            const SizedBox(height: Sizes.p16),
-
-            // Bottone per aggiungere la foto
-            ElevatedButton.icon(
-              icon: const Icon(Icons.camera_alt),
-              label: const Text('Add Photo'),
-              onPressed: _pickImage,
-            ),
-            const SizedBox(height: Sizes.p16),
-
-            // Mostra le immagini selezionate e aggiunte
-            if (_newImages.isNotEmpty)
-              Wrap(
-                spacing: Sizes.p12,
-                runSpacing: Sizes.p12,
-                children: _newImages.map(
-                  (image) {
-                    return Stack(
-                      children: [
-                        Image.file(
-                          image,
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
-                        ),
-                        Positioned(
-                          right: 0,
-                          child: IconButton(
-                            icon: const Icon(Icons.remove_circle, color: Colors.red),
-                            onPressed: () {
-                              setState(() {
-                                _newImages.remove(image);
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ).toList(),
+              const SizedBox(height: Sizes.p16),
+              CombinedImageGallery(
+                localImages: _repairLocalImages,
+                remoteImages: _repairRemoteImages,
+                canEdit: isOperator,
+                onRemoveLocal: (file) {
+                  setState(() {
+                    _repairLocalImages.remove(file);
+                  });
+                },
+                onRemoveRemote: (url) {
+                  setState(() {
+                    _repairRemoteImages.remove(url);
+                  });
+                },
               ),
+            ],
+
+            const SizedBox(height: Sizes.p16),
+
+            // Dismissible widget to change the report status from assigned to completed
+            if (isOperator && _reportStatus == ReportStatus.assigned) ...[
+              const SizedBox(height: Sizes.p8),
+              const Text('Swipe to complete report:'),
+              const SizedBox(height: Sizes.p8),
+              Dismissible(
+                key: const Key('reportStatusDismissible'),
+                direction: DismissDirection.startToEnd,
+                background: Container(
+                  color: Colors.green,
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: const Icon(Icons.check, color: Colors.white),
+                ),
+                onDismissed: (direction) {
+                  // Cambia lo stato del report a completed
+                  _updateReportStatus(ReportStatus.completed);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Report status updated to Completed'),
+                    ),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(Sizes.p16),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(Sizes.p8),
+                  ),
+                  child: const Text(
+                    'Swipe right to mark as Completed',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),

@@ -10,13 +10,20 @@ enum ReportStatus {
   deleted,
 }
 
+enum PriorityLevel {
+  normal,
+  urgent,
+}
+
 class Report {
   final String userId;
   final String buildingId;
+  final String buildingSpot;
+  final PriorityLevel priority;
   final String title;
   final String description;
   final ReportStatus status;
-  final DateTime date;
+  final DateTime timestamp;
   final List<String> photoUrls;
   final String operatorId;
   final String repairDescription;
@@ -25,10 +32,12 @@ class Report {
   Report({
     required this.userId,
     required this.buildingId,
+    required this.buildingSpot,
+    required this.priority,
     required this.title,
     required this.description,
     required this.status,
-    required this.date,
+    required this.timestamp,
     required this.photoUrls,
     required this.operatorId,
     required this.repairDescription,
@@ -38,10 +47,12 @@ class Report {
   Report copyWith({
     String? userId,
     String? buildingId,
+    String? buildingSpot,
+    PriorityLevel? priority,
     String? title,
     String? description,
     ReportStatus? status,
-    DateTime? date,
+    DateTime? timestamp,
     List<String>? photoUrls,
     String? operatorId,
     String? repairDescription,
@@ -50,10 +61,12 @@ class Report {
     return Report(
       userId: userId ?? this.userId,
       buildingId: buildingId ?? this.buildingId,
+      buildingSpot: buildingSpot ?? this.buildingSpot,
+      priority: priority ?? this.priority,
       title: title ?? this.title,
       description: description ?? this.description,
       status: status ?? this.status,
-      date: date ?? this.date,
+      timestamp: timestamp ?? this.timestamp,
       photoUrls: photoUrls ?? this.photoUrls,
       operatorId: operatorId ?? this.operatorId,
       repairDescription: repairDescription ?? this.repairDescription,
@@ -65,10 +78,12 @@ class Report {
     return <String, dynamic>{
       'userId': userId,
       'buildingId': buildingId,
+      'buildingSpot': buildingSpot,
+      'priority': priority.name,
       'title': title,
       'description': description,
       'status': status.name,
-      'date': date.millisecondsSinceEpoch,
+      'timestamp': timestamp.millisecondsSinceEpoch,
       'photoUrls': photoUrls,
       'operatorId': operatorId,
       'repairDescription': repairDescription,
@@ -80,10 +95,12 @@ class Report {
     return Report(
       userId: map['userId'] as String,
       buildingId: map['buildingId'] as String,
+      buildingSpot: map['buildingSpot'] as String,
+      priority: PriorityLevel.values.byName(map['priority']),
       title: map['title'] as String,
       description: map['description'] as String,
       status: ReportStatus.values.byName(map['status']),
-      date: DateTime.fromMillisecondsSinceEpoch(map['date'] as int),
+      timestamp: DateTime.fromMillisecondsSinceEpoch(map['timestamp'] as int),
       photoUrls: List<String>.from((map['photoUrls'] as List<String>)),
       operatorId: map['operatorId'] as String,
       repairDescription: map['repairDescription'] as String,
@@ -98,7 +115,7 @@ class Report {
 
   @override
   String toString() {
-    return 'Report(userId: $userId, buildingId: $buildingId, title: $title, description: $description, status: $status, date: $date, photoUrls: $photoUrls, operatorId: $operatorId, repairDescription: $repairDescription, repairPhotosUrls: $repairPhotosUrls)';
+    return 'Report(userId: $userId, buildingId: $buildingId, buildingSpot: $buildingSpot, priority: $priority, title: $title, description: $description, status: $status, timestamp: $timestamp, photoUrls: $photoUrls, operatorId: $operatorId, repairDescription: $repairDescription, repairPhotosUrls: $repairPhotosUrls)';
   }
 
   @override
@@ -107,10 +124,12 @@ class Report {
 
     return other.userId == userId &&
         other.buildingId == buildingId &&
+        other.buildingSpot == buildingSpot &&
+        other.priority == priority &&
         other.title == title &&
         other.description == description &&
         other.status == status &&
-        other.date == date &&
+        other.timestamp == timestamp &&
         listEquals(other.photoUrls, photoUrls) &&
         other.operatorId == operatorId &&
         other.repairDescription == repairDescription &&
@@ -121,10 +140,12 @@ class Report {
   int get hashCode {
     return userId.hashCode ^
         buildingId.hashCode ^
+        buildingSpot.hashCode ^
+        priority.hashCode ^
         title.hashCode ^
         description.hashCode ^
         status.hashCode ^
-        date.hashCode ^
+        timestamp.hashCode ^
         photoUrls.hashCode ^
         operatorId.hashCode ^
         repairDescription.hashCode ^

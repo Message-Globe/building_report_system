@@ -31,7 +31,7 @@ class CombinedImageGallery extends StatelessWidget {
             canRemove: canEdit,
             onRemove: onRemoveRemote, // Passa il callback per rimuovere l'immagine remota
           ),
-        if (remoteImages.isNotEmpty && canEdit) const SizedBox(height: Sizes.p16),
+        if (remoteImages.isNotEmpty && canEdit) gapH16,
         if (canEdit)
           LocalImageGallery(
             imageFiles: localImages,

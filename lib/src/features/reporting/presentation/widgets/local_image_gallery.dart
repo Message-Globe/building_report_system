@@ -43,7 +43,7 @@ class _LocalImageGalleryState extends State<LocalImageGallery> {
         // Galleria di immagini locali in un wrap
         if (widget.imageFiles.isNotEmpty) ...[
           const Text("Local photos:"),
-          const SizedBox(height: Sizes.p4),
+          gapH4,
           Wrap(
             spacing: Sizes.p12,
             runSpacing: Sizes.p12,
@@ -87,7 +87,7 @@ class _LocalImageGalleryState extends State<LocalImageGallery> {
               },
             ).toList(),
           ),
-          const SizedBox(height: Sizes.p16),
+          gapH16,
         ],
 
         // Pulsante per aggiungere foto

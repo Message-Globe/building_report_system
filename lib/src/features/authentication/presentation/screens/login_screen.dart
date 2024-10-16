@@ -1,3 +1,5 @@
+import 'package:building_report_system/src/localization/string_hardcoded.dart';
+
 import '../../../../constants/app_sizes.dart';
 import '../../../../routing/app_router.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +17,11 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> with EmailPasswordValidators {
+  final _formKey = GlobalKey<FormState>();
+  final _node = FocusScopeNode();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+
   var _passwordVisible = false;
   var _submitted = false;
 
@@ -29,23 +34,31 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with EmailPasswordVal
 
   Future<void> _submit() async {
     setState(() => _submitted = true);
-    if (_validateForm()) {
+    // only submit the form if validation passes
+    if (_formKey.currentState!.validate()) {
       final controller = ref.read(loginScreenControllerProvider.notifier);
       final success = await controller.login(
         email: _emailController.text,
         password: _passwordController.text,
       );
       if (success) {
-        // Navigate to another screen on successful login
         ref.read(goRouterProvider).pushReplacementNamed(AppRoute.home.name);
       }
     }
   }
 
-  bool _validateForm() {
-    final emailValid = canSubmitEmail(_emailController.text);
-    final passwordValid = canSubmitPassword(_passwordController.text);
-    return emailValid && passwordValid;
+  void _emailEditingComplete() {
+    if (canSubmitEmail(_emailController.text)) {
+      _node.nextFocus();
+    }
+  }
+
+  void _passwordEditingComplete() {
+    if (!canSubmitPassword(_passwordController.text)) {
+      _node.previousFocus();
+      return;
+    }
+    _submit();
   }
 
   @override
@@ -60,46 +73,59 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with EmailPasswordVal
       appBar: AppBar(title: const Text('Login')),
       body: Padding(
         padding: const EdgeInsets.all(Sizes.p16),
-        child: Form(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextFormField(
-                controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  hintText: 'test@example.com',
-                  errorText: _submitted ? emailErrorText(_emailController.text) : null,
-                ),
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-              ),
-              const SizedBox(height: Sizes.p16),
-              TextFormField(
-                controller: _passwordController,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  errorText:
-                      _submitted ? passwordErrorText(_passwordController.text) : null,
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _passwordVisible ? Icons.visibility : Icons.visibility_off,
-                    ),
-                    onPressed: () => setState(() => _passwordVisible = !_passwordVisible),
+        child: FocusScope(
+          node: _node,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextFormField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    labelText: 'Email'.hardcoded,
+                    hintText: 'test@example.com'.hardcoded,
+                    enabled: !state.isLoading,
                   ),
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (email) => !_submitted ? null : emailErrorText(email ?? ''),
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  onEditingComplete: () => _emailEditingComplete(),
                 ),
-                obscureText: !_passwordVisible,
-                textInputAction: TextInputAction.done,
-                onEditingComplete: _submit,
-              ),
-              const SizedBox(height: Sizes.p16),
-              ElevatedButton(
-                onPressed: state.isLoading ? null : _submit,
-                child: state.isLoading
-                    ? const CircularProgressIndicator()
-                    : const Text('Login'),
-              ),
-            ],
+                gapH16,
+                TextFormField(
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    enabled: !state.isLoading,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () =>
+                          setState(() => _passwordVisible = !_passwordVisible),
+                    ),
+                  ),
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (password) => !_submitted
+                      ? null
+                      : passwordErrorText(
+                          password ?? '',
+                        ),
+                  obscureText: !_passwordVisible,
+                  textInputAction: TextInputAction.done,
+                  onEditingComplete: () => _passwordEditingComplete(),
+                ),
+                gapH16,
+                ElevatedButton(
+                  onPressed: state.isLoading ? null : _submit,
+                  child: state.isLoading
+                      ? const CircularProgressIndicator()
+                      : const Text('Login'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

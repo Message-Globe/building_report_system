@@ -65,7 +65,7 @@ class FakeReportsRepository implements ReportsRepository {
         .toList();
 
     // Ordina i report per data
-    filteredReports.sort((a, b) => a.date.compareTo(b.date));
+    filteredReports.sort((a, b) => a.timestamp.compareTo(b.timestamp));
 
     // Inverti l'ordine se necessario
     if (reverseOrder) {
@@ -92,7 +92,7 @@ class FakeReportsRepository implements ReportsRepository {
           .toList();
 
       // Ordina i report per data
-      filteredReports.sort((a, b) => a.date.compareTo(b.date));
+      filteredReports.sort((a, b) => a.timestamp.compareTo(b.timestamp));
 
       // Inverti l'ordine se necessario
       if (reverseOrder) {
@@ -107,6 +107,8 @@ class FakeReportsRepository implements ReportsRepository {
   Future<void> addReport({
     required String userId,
     required String buildingId,
+    required String buildingSpot,
+    required PriorityLevel priority,
     required String title,
     required String description,
     required List<String>? photoUrls,
@@ -116,10 +118,12 @@ class FakeReportsRepository implements ReportsRepository {
     final newReport = Report(
       userId: userId,
       buildingId: buildingId,
+      buildingSpot: buildingSpot,
+      priority: priority,
       title: title,
       description: description,
       status: ReportStatus.open,
-      date: DateTime.now(),
+      timestamp: DateTime.now(),
       photoUrls: photoUrls ?? [],
       operatorId: '',
       repairDescription: '',
@@ -147,28 +151,35 @@ class FakeReportsRepository implements ReportsRepository {
   Future<void> updateReport({
     required Report report,
     String? buildingId,
+    String? buildingSpot,
+    PriorityLevel? priority,
     String? title,
     String? description,
     ReportStatus? status,
     List<String>? photoUrls,
-    List<String>? repairPhotosUrls,
     String? operatorId,
     String? repairDescription,
+    List<String>? repairPhotosUrls,
   }) async {
     await delay(addDelay);
 
     final index = _reports.value.indexOf(report);
     if (index != -1) {
-      _reports.value[index] = report.copyWith(
+      final updatedReports = List<Report>.from(_reports.value);
+      updatedReports[index] = report.copyWith(
         buildingId: buildingId,
+        buildingSpot: buildingSpot,
+        priority: priority,
         title: title,
         description: description,
         status: status,
         photoUrls: photoUrls,
-        repairPhotosUrls: repairPhotosUrls,
         operatorId: operatorId,
         repairDescription: repairDescription,
+        repairPhotosUrls: repairPhotosUrls,
       );
+
+      _reports.value = updatedReports;
     }
   }
 
@@ -181,8 +192,8 @@ class FakeReportsRepository implements ReportsRepository {
     if (report.status != ReportStatus.open) {
       throw Exception("Report is already assigned.");
     }
-    // Assegna il report all'operatore
-    updateReport(
+
+    await updateReport(
       report: report,
       status: ReportStatus.assigned,
       operatorId: operatorId,
@@ -191,10 +202,12 @@ class FakeReportsRepository implements ReportsRepository {
 
   @override
   Future<void> unassignReportFromOperator(Report report) async {
+    // Assicura che il report sia attualmente assegnato
     if (report.status != ReportStatus.assigned) {
       throw Exception("Only assigned reports can be unassigned.");
     }
-    updateReport(
+
+    await updateReport(
       report: report,
       status: ReportStatus.open,
       operatorId: '',

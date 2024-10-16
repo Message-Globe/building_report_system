@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../routing/app_router.dart';
 import '../../../authentication/data/auth_repository.dart';
 import '../controllers/filters_controllers.dart';
-import 'building_filter_dropdown.dart';
+import 'building_selection_dropdown.dart';
 
 class FiltersButton extends ConsumerWidget {
   const FiltersButton({super.key});
@@ -65,7 +65,7 @@ class FiltersButton extends ConsumerWidget {
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      BuildingFilterDropdown(
+                      BuildingSelectionDropdown(
                         buildingIds: userProfile.buildingsIds,
                         selectedBuilding: tempSelectedBuilding,
                         onBuildingSelected: (newValue) {
@@ -73,6 +73,7 @@ class FiltersButton extends ConsumerWidget {
                             tempSelectedBuilding = newValue;
                           });
                         },
+                        showAllBuildings: true,
                       ),
                       // Checkbox per "Show completed Reports"
                       CheckboxListTile(

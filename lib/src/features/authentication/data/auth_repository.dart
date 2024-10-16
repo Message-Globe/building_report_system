@@ -11,19 +11,23 @@ abstract class AuthRepository {
   Stream<UserProfile?> get authStateChanges;
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 AuthRepository authRepository(AuthRepositoryRef ref) {
   return FakeAuthRepository(addDelay: true);
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Stream<UserProfile?> authState(AuthStateRef ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   return authRepository.authStateChanges;
 }
 
 @riverpod
-UserRole userRole(UserRoleRef ref) {
-  final userProfile = ref.watch(authStateProvider).asData!.value!;
+UserRole? userRole(UserRoleRef ref) {
+  final userProfile = ref.watch(authStateProvider).asData?.value;
+
+  if (userProfile == null) {
+    return null;
+  }
   return userProfile.role;
 }

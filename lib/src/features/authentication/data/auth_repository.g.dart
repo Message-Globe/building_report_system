@@ -6,11 +6,11 @@ part of 'auth_repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authRepositoryHash() => r'09a9e4bdf96a554ad29e4e52406124f2b1803966';
+String _$authRepositoryHash() => r'a35bc4e40c08f0229994588fe7fe3aa41cf07864';
 
 /// See also [authRepository].
 @ProviderFor(authRepository)
-final authRepositoryProvider = AutoDisposeProvider<AuthRepository>.internal(
+final authRepositoryProvider = Provider<AuthRepository>.internal(
   authRepository,
   name: r'authRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -20,12 +20,12 @@ final authRepositoryProvider = AutoDisposeProvider<AuthRepository>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef AuthRepositoryRef = AutoDisposeProviderRef<AuthRepository>;
-String _$authStateHash() => r'194b0028e49503367d533bf00551592181d1fb90';
+typedef AuthRepositoryRef = ProviderRef<AuthRepository>;
+String _$authStateHash() => r'5f2b8f8f1f3dc50949d4e72816d4a215ad55b1f3';
 
 /// See also [authState].
 @ProviderFor(authState)
-final authStateProvider = AutoDisposeStreamProvider<UserProfile?>.internal(
+final authStateProvider = StreamProvider<UserProfile?>.internal(
   authState,
   name: r'authStateProvider',
   debugGetCreateSourceHash:
@@ -34,12 +34,12 @@ final authStateProvider = AutoDisposeStreamProvider<UserProfile?>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef AuthStateRef = AutoDisposeStreamProviderRef<UserProfile?>;
-String _$userRoleHash() => r'dda5b6095590019b5919171fa5aca2c9094b243b';
+typedef AuthStateRef = StreamProviderRef<UserProfile?>;
+String _$userRoleHash() => r'5e0d9e2372f448eeb5c62df3b8ac602aa7b7991a';
 
 /// See also [userRole].
 @ProviderFor(userRole)
-final userRoleProvider = AutoDisposeProvider<UserRole>.internal(
+final userRoleProvider = AutoDisposeProvider<UserRole?>.internal(
   userRole,
   name: r'userRoleProvider',
   debugGetCreateSourceHash:
@@ -48,6 +48,6 @@ final userRoleProvider = AutoDisposeProvider<UserRole>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef UserRoleRef = AutoDisposeProviderRef<UserRole>;
+typedef UserRoleRef = AutoDisposeProviderRef<UserRole?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

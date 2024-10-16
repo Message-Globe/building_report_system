@@ -1,3 +1,4 @@
+import 'package:building_report_system/src/features/reporting/domain/report.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../authentication/data/auth_repository.dart';
@@ -12,27 +13,25 @@ class CreateReportScreenController extends _$CreateReportScreenController {
 
   Future<void> addReport({
     required String buildingId,
+    required String buildingSpot,
+    required PriorityLevel priority,
     required String title,
     required String description,
     required List<String> photoUrls,
   }) async {
     state = const AsyncValue.loading();
-
-    try {
-      final userProfile = ref.watch(authStateProvider).asData!.value!;
-      final reportsRepository = ref.read(reportsRepositoryProvider);
-
-      await reportsRepository.addReport(
+    final userProfile = ref.watch(authStateProvider).asData!.value!;
+    final reportsRepository = ref.read(reportsRepositoryProvider);
+    state = await AsyncValue.guard(
+      () => reportsRepository.addReport(
         userId: userProfile.appUser.uid,
         buildingId: buildingId,
+        buildingSpot: buildingSpot,
+        priority: priority,
         title: title,
         description: description,
         photoUrls: photoUrls,
-      );
-
-      state = const AsyncValue.data(null);
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-    }
+      ),
+    );
   }
 }

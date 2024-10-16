@@ -1,10 +1,15 @@
+import 'package:building_report_system/src/features/reporting/presentation/controllers/edit_report_screen_controller.dart';
+import 'package:building_report_system/src/features/reporting/presentation/widgets/building_selection_dropdown.dart';
+import 'package:building_report_system/src/features/reporting/presentation/widgets/complete_report_tile.dart';
+import 'package:building_report_system/src/features/reporting/presentation/widgets/custom_text_field.dart';
+import 'package:building_report_system/src/features/reporting/presentation/widgets/date_display.dart';
+import 'package:building_report_system/src/features/reporting/presentation/widgets/priority_selection_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:io';
 import '../../../../constants/app_sizes.dart';
-import '../../../authentication/data/auth_repository.dart';
 import '../../../../routing/app_router.dart';
-import '../../../../utils/date_formatter.dart';
+import '../../../authentication/data/auth_repository.dart';
 import '../../../authentication/domain/user_profile.dart';
 import '../../domain/report.dart';
 import '../widgets/combined_image_gallery.dart';
@@ -21,220 +26,220 @@ class EditReportScreen extends ConsumerStatefulWidget {
 class _EditReportScreenState extends ConsumerState<EditReportScreen> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _buildingSpotController = TextEditingController();
+  late String _selectedBuilding;
+  PriorityLevel _selectedPriority = PriorityLevel.normal;
   final List<File> _localImages = [];
   final List<String> _remoteImages = [];
   final _repairDescriptionController = TextEditingController();
   final List<File> _repairLocalImages = [];
   final List<String> _repairRemoteImages = [];
 
-  late ReportStatus _reportStatus;
-
   @override
   void initState() {
     super.initState();
     _titleController.text = widget.report.title;
     _descriptionController.text = widget.report.description;
+    _buildingSpotController.text = widget.report.buildingSpot;
+    _selectedBuilding = widget.report.buildingId;
+    _selectedPriority = widget.report.priority;
     _remoteImages.addAll(widget.report.photoUrls);
     _repairDescriptionController.text = widget.report.repairDescription;
     _repairRemoteImages.addAll(widget.report.repairPhotosUrls);
-    _reportStatus = widget.report.status; // Imposta lo stato iniziale del report
   }
 
   @override
   void dispose() {
     _titleController.dispose();
     _descriptionController.dispose();
+    _buildingSpotController.dispose(); // Disposizione del controller aggiunto
     _repairDescriptionController.dispose();
     super.dispose();
   }
 
-  // Invio del report modificato (converti nuovamente i file in URL)
-  void _submitReport() async {
+  void _updateReport() async {
     final title = _titleController.text;
     final description = _descriptionController.text;
+    final buildingSpot = _buildingSpotController.text;
 
-    if (title.isEmpty || description.isEmpty) {
+    if (title.isEmpty || description.isEmpty || buildingSpot.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please complete all fields'),
-        ),
+        const SnackBar(content: Text('Please complete all fields')),
       );
       return;
     }
 
-    // TODO: Logica per caricare le immagini su un server e ottenere gli URL
+    await ref.read(editReportScreenControllerProvider.notifier).updateReport(
+          report: widget.report,
+          title: title,
+          description: description,
+          buildingSpot: buildingSpot,
+          priority: _selectedPriority,
+          photoUrls: _remoteImages,
+        );
 
     ref.read(goRouterProvider).pop();
   }
 
-  void _completeReport() {
+  Future<bool> _completeReport() async {
     final repairDescription = _repairDescriptionController.text;
     if (repairDescription.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please provide repair details'),
-        ),
+        const SnackBar(content: Text('Please provide repair details')),
       );
-      return;
+      return Future.value(false);
     }
-    // TODO: Logica per completare il report e inviare le nuove immagini
-    ref.read(goRouterProvider).pop();
-  }
 
-  void _updateReportStatus(ReportStatus newStatus) {
-    setState(() {
-      _reportStatus = newStatus;
-    });
+    await ref.read(editReportScreenControllerProvider.notifier).completeReport(
+          report: widget.report,
+          repairDescription: repairDescription,
+          repairPhotosUrls: _repairRemoteImages,
+        );
+
+    ref.read(goRouterProvider).pop();
+    return Future.value(true);
   }
 
   @override
   Widget build(BuildContext context) {
     final userProfile = ref.watch(authStateProvider).asData!.value!;
-    final dateFormatter = ref.read(dateFormatterProvider);
     final isReporter = userProfile.role == UserRole.reporter;
     final isOperator = userProfile.role == UserRole.operator;
     final reportEditable = widget.report.status == ReportStatus.open;
+    final isLoading = ref.watch(editReportScreenControllerProvider).isLoading;
+    final isAssignedToMe = widget.report.operatorId == userProfile.appUser.uid &&
+        widget.report.status == ReportStatus.assigned;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Edit Report'),
-        actions: [
-          if (isOperator)
-            IconButton(icon: const Icon(Icons.check), onPressed: _completeReport),
-          if (isReporter && reportEditable)
-            IconButton(icon: const Icon(Icons.save), onPressed: _submitReport),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(Sizes.p16),
-        child: ListView(
-          children: [
-            // Titolo
-            if (isReporter && reportEditable)
-              TextField(
-                controller: _titleController,
-                decoration: const InputDecoration(
-                  labelText: 'Report Title',
-                  border: OutlineInputBorder(),
+    return Stack(
+      children: <Widget>[
+        Scaffold(
+          appBar: AppBar(
+            title: const Text('Edit Report'),
+            actions: <Widget>[
+              if (isReporter && reportEditable)
+                IconButton(
+                  icon: const Icon(Icons.save),
+                  onPressed: _updateReport,
                 ),
-              )
-            else
-              Text('Title: ${widget.report.title}'),
-            const SizedBox(height: Sizes.p16),
-
-            // Data
-            Text(
-              'Date: ${dateFormatter.format(widget.report.date)}',
-              style: const TextStyle(fontSize: Sizes.p16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: Sizes.p16),
-
-            // Descrizione
-            if (isReporter && reportEditable)
-              TextField(
-                controller: _descriptionController,
-                maxLines: 3,
-                decoration: const InputDecoration(
-                  labelText: 'Description',
-                  border: OutlineInputBorder(),
-                ),
-              )
-            else
-              Text('Description: ${widget.report.description}'),
-            const SizedBox(height: Sizes.p16),
-
-            // Galleria combinata (locali e remote)
-            CombinedImageGallery(
-              localImages: _localImages,
-              remoteImages: _remoteImages,
-              canEdit: isReporter,
-              onRemoveLocal: (file) {
-                setState(() {
-                  _localImages.remove(file); // Rimuovi immagine locale
-                });
-              },
-              onRemoveRemote: (url) {
-                setState(() {
-                  _remoteImages.remove(url); // Rimuovi immagine remota
-                });
-              },
-            ),
-
-            if (isOperator) ...[
-              const SizedBox(height: Sizes.p8),
-              const Divider(),
-              const SizedBox(height: Sizes.p8),
             ],
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(Sizes.p16),
+            child: ListView(
+              children: <Widget>[
+                // Titolo
+                if (isReporter && reportEditable)
+                  CustomTextField(controller: _titleController, labelText: 'Report Title')
+                else
+                  Text('Title: ${widget.report.title}'),
+                gapH16,
 
-            // Descrizione dei lavori (solo per operator)
-            if (isOperator) ...[
-              TextField(
-                controller: _repairDescriptionController,
-                maxLines: 3,
-                decoration: const InputDecoration(
-                  labelText: 'Repair Description',
-                  border: OutlineInputBorder(),
+                // Data
+                DateDisplay(date: DateTime.now()),
+                gapH16,
+
+                // Descrizione
+                if (isReporter && reportEditable)
+                  CustomTextField(
+                    controller: _descriptionController,
+                    labelText: 'Description',
+                    maxLines: 3,
+                  )
+                else
+                  Text('Description: ${widget.report.description}'),
+                gapH16,
+
+                if (isReporter && reportEditable)
+                  BuildingSelectionDropdown(
+                    buildingIds: userProfile.buildingsIds,
+                    selectedBuilding: _selectedBuilding,
+                    onBuildingSelected: (newBuilding) {
+                      if (newBuilding != null) {
+                        setState(() => _selectedBuilding = newBuilding);
+                      }
+                    },
+                  )
+                else
+                  Text('Building: ${widget.report.buildingId}'),
+                gapH16,
+
+                // Building Spot (solo per reporter e se modificabile)
+                if (isReporter && reportEditable)
+                  CustomTextField(
+                    controller: _buildingSpotController,
+                    labelText: 'Building Spot',
+                  )
+                else
+                  Text('Building Spot: ${widget.report.buildingSpot}'),
+                gapH16,
+
+                // Priority Level (Dropdown)
+                if (isReporter && reportEditable)
+                  PrioritySelectionDropdown(
+                    selectedPriority: _selectedPriority,
+                    onPrioritySelected: (PriorityLevel? newPriority) {
+                      if (newPriority != null) {
+                        setState(() => _selectedPriority = newPriority);
+                      }
+                    },
+                  )
+                else
+                  Text('Priority: ${widget.report.priority.name}'),
+                gapH16,
+
+                // Galleria combinata (locali e remote)
+                CombinedImageGallery(
+                  localImages: _localImages,
+                  remoteImages: _remoteImages,
+                  canEdit: isReporter && reportEditable,
+                  onRemoveLocal: (file) => setState(() => _localImages.remove(file)),
+                  onRemoveRemote: (url) => setState(() => _remoteImages.remove(url)),
                 ),
-              ),
-              const SizedBox(height: Sizes.p16),
-              CombinedImageGallery(
-                localImages: _repairLocalImages,
-                remoteImages: _repairRemoteImages,
-                canEdit: isOperator,
-                onRemoveLocal: (file) {
-                  setState(() {
-                    _repairLocalImages.remove(file);
-                  });
-                },
-                onRemoveRemote: (url) {
-                  setState(() {
-                    _repairRemoteImages.remove(url);
-                  });
-                },
-              ),
-            ],
 
-            const SizedBox(height: Sizes.p16),
-
-            // Dismissible widget to change the report status from assigned to completed
-            if (isOperator && _reportStatus == ReportStatus.assigned) ...[
-              const SizedBox(height: Sizes.p8),
-              const Text('Swipe to complete report:'),
-              const SizedBox(height: Sizes.p8),
-              Dismissible(
-                key: const Key('reportStatusDismissible'),
-                direction: DismissDirection.startToEnd,
-                background: Container(
-                  color: Colors.green,
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: const Icon(Icons.check, color: Colors.white),
-                ),
-                onDismissed: (direction) {
-                  // Cambia lo stato del report a completed
-                  _updateReportStatus(ReportStatus.completed);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Report status updated to Completed'),
+                // Descrizione dei lavori (solo per operator)
+                if (isOperator) ...<Widget>[
+                  gapH8,
+                  const Divider(),
+                  gapH8,
+                  if (isAssignedToMe)
+                    CustomTextField(
+                      controller: _repairDescriptionController,
+                      labelText: 'Repair Description',
+                      maxLines: 3,
+                    )
+                  else
+                    Text(widget.report.repairDescription),
+                  gapH16,
+                  CombinedImageGallery(
+                    localImages: _repairLocalImages,
+                    remoteImages: _repairRemoteImages,
+                    canEdit: isAssignedToMe,
+                    onRemoveLocal: (file) =>
+                        setState(() => _repairLocalImages.remove(file)),
+                    onRemoveRemote: (url) =>
+                        setState(() => _repairRemoteImages.remove(url)),
+                  ),
+                  gapH16,
+                  if (isAssignedToMe)
+                    CompleteReportTile(
+                      onComplete: _completeReport,
+                      isAssignedToMe: isAssignedToMe,
                     ),
-                  );
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(Sizes.p16),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(Sizes.p8),
-                  ),
-                  child: const Text(
-                    'Swipe right to mark as Completed',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
-              ),
-            ],
-          ],
+                ],
+              ],
+            ),
+          ),
         ),
-      ),
+        if (isLoading) ...<Widget>[
+          ModalBarrier(
+            color: Colors.black.withOpacity(0.5),
+            dismissible: false, // Impedisce di interagire con la schermata sotto
+          ),
+          const Center(
+            child: CircularProgressIndicator(),
+          ),
+        ],
+      ],
     );
   }
 }

@@ -7,7 +7,7 @@ part of 'create_report_screen_controller.dart';
 // **************************************************************************
 
 String _$createReportScreenControllerHash() =>
-    r'74545f9ae6520d7982c50794ece61a50e0075058';
+    r'9c35d6acd37cffca7a4c1bc2b1a892d2395e539b';
 
 /// See also [CreateReportScreenController].
 @ProviderFor(CreateReportScreenController)

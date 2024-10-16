@@ -23,7 +23,7 @@ class RemoteImageGallery extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text("Remote photos:"),
-        const SizedBox(height: Sizes.p4),
+        gapH4,
         Wrap(
           spacing: Sizes.p12,
           runSpacing: Sizes.p12,

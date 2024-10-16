@@ -3,6 +3,7 @@ import '../domain/report.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../authentication/data/auth_repository.dart';
+import '../presentation/controllers/filters_controllers.dart';
 import 'fake_reports_repository.dart';
 
 part 'reports_repository.g.dart';
@@ -29,6 +30,8 @@ abstract class ReportsRepository {
   Future<void> addReport({
     required String userId,
     required String buildingId,
+    required String buildingSpot,
+    required PriorityLevel priority,
     required String title,
     required String description,
     required List<String>? photoUrls,
@@ -38,10 +41,16 @@ abstract class ReportsRepository {
 
   Future<void> updateReport({
     required Report report,
+    String? buildingId,
+    String? buildingSpot,
+    PriorityLevel? priority,
     String? title,
     String? description,
     ReportStatus? status,
     List<String>? photoUrls,
+    String? operatorId,
+    String? repairDescription,
+    List<String>? repairPhotosUrls,
   });
 
   Future<void> assignReportToOperator({
@@ -54,60 +63,45 @@ abstract class ReportsRepository {
   Future<void> completeReport(Report report);
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 ReportsRepository reportsRepository(ReportsRepositoryRef ref) {
   return FakeReportsRepository();
 }
 
 @riverpod
-Future<List<Report>> reportsListFuture(
-  ReportsListFutureRef ref, {
-  bool showCompleted = false,
-  bool showDeleted = false,
-  bool reverseOrder = false,
-  String? buildingId,
-}) {
+Future<List<Report>> reportsListFuture(ReportsListFutureRef ref) {
   final reportsRepository = ref.watch(reportsRepositoryProvider);
   final userProfile = ref.watch(authStateProvider).asData!.value!;
+
+  final showCompleted = ref.watch(showworkedFilterProvider);
+  final showDeleted = ref.watch(showDeletedFilterProvider);
+  final reverseOrder = ref.watch(reverseOrderFilterProvider);
+  final selectedBuilding = ref.watch(selectedBuildingFilterProvider);
 
   return reportsRepository.fetchReportsList(
     showCompleted: showCompleted,
     showDeleted: showDeleted,
     reverseOrder: reverseOrder,
     userProfile: userProfile,
-    buildingId: buildingId,
+    buildingId: selectedBuilding,
   );
 }
 
 @riverpod
-Stream<List<Report>> reportsListStream(
-  ReportsListStreamRef ref, {
-  bool showCompleted = false,
-  bool showDeleted = false,
-  bool reverseOrder = false,
-  String? buildingId,
-}) {
+Stream<List<Report>> reportsListStream(ReportsListStreamRef ref) {
   final reportsRepository = ref.watch(reportsRepositoryProvider);
   final userProfile = ref.watch(authStateProvider).asData!.value!;
+
+  final showCompleted = ref.watch(showworkedFilterProvider);
+  final showDeleted = ref.watch(showDeletedFilterProvider);
+  final reverseOrder = ref.watch(reverseOrderFilterProvider);
+  final selectedBuilding = ref.watch(selectedBuildingFilterProvider);
 
   return reportsRepository.watchReportsList(
     showCompleted: showCompleted,
     showDeleted: showDeleted,
     reverseOrder: reverseOrder,
     userProfile: userProfile,
-    buildingId: buildingId,
+    buildingId: selectedBuilding,
   );
-}
-
-@riverpod
-Future<int> openReportsCount(OpenReportsCountRef ref) async {
-  final reports = await ref.watch(
-    reportsListFutureProvider(
-      showCompleted: false,
-      showDeleted: false,
-      reverseOrder: false,
-    ).future,
-  );
-
-  return reports.where((report) => report.status == ReportStatus.open).length;
 }

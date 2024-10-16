@@ -62,20 +62,18 @@ GoRouter goRouter(GoRouterRef ref) {
               final report = state.extra as Report;
               return EditReportScreen(report: report);
             },
-            routes: [
-              GoRoute(
-                path: "photo-gallery",
-                name: AppRoute.photoGallery.name,
-                builder: (context, state) {
-                  final args = state.extra as PhotoViewGalleryArgs;
-                  return PhotoViewGalleryScreen(
-                    imageUrls: args.imageUrls,
-                    imageFiles: args.imageFiles,
-                    initialIndex: args.initialIndex,
-                  );
-                },
-              ),
-            ],
+          ),
+          GoRoute(
+            path: "photo-gallery",
+            name: AppRoute.photoGallery.name,
+            builder: (context, state) {
+              final args = state.extra as PhotoViewGalleryArgs;
+              return PhotoViewGalleryScreen(
+                imageUrls: args.imageUrls,
+                imageFiles: args.imageFiles,
+                initialIndex: args.initialIndex,
+              );
+            },
           ),
           // GoRoute(
           //   path: "profile",

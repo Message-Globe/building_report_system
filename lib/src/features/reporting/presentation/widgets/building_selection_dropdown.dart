@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-class BuildingFilterDropdown extends StatelessWidget {
+class BuildingSelectionDropdown extends StatelessWidget {
   final List<String> buildingIds;
   final String? selectedBuilding;
   final Function(String?) onBuildingSelected;
   final bool showAllBuildings;
 
-  const BuildingFilterDropdown({
+  const BuildingSelectionDropdown({
     super.key,
     required this.buildingIds,
     required this.selectedBuilding,
     required this.onBuildingSelected,
-    this.showAllBuildings = true,
+    this.showAllBuildings = false,
   });
 
   @override

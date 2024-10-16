@@ -15,52 +15,59 @@ class FakeReportsRepository implements ReportsRepository {
   @override
   Stream<List<Report>> get reportsStream => _reports.stream;
 
+  // Metodo per filtrare i report in base al ruolo dell'utente
+  bool _filterByUserRole(Report report, UserProfile userProfile) {
+    if (userProfile.role == UserRole.reporter) {
+      return report.userId == userProfile.appUser.uid;
+    } else if (userProfile.role == UserRole.operator) {
+      return userProfile.buildingsIds.contains(report.buildingId);
+    }
+    // Se è un admin, mostra tutti i report
+    return true;
+  }
+
+// Metodo per filtrare i report in base all'edificio
+  bool _filterByBuilding(Report report, String? buildingId) {
+    if (buildingId != null) {
+      return report.buildingId == buildingId;
+    }
+    // Se nessun edificio specifico è selezionato, mostra tutti i report
+    return true;
+  }
+
+// Metodo per filtrare i report in base allo stato
+  bool _filterByStatus(Report report, bool showCompleted, bool showDeleted) {
+    if (report.status == ReportStatus.open || report.status == ReportStatus.assigned) {
+      return true; // Mostra sempre report attivi e assegnati
+    } else if (report.status == ReportStatus.completed) {
+      return showCompleted; // Mostra solo se showCompleted è abilitato
+    } else if (report.status == ReportStatus.deleted) {
+      return showDeleted; // Mostra solo se showDeleted è abilitato
+    }
+    return false;
+  }
+
   @override
   Future<List<Report>> fetchReportsList({
     required UserProfile userProfile,
     required bool showCompleted,
     required bool showDeleted,
     required bool reverseOrder,
-    // TODO: make buildingIds, so that I can have multiple buildingId to filter
     String? buildingId,
   }) async {
     await delay(addDelay);
 
-    // Filtro per ruolo dell'utente
-    List<Report> filteredReports = _reports.value.where((report) {
-      if (userProfile.role == UserRole.reporter) {
-        // Se l'utente è un reporter, mostra solo i suoi report
-        if (report.userId != userProfile.appUser.uid) {
-          return false;
-        }
-      } else if (userProfile.role == UserRole.operator) {
-        // Se è un operatore, mostra solo i report degli edifici assegnati
-        if (!userProfile.buildingsIds.contains(report.buildingId)) {
-          return false;
-        }
-      }
-      // Se è un admin, non facciamo alcun filtro sull'utente o sugli edifici (vedrà tutto)
+    // Filtra i report
+    List<Report> filteredReports = _reports.value
+        .where((report) => _filterByUserRole(report, userProfile))
+        .where((report) => _filterByBuilding(report, buildingId))
+        .where((report) => _filterByStatus(report, showCompleted, showDeleted))
+        .toList();
 
-      // Filtro per edificio (se selezionato un edificio specifico)
-      if (buildingId != null && report.buildingId != buildingId) {
-        return false;
-      }
-
-      // Filtro per status
-      if (report.status == ReportStatus.open) {
-        return true; // Mostra sempre report attivi
-      } else if (report.status == ReportStatus.completed && showCompleted) {
-        return true; // Mostra report completati se il filtro è abilitato
-      } else if (report.status == ReportStatus.deleted && showDeleted) {
-        return true; // Mostra report eliminati se il filtro è abilitato
-      }
-      return false;
-    }).toList();
-
-    // Ordina i report per data (i più recenti prima, per default)
+    // Ordina i report per data
     filteredReports.sort((a, b) => a.date.compareTo(b.date));
 
-    // Se reverseOrder è true, inverti l'ordine della lista
+    // Inverti l'ordine se necessario
     if (reverseOrder) {
       filteredReports = filteredReports.reversed.toList();
     }
@@ -77,32 +84,19 @@ class FakeReportsRepository implements ReportsRepository {
     String? buildingId,
   }) {
     return reportsStream.map((reports) {
-      List<Report> filteredReports = reports.where((report) {
-        if (userProfile.role == UserRole.reporter) {
-          if (report.userId != userProfile.appUser.uid) return false;
-        } else if (userProfile.role == UserRole.operator) {
-          if (!userProfile.buildingsIds.contains(report.buildingId)) return false;
-        }
-
-        // Filtro per edificio
-        if (buildingId != null && report.buildingId != buildingId) return false;
-
-        // Filtro per stato
-        if (report.status == ReportStatus.open ||
-            report.status == ReportStatus.assigned) {
-          return true;
-        }
-        if (report.status == ReportStatus.completed && showCompleted) return true;
-        if (report.status == ReportStatus.deleted && showDeleted) return true;
-
-        return false;
-      }).toList();
+      // Filtra i report
+      List<Report> filteredReports = _reports.value
+          .where((report) => _filterByUserRole(report, userProfile))
+          .where((report) => _filterByBuilding(report, buildingId))
+          .where((report) => _filterByStatus(report, showCompleted, showDeleted))
+          .toList();
 
       // Ordina i report per data
+      filteredReports.sort((a, b) => a.date.compareTo(b.date));
+
+      // Inverti l'ordine se necessario
       if (reverseOrder) {
-        filteredReports.sort((a, b) => b.date.compareTo(a.date));
-      } else {
-        filteredReports.sort((a, b) => a.date.compareTo(b.date));
+        filteredReports = filteredReports.reversed.toList();
       }
 
       return filteredReports;

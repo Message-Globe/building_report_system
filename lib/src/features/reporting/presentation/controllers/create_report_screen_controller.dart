@@ -1,4 +1,4 @@
-import 'package:building_report_system/src/features/reporting/domain/report.dart';
+import '../../domain/report.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../authentication/data/auth_repository.dart';
@@ -20,7 +20,7 @@ class CreateReportScreenController extends _$CreateReportScreenController {
     required List<String> photoUrls,
   }) async {
     state = const AsyncValue.loading();
-    final userProfile = ref.watch(authStateProvider).asData!.value!;
+    final userProfile = ref.watch(authRepositoryProvider).currentUser!;
     final reportsRepository = ref.read(reportsRepositoryProvider);
     state = await AsyncValue.guard(
       () => reportsRepository.addReport(

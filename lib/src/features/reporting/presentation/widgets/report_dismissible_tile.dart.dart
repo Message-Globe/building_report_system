@@ -1,4 +1,4 @@
-import 'package:building_report_system/src/features/reporting/presentation/widgets/report_tile.dart';
+import 'report_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../constants/app_sizes.dart';
@@ -9,12 +9,12 @@ import '../../../../common_widgets/alert_dialogs.dart'; // Importa la tua funzio
 
 class ReportDismissibleTile extends ConsumerWidget {
   final Report report;
-  final UserRole? userRole;
+  final UserProfile userProfile;
 
   const ReportDismissibleTile({
     super.key,
     required this.report,
-    required this.userRole,
+    required this.userProfile,
   });
 
   Future<bool> _handleDismissAction(
@@ -22,6 +22,7 @@ class ReportDismissibleTile extends ConsumerWidget {
     WidgetRef ref,
     Report report,
   ) async {
+    final userRole = userProfile.role;
     if (userRole == UserRole.reporter) {
       final confirm = await showAlertDialog(
         context: context,
@@ -75,14 +76,17 @@ class ReportDismissibleTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final userRole = userProfile.role;
     final isLoading = ref.watch(reportDismissibleTileControllerProvider).isLoading;
+    final canAssignReport = userRole == UserRole.operator &&
+        report.status != ReportStatus.completed &&
+        report.status != ReportStatus.deleted &&
+        (report.operatorId == '' || report.operatorId == userProfile.appUser.uid);
 
     return Dismissible(
       key: ValueKey(report),
       direction: (userRole == UserRole.reporter && report.status == ReportStatus.open) ||
-              (userRole == UserRole.operator &&
-                  report.status != ReportStatus.completed &&
-                  report.status != ReportStatus.deleted)
+              canAssignReport
           ? DismissDirection.endToStart
           : DismissDirection.none,
       background: Stack(

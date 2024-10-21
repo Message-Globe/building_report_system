@@ -71,7 +71,7 @@ ReportsRepository reportsRepository(ReportsRepositoryRef ref) {
 @riverpod
 Future<List<Report>> reportsListFuture(ReportsListFutureRef ref) {
   final reportsRepository = ref.watch(reportsRepositoryProvider);
-  final userProfile = ref.watch(authStateProvider).asData!.value!;
+  final userProfile = ref.watch(authRepositoryProvider).currentUser!;
 
   final showCompleted = ref.watch(showworkedFilterProvider);
   final showDeleted = ref.watch(showDeletedFilterProvider);
@@ -90,7 +90,12 @@ Future<List<Report>> reportsListFuture(ReportsListFutureRef ref) {
 @riverpod
 Stream<List<Report>> reportsListStream(ReportsListStreamRef ref) {
   final reportsRepository = ref.watch(reportsRepositoryProvider);
-  final userProfile = ref.watch(authStateProvider).asData!.value!;
+  final userProfile = ref.watch(authRepositoryProvider).currentUser;
+
+  if (userProfile == null) {
+    // Gestisci un caso in cui `userProfile` è null per evitare il null check error
+    throw Exception("User profile not available");
+  }
 
   final showCompleted = ref.watch(showworkedFilterProvider);
   final showDeleted = ref.watch(showDeletedFilterProvider);

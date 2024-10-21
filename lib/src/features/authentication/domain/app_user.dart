@@ -1,13 +1,14 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 class AppUser {
   const AppUser({
     required this.uid,
-    this.email,
+    required this.email,
   });
 
   final String uid;
-  final String? email;
+  final String email;
 
   AppUser copyWith({
     String? uid,
@@ -29,7 +30,7 @@ class AppUser {
   factory AppUser.fromMap(Map<String, dynamic> map) {
     return AppUser(
       uid: map['uid'] as String,
-      email: map['email'] != null ? map['email'] as String : null,
+      email: map['email'] as String,
     );
   }
 

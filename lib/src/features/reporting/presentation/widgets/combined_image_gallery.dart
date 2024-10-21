@@ -1,10 +1,13 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
+
+import '../../../../constants/app_sizes.dart';
 import '../widgets/local_image_gallery.dart';
 import '../widgets/remote_image_gallery.dart';
-import '../../../../constants/app_sizes.dart';
 
 class CombinedImageGallery extends StatelessWidget {
+  final bool isOperator;
   final List<File> localImages;
   final List<String> remoteImages;
   final bool canEdit;
@@ -12,6 +15,7 @@ class CombinedImageGallery extends StatelessWidget {
   final void Function(String) onRemoveRemote;
 
   const CombinedImageGallery({
+    required this.isOperator,
     required this.localImages,
     required this.remoteImages,
     required this.canEdit,
@@ -27,6 +31,7 @@ class CombinedImageGallery extends StatelessWidget {
       children: [
         if (remoteImages.isNotEmpty)
           RemoteImageGallery(
+            isOperator: isOperator,
             imageUrls: remoteImages,
             canRemove: canEdit,
             onRemove: onRemoveRemote, // Passa il callback per rimuovere l'immagine remota
@@ -34,6 +39,7 @@ class CombinedImageGallery extends StatelessWidget {
         if (remoteImages.isNotEmpty && canEdit) gapH16,
         if (canEdit)
           LocalImageGallery(
+            isOperator: isOperator,
             imageFiles: localImages,
             canRemove: canEdit,
             onRemove: onRemoveLocal, // Passa il callback per rimuovere l'immagine locale

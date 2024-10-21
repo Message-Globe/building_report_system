@@ -21,7 +21,7 @@ final reportsRepositoryProvider = Provider<ReportsRepository>.internal(
 );
 
 typedef ReportsRepositoryRef = ProviderRef<ReportsRepository>;
-String _$reportsListFutureHash() => r'a7e8318984dc7536945e67ecdb036fdada78ebfe';
+String _$reportsListFutureHash() => r'0bb34171bcfb6a8e29e3aaa45623cb596a9ff964';
 
 /// See also [reportsListFuture].
 @ProviderFor(reportsListFuture)
@@ -37,7 +37,7 @@ final reportsListFutureProvider =
 );
 
 typedef ReportsListFutureRef = AutoDisposeFutureProviderRef<List<Report>>;
-String _$reportsListStreamHash() => r'bc2108ebc943a2a968301612e45f3667272b9eb5';
+String _$reportsListStreamHash() => r'2ab10ba28a0aefe57a23471360d6a17d20b6f6d2';
 
 /// See also [reportsListStream].
 @ProviderFor(reportsListStream)

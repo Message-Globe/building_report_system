@@ -23,15 +23,18 @@ enum AppRoute {
 
 @riverpod
 GoRouter goRouter(GoRouterRef ref) {
-  final authState = ref.watch(authStateProvider);
+  final authRepository = ref.watch(authRepositoryProvider);
 
   return GoRouter(
     initialLocation: "/",
     debugLogDiagnostics: true,
+    refreshListenable: authRepository,
     redirect: (context, state) {
-      final user = authState.asData?.value;
+      final user = authRepository.currentUser;
       final isLoggedIn = user != null;
       final path = state.uri.path;
+
+      // Logica di redirect per gestire il login/logout
       if (isLoggedIn) {
         if (path == '/login') {
           return '/';
@@ -58,7 +61,6 @@ GoRouter goRouter(GoRouterRef ref) {
             path: "edit-report",
             name: AppRoute.editReport.name,
             builder: (context, state) {
-              // final report = Report.fromJson(state.pathParameters['report']!);
               final report = state.extra as Report;
               return EditReportScreen(report: report);
             },
@@ -75,11 +77,6 @@ GoRouter goRouter(GoRouterRef ref) {
               );
             },
           ),
-          // GoRoute(
-          //   path: "profile",
-          //   name: AppRoute.profile.name,
-          //   builder: (context, state) => const ProfileScreen(),
-          // ),
         ],
       ),
       GoRoute(

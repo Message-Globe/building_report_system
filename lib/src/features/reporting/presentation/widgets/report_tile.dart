@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../constants/app_sizes.dart';
 import '../../../../routing/app_router.dart';
@@ -24,10 +25,10 @@ class ReportTile extends ConsumerWidget {
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(Sizes.p12),
-        onTap: () => ref.read(goRouterProvider).pushNamed(
-              AppRoute.editReport.name,
-              extra: report,
-            ),
+        onTap: () => context.goNamed(
+          AppRoute.editReport.name,
+          extra: report,
+        ),
         child: ListTile(
           leading: ReportStatusIcon(status: report.status),
           title: Text(

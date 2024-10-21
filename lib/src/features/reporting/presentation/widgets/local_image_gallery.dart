@@ -1,17 +1,20 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart'; // Importa ImagePicker per scattare foto
 import '../../../../constants/app_sizes.dart';
 import '../../../../routing/app_router.dart';
 import '../screens/photo_view_gallery_screen.dart';
 
 class LocalImageGallery extends StatefulWidget {
+  final bool isOperator;
   final List<File> imageFiles;
   final bool canRemove;
   final void Function(File) onRemove; // Funzione per rimuovere l'immagine locale
 
   const LocalImageGallery({
+    required this.isOperator,
     required this.imageFiles,
     required this.canRemove,
     required this.onRemove,
@@ -42,7 +45,7 @@ class _LocalImageGalleryState extends State<LocalImageGallery> {
       children: <Widget>[
         // Galleria di immagini locali in un wrap
         if (widget.imageFiles.isNotEmpty) ...[
-          const Text("Local photos:"),
+          Text("Local ${widget.isOperator ? 'repair ' : ''}photos:"),
           gapH4,
           Wrap(
             spacing: Sizes.p12,
@@ -56,13 +59,13 @@ class _LocalImageGalleryState extends State<LocalImageGallery> {
                         return GestureDetector(
                           onTap: () {
                             debugPrint(widget.imageFiles.length.toString());
-                            ref.read(goRouterProvider).pushNamed(
-                                  AppRoute.photoGallery.name,
-                                  extra: PhotoViewGalleryArgs(
-                                    imageFiles: widget.imageFiles,
-                                    initialIndex: widget.imageFiles.indexOf(file),
-                                  ),
-                                );
+                            context.goNamed(
+                              AppRoute.photoGallery.name,
+                              extra: PhotoViewGalleryArgs(
+                                imageFiles: widget.imageFiles,
+                                initialIndex: widget.imageFiles.indexOf(file),
+                              ),
+                            );
                           },
                           child: Image.file(
                             file,

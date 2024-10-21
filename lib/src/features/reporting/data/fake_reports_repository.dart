@@ -134,20 +134,6 @@ class FakeReportsRepository implements ReportsRepository {
   }
 
   @override
-  Future<void> deleteReport(Report report) async {
-    if (report.status != ReportStatus.open) {
-      throw Exception("Only unassigned reports can be deleted.");
-    }
-    await delay(addDelay);
-
-    final index = _reports.value.indexOf(report);
-    if (index != -1) {
-      // Invece di rimuovere fisicamente il report, lo marchiamo come "deleted"
-      _reports.value[index] = report.copyWith(status: ReportStatus.deleted);
-    }
-  }
-
-  @override
   Future<void> updateReport({
     required Report report,
     String? buildingId,
@@ -184,6 +170,33 @@ class FakeReportsRepository implements ReportsRepository {
   }
 
   @override
+  Future<void> deleteReport(Report report) async {
+    if (report.status != ReportStatus.open) {
+      throw Exception("Only unassigned reports can be deleted.");
+    }
+    await delay(addDelay);
+
+    updateReport(
+      report: report,
+      status: ReportStatus.deleted,
+    );
+  }
+
+  @override
+  Future<void> completeReport(Report report) async {
+    if (report.status != ReportStatus.assigned) {
+      throw Exception("Only assigned reports can be completed.");
+    }
+    if (report.repairDescription.isEmpty && report.repairPhotosUrls.isEmpty) {
+      throw Exception("At least repair description or photos must be provided.");
+    }
+    updateReport(
+      report: report,
+      status: ReportStatus.completed,
+    );
+  }
+
+  @override
   Future<void> assignReportToOperator({
     required Report report,
     required String operatorId,
@@ -211,20 +224,6 @@ class FakeReportsRepository implements ReportsRepository {
       report: report,
       status: ReportStatus.open,
       operatorId: '',
-    );
-  }
-
-  @override
-  Future<void> completeReport(Report report) async {
-    if (report.status != ReportStatus.assigned) {
-      throw Exception("Only assigned reports can be completed.");
-    }
-    if (report.repairDescription.isEmpty && report.repairPhotosUrls.isEmpty) {
-      throw Exception("At least repair description or photos must be provided.");
-    }
-    updateReport(
-      report: report,
-      status: ReportStatus.completed,
     );
   }
 }

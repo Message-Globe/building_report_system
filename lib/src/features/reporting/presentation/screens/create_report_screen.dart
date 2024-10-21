@@ -1,8 +1,8 @@
-import 'package:building_report_system/src/features/reporting/domain/report.dart';
-import 'package:building_report_system/src/features/reporting/presentation/widgets/custom_text_field.dart';
-import 'package:building_report_system/src/features/reporting/presentation/widgets/date_display.dart';
-import 'package:building_report_system/src/features/reporting/presentation/widgets/priority_selection_dropdown.dart';
-import 'package:building_report_system/src/localization/string_hardcoded.dart';
+import '../../domain/report.dart';
+import '../widgets/custom_text_field.dart';
+import '../widgets/date_display.dart';
+import '../widgets/priority_selection_dropdown.dart';
+import '../../../../localization/string_hardcoded.dart';
 import '../widgets/local_image_gallery.dart';
 import '../../../authentication/data/auth_repository.dart';
 import '../controllers/create_report_screen_controller.dart';
@@ -80,7 +80,7 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
     );
 
     final isLoading = ref.watch(createReportScreenControllerProvider).isLoading;
-    final userProfile = ref.watch(authStateProvider).asData!.value!;
+    final userProfile = ref.watch(authRepositoryProvider).currentUser!;
 
     return Stack(
       children: <Widget>[
@@ -145,6 +145,7 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
 
                 // Galleria di immagini locali
                 LocalImageGallery(
+                  isOperator: false,
                   imageFiles: _images,
                   canRemove: true,
                   onRemove: (file) => setState(() => _images.remove(file)),

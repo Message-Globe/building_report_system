@@ -1,3 +1,5 @@
+import 'package:go_router/go_router.dart';
+
 import '../../../../constants/app_sizes.dart';
 import '../../../authentication/data/auth_repository.dart';
 import '../../../../routing/app_router.dart';
@@ -9,7 +11,6 @@ class AppDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final goRouter = ref.read(goRouterProvider);
     final authRepository = ref.watch(authRepositoryProvider);
 
     return Drawer(
@@ -43,7 +44,7 @@ class AppDrawer extends ConsumerWidget {
             leading: const Icon(Icons.person),
             title: const Text('Profile'),
             onTap: () {
-              goRouter.pushNamed(AppRoute.profile.name);
+              context.goNamed(AppRoute.profile.name);
             },
           ),
           ListTile(

@@ -33,7 +33,7 @@ final kTestReports = <Report>[
       "https://static.italiaoggi.it/content_upload/img/2608/75/2608751/dannimaltempo-631775.jpg",
       "https://media-assets.wired.it/photos/646b383a14e3921f4e7c7c3b/16:9/w_2560%2Cc_limit/1256998159",
     ],
-    operatorId: "1",
+    operatorId: "",
     repairDescription: '',
     repairPhotosUrls: [],
   ),

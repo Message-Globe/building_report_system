@@ -1,11 +1,9 @@
 import 'dart:io';
 
 import '../localization/string_hardcoded.dart';
-import '../routing/app_router.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 const kDialogDefaultKey = Key('dialog-default-key');
 
@@ -22,40 +20,36 @@ Future<bool?> showAlertDialog({
     // * Only make the dialog dismissible if there is a cancel button
     barrierDismissible: cancelActionText != null,
     // * AlertDialog.adaptive was added in Flutter 3.13
-    builder: (context) => Consumer(builder: (_, ref, __) {
-      final goRouter = ref.read(goRouterProvider);
-
-      return AlertDialog.adaptive(
-        title: Text(title),
-        content: content != null ? Text(content) : null,
-        // * Use [TextButton] or [CupertinoDialogAction] depending on the platform
-        actions: kIsWeb || !Platform.isIOS
-            ? <Widget>[
-                if (cancelActionText != null)
-                  TextButton(
-                    child: Text(cancelActionText),
-                    onPressed: () => goRouter.pop(false),
-                  ),
+    builder: (context) => AlertDialog.adaptive(
+      title: Text(title),
+      content: content != null ? Text(content) : null,
+      // * Use [TextButton] or [CupertinoDialogAction] depending on the platform
+      actions: kIsWeb || !Platform.isIOS
+          ? <Widget>[
+              if (cancelActionText != null)
                 TextButton(
-                  key: kDialogDefaultKey,
-                  child: Text(defaultActionText),
-                  onPressed: () => goRouter.pop(true),
+                  child: Text(cancelActionText),
+                  onPressed: () => Navigator.of(context).pop(false),
                 ),
-              ]
-            : <Widget>[
-                if (cancelActionText != null)
-                  CupertinoDialogAction(
-                    child: Text(cancelActionText),
-                    onPressed: () => goRouter.pop(false),
-                  ),
+              TextButton(
+                key: kDialogDefaultKey,
+                child: Text(defaultActionText),
+                onPressed: () => Navigator.of(context).pop(true),
+              ),
+            ]
+          : <Widget>[
+              if (cancelActionText != null)
                 CupertinoDialogAction(
-                  key: kDialogDefaultKey,
-                  child: Text(defaultActionText),
-                  onPressed: () => goRouter.pop(true),
+                  child: Text(cancelActionText),
+                  onPressed: () => Navigator.of(context).pop(false),
                 ),
-              ],
-      );
-    }),
+              CupertinoDialogAction(
+                key: kDialogDefaultKey,
+                child: Text(defaultActionText),
+                onPressed: () => Navigator.of(context).pop(true),
+              ),
+            ],
+    ),
   );
 }
 

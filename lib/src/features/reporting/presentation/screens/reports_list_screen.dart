@@ -1,14 +1,14 @@
-import 'package:building_report_system/src/features/reporting/presentation/widgets/report_dismissible_tile.dart.dart';
-import 'package:building_report_system/src/utils/async_value_ui.dart';
+import '../widgets/report_dismissible_tile.dart.dart';
+import '../../../../utils/async_value_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../common_widgets/async_value_widget.dart';
 import '../../../../routing/app_router.dart';
 import '../../../authentication/data/auth_repository.dart';
 import '../../../authentication/domain/user_profile.dart';
 import '../../data/reports_repository.dart';
-import '../controllers/filters_controllers.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/filters_button.dart';
 import '../widgets/reverse_order_button.dart';
@@ -18,7 +18,8 @@ class ReportsListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userRole = ref.watch(userRoleProvider);
+    final userProfile = ref.watch(authRepositoryProvider).currentUser!;
+    final userRole = userProfile.role;
     final reportsListValue = ref.watch(reportsListStreamProvider);
 
     ref.listen(
@@ -39,21 +40,8 @@ class ReportsListScreen extends ConsumerWidget {
         value: reportsListValue,
         data: (reports) => RefreshIndicator(
           onRefresh: () async {
-            // TODO: check here if it can be changed
-            final userProfile = ref.read(authStateProvider).asData!.value!;
-            final showCompleted = ref.read(showworkedFilterProvider);
-            final showDeleted = ref.read(showDeletedFilterProvider);
-            final reverseOrder = ref.read(reverseOrderFilterProvider);
-            final selectedBuilding = ref.read(selectedBuildingFilterProvider);
-
-            // Forza un aggiornamento leggendo direttamente dalla repository
-            await ref.read(reportsRepositoryProvider).fetchReportsList(
-                  showCompleted: showCompleted,
-                  showDeleted: showDeleted,
-                  reverseOrder: reverseOrder,
-                  userProfile: userProfile,
-                  buildingId: selectedBuilding,
-                );
+            // Invalida il provider per forzare un nuovo fetch dello stream
+            ref.invalidate(reportsListStreamProvider);
           },
           child: ListView.builder(
             itemCount: reports.length,
@@ -62,7 +50,7 @@ class ReportsListScreen extends ConsumerWidget {
 
               return ReportDismissibleTile(
                 report: report,
-                userRole: userRole,
+                userProfile: userProfile,
               );
             },
           ),
@@ -70,8 +58,7 @@ class ReportsListScreen extends ConsumerWidget {
       ),
       floatingActionButton: userRole == UserRole.reporter
           ? FloatingActionButton(
-              onPressed: () =>
-                  ref.read(goRouterProvider).pushNamed(AppRoute.createReport.name),
+              onPressed: () => context.goNamed(AppRoute.createReport.name),
               child: const Icon(Icons.add),
             )
           : null, // Solo il Reporter può aggiungere nuovi report

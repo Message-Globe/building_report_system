@@ -1,8 +1,7 @@
+import 'package:building_report_system/src/features/authentication/data/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../routing/app_router.dart';
-import '../../../authentication/data/auth_repository.dart';
 import '../controllers/filters_controllers.dart';
 import 'building_selection_dropdown.dart';
 
@@ -54,11 +53,9 @@ class FiltersButton extends ConsumerWidget {
             bool tempShowDeleted = ref.watch(showDeletedFilterProvider);
             String? tempSelectedBuilding = ref.watch(selectedBuildingFilterProvider);
 
-            final goRouter = ref.read(goRouterProvider);
-
             return StatefulBuilder(
               builder: (context, setDialogState) {
-                final userProfile = ref.watch(authStateProvider).asData!.value!;
+                final userProfile = ref.watch(authRepositoryProvider).currentUser!;
 
                 return AlertDialog(
                   title: const Text('Filter Reports'),
@@ -111,7 +108,7 @@ class FiltersButton extends ConsumerWidget {
                     ),
                     TextButton(
                       onPressed: () {
-                        goRouter.pop();
+                        Navigator.of(context).pop();
                       },
                       child: const Text('Cancel'),
                     ),
@@ -127,7 +124,7 @@ class FiltersButton extends ConsumerWidget {
                         ref
                             .read(selectedBuildingFilterProvider.notifier)
                             .update(tempSelectedBuilding);
-                        goRouter.pop();
+                        Navigator.of(context).pop();
                       },
                       child: const Text('Apply'),
                     ),

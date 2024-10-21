@@ -7,7 +7,7 @@ part of 'edit_report_screen_controller.dart';
 // **************************************************************************
 
 String _$editReportScreenControllerHash() =>
-    r'3878bb8d7c9a8b31219787cae33163db8fc41fce';
+    r'6fd6dfb8b205a31e3fd0af985ef057737e8798dc';
 
 /// See also [EditReportScreenController].
 @ProviderFor(EditReportScreenController)

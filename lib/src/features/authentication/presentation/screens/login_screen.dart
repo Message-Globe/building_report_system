@@ -1,4 +1,4 @@
-import 'package:building_report_system/src/localization/string_hardcoded.dart';
+import '../../../../localization/string_hardcoded.dart';
 
 import '../../../../constants/app_sizes.dart';
 import '../../../../routing/app_router.dart';

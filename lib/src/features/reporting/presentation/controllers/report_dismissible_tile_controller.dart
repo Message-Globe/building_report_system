@@ -19,7 +19,7 @@ class ReportDismissibleTileController extends _$ReportDismissibleTileController 
 
   Future<void> assignReport(Report report) async {
     state = const AsyncLoading();
-    final userProfile = ref.read(authStateProvider).asData!.value!;
+    final userProfile = ref.read(authRepositoryProvider).currentUser!;
     state = await AsyncValue.guard(
       () => ref.read(reportsRepositoryProvider).assignReportToOperator(
             report: report,

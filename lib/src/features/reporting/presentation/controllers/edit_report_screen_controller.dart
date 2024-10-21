@@ -11,23 +11,27 @@ class EditReportScreenController extends _$EditReportScreenController {
 
   Future<void> updateReport({
     required Report report,
-    required String title,
-    required String description,
+    required String buildingId,
     required String buildingSpot,
     required PriorityLevel priority,
+    required String title,
+    required String description,
     List<String>? photoUrls,
-    ReportStatus? status,
+    required String repairDescription,
+    List<String>? repairPhotosUrls,
   }) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(
       () => ref.read(reportsRepositoryProvider).updateReport(
             report: report,
-            title: title,
-            description: description,
+            buildingId: buildingId,
             buildingSpot: buildingSpot,
             priority: priority,
+            title: title,
+            description: description,
             photoUrls: photoUrls,
-            status: status,
+            repairDescription: repairDescription,
+            repairPhotosUrls: repairPhotosUrls,
           ),
     );
   }

@@ -1,9 +1,9 @@
-import 'package:building_report_system/src/features/reporting/presentation/controllers/edit_report_screen_controller.dart';
-import 'package:building_report_system/src/features/reporting/presentation/widgets/building_selection_dropdown.dart';
-import 'package:building_report_system/src/features/reporting/presentation/widgets/complete_report_tile.dart';
-import 'package:building_report_system/src/features/reporting/presentation/widgets/custom_text_field.dart';
-import 'package:building_report_system/src/features/reporting/presentation/widgets/date_display.dart';
-import 'package:building_report_system/src/features/reporting/presentation/widgets/priority_selection_dropdown.dart';
+import '../controllers/edit_report_screen_controller.dart';
+import '../widgets/building_selection_dropdown.dart';
+import '../widgets/complete_report_tile.dart';
+import '../widgets/custom_text_field.dart';
+import '../widgets/date_display.dart';
+import '../widgets/priority_selection_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:io';
@@ -28,7 +28,7 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
   final _descriptionController = TextEditingController();
   final _buildingSpotController = TextEditingController();
   late String _selectedBuilding;
-  PriorityLevel _selectedPriority = PriorityLevel.normal;
+  late PriorityLevel _selectedPriority;
   final List<File> _localImages = [];
   final List<String> _remoteImages = [];
   final _repairDescriptionController = TextEditingController();
@@ -57,25 +57,49 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
     super.dispose();
   }
 
-  void _updateReport() async {
+  void _updateReport(bool isReporter) async {
     final title = _titleController.text;
     final description = _descriptionController.text;
     final buildingSpot = _buildingSpotController.text;
+    final repairDescription = _repairDescriptionController.text;
+    final allImages = [
+      ..._remoteImages,
+      ..._localImages.map((file) => file.path),
+    ];
+    final allRepairImages = [
+      ..._repairRemoteImages,
+      ..._repairLocalImages.map((file) => file.path),
+    ];
 
-    if (title.isEmpty || description.isEmpty || buildingSpot.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please complete all fields')),
-      );
-      return;
+    if (isReporter) {
+      if (title.isEmpty || description.isEmpty || buildingSpot.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please complete all fields')),
+        );
+        return;
+      }
+    } else {
+      final hasRepairContent = repairDescription.isNotEmpty ||
+          _repairLocalImages.isNotEmpty ||
+          _repairRemoteImages.isNotEmpty;
+      if (!hasRepairContent) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please provide repair details or photos')),
+        );
+        return;
+      }
     }
 
     await ref.read(editReportScreenControllerProvider.notifier).updateReport(
           report: widget.report,
-          title: title,
-          description: description,
+          buildingId: _selectedBuilding,
           buildingSpot: buildingSpot,
           priority: _selectedPriority,
-          photoUrls: _remoteImages,
+          title: title,
+          description: description,
+          photoUrls: allImages,
+          repairDescription: repairDescription,
+          repairPhotosUrls: allRepairImages,
         );
 
     ref.read(goRouterProvider).pop();
@@ -102,7 +126,7 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userProfile = ref.watch(authStateProvider).asData!.value!;
+    final userProfile = ref.watch(authRepositoryProvider).currentUser!;
     final isReporter = userProfile.role == UserRole.reporter;
     final isOperator = userProfile.role == UserRole.operator;
     final reportEditable = widget.report.status == ReportStatus.open;
@@ -116,10 +140,10 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
           appBar: AppBar(
             title: const Text('Edit Report'),
             actions: <Widget>[
-              if (isReporter && reportEditable)
+              if ((isReporter && reportEditable) || isAssignedToMe)
                 IconButton(
                   icon: const Icon(Icons.save),
-                  onPressed: _updateReport,
+                  onPressed: () => _updateReport(isReporter),
                 ),
             ],
           ),
@@ -189,6 +213,7 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
 
                 // Galleria combinata (locali e remote)
                 CombinedImageGallery(
+                  isOperator: false,
                   localImages: _localImages,
                   remoteImages: _remoteImages,
                   canEdit: isReporter && reportEditable,
@@ -208,9 +233,10 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
                       maxLines: 3,
                     )
                   else
-                    Text(widget.report.repairDescription),
+                    Text('Repair Description: ${widget.report.repairDescription}'),
                   gapH16,
                   CombinedImageGallery(
+                    isOperator: true,
                     localImages: _repairLocalImages,
                     remoteImages: _repairRemoteImages,
                     canEdit: isAssignedToMe,

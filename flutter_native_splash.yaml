@@ -1,0 +1,9 @@
+# TODO: change the splash screen
+
+flutter_native_splash:
+  color: "#ffffff" # Colore di sfondo dello splash screen
+  image: assets/splash_logo.png # Immagine che desideri mostrare nello splash
+  android: true
+  ios: true
+  web: true
+  fullscreen: true

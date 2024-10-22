@@ -25,6 +25,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with EmailPasswordVal
   var _passwordVisible = false;
   var _submitted = false;
 
+  // TODO: delete this initState after completation
+  @override
+  void initState() {
+    super.initState();
+    _emailController.text = "dedalus80@gmail.com";
+    _passwordController.text = "AIP@5q^7^lMc";
+  }
+
   @override
   void dispose() {
     _emailController.dispose();

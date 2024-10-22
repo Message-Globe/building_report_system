@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:building_report_system/src/exceptions/app_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -23,14 +24,13 @@ class HttpAuthRepository with ChangeNotifier implements AuthRepository {
   // 4. Metodi pubblici
   @override
   Future<UserProfile?> checkToken() async {
-    await _loadToken(); // Carica il token da SharedPreferences
+    await _loadToken();
     if (_token == null) {
       return null; // Token non presente
     }
 
-    // TODO: change with check token api
     // API per verificare il token
-    final url = Uri.parse("$_baseUrl/api/verify-token");
+    final url = Uri.parse("$_baseUrl/api/token/check");
     final response = await http.get(
       url,
       headers: {'Authorization': 'Bearer $_token'},
@@ -42,7 +42,7 @@ class HttpAuthRepository with ChangeNotifier implements AuthRepository {
       return _currentUser;
     } else {
       // Token non valido o scaduto
-      await _clearToken(); // Cancella il token
+      await _clearToken();
       return null;
     }
   }
@@ -65,6 +65,8 @@ class HttpAuthRepository with ChangeNotifier implements AuthRepository {
       _currentUser = _getUserProfileFromApiResponse(data);
 
       return _currentUser;
+    } else if (response.statusCode == 401) {
+      throw WrongCredentials();
     } else {
       throw Exception('Login failed: ${response.body}');
     }
@@ -117,10 +119,8 @@ class HttpAuthRepository with ChangeNotifier implements AuthRepository {
         return UserRole.reporter;
       case 'manutentore':
         return UserRole.operator;
-      case 'admin':
-        return UserRole.admin;
       default:
-        throw Exception('Unknown role: $apiRole');
+        return UserRole.admin;
     }
   }
 }

@@ -57,16 +57,13 @@ class _LocalImageGalleryState extends State<LocalImageGallery> {
                     Consumer(
                       builder: (_, ref, __) {
                         return GestureDetector(
-                          onTap: () {
-                            debugPrint(widget.imageFiles.length.toString());
-                            context.goNamed(
-                              AppRoute.photoGallery.name,
-                              extra: PhotoViewGalleryArgs(
-                                imageFiles: widget.imageFiles,
-                                initialIndex: widget.imageFiles.indexOf(file),
-                              ),
-                            );
-                          },
+                          onTap: () => context.goNamed(
+                            AppRoute.photoGallery.name,
+                            extra: PhotoViewGalleryArgs(
+                              imageFiles: widget.imageFiles,
+                              initialIndex: widget.imageFiles.indexOf(file),
+                            ),
+                          ),
                           child: Image.file(
                             file,
                             width: 100,

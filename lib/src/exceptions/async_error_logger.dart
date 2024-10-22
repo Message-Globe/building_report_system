@@ -19,10 +19,6 @@ class AsyncErrorLogger extends ProviderObserver {
     // Verifica se c'è un errore nell'AsyncValue
     final error = _findError(newValue);
     if (error != null) {
-      // Log l'errore per debugging
-      debugPrint('Error detected in provider: ${provider.name ?? provider.runtimeType}');
-      debugPrint('Error: ${error.error}, StackTrace: ${error.stackTrace}');
-
       // Log l'errore tramite il logger
       if (error.error is AppException) {
         // Se è un'AppException, usa il logger specifico per AppException

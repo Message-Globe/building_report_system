@@ -1,3 +1,4 @@
+import 'package:building_report_system/src/exceptions/app_exception.dart';
 import 'package:building_report_system/src/utils/delay.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -56,7 +57,7 @@ class FakeAuthRepository with ChangeNotifier implements AuthRepository {
     // Simula il login e assegna un token in base all'utente
     final user = kTestUsers.firstWhere(
       (profile) => profile.appUser.email == email,
-      orElse: () => throw Exception('Invalid credentials'),
+      orElse: () => throw UserNotFoundException(),
     );
 
     // Genera un token diverso per ogni utente

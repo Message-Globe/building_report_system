@@ -27,11 +27,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with EmailPasswordVal
   @override
   void initState() {
     super.initState();
+    //!FakeRepository
     _emailController.text = "reporter@example.com";
     _passwordController.text = "password123";
     // _emailController.text = "operator@example.com";
     // _passwordController.text = "password123";
 
+    //!RealRepository
     // _emailController.text = "dedalus80@gmail.com";
     // _passwordController.text = "AIP@5q^7^lMc";
     // _emailController.text = "manutentore@test.it";

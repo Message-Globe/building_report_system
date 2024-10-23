@@ -39,7 +39,7 @@ class ReportDismissibleTile extends ConsumerWidget {
       }
 
       return confirm ?? false;
-    } else if (report.status == ReportStatus.open) {
+    } else if (report.status == ReportStatus.opened) {
       final confirm = await showAlertDialog(
         context: context,
         title: 'Confirm Assignation',
@@ -51,7 +51,7 @@ class ReportDismissibleTile extends ConsumerWidget {
       if (confirm == true) {
         await ref
             .read(reportDismissibleTileControllerProvider.notifier)
-            .assignReport(report);
+            .assignReport(report, userProfile);
       }
 
       return confirm ?? false;
@@ -81,14 +81,15 @@ class ReportDismissibleTile extends ConsumerWidget {
     final canAssignReport = userRole == UserRole.operator &&
         report.status != ReportStatus.completed &&
         report.status != ReportStatus.deleted &&
-        (report.operatorId == '' || report.operatorId == userProfile.appUser.uid);
+        (report.assignedTo == '' || report.assignedTo == userProfile.appUser.uid);
 
     return Dismissible(
       key: ValueKey(report),
-      direction: (userRole == UserRole.reporter && report.status == ReportStatus.open) ||
-              canAssignReport
-          ? DismissDirection.endToStart
-          : DismissDirection.none,
+      direction:
+          (userRole == UserRole.reporter && report.status == ReportStatus.opened) ||
+                  canAssignReport
+              ? DismissDirection.endToStart
+              : DismissDirection.none,
       background: Stack(
         children: <Widget>[
           Container(

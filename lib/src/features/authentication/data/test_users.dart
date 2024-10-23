@@ -8,7 +8,10 @@ const List<UserProfile> kTestUsers = <UserProfile>[
       email: 'reporter@example.com',
     ),
     name: 'John Reporter',
-    buildingsIds: ['building1', 'building2'],
+    assignedBuildings: {
+      '1': 'Scuola media',
+      '2': 'Ospedale',
+    },
     role: UserRole.reporter,
   ),
   UserProfile(
@@ -17,7 +20,10 @@ const List<UserProfile> kTestUsers = <UserProfile>[
       email: 'operator@example.com',
     ),
     name: 'Jane Operator',
-    buildingsIds: ['building1', 'building2'],
+    assignedBuildings: {
+      '1': 'Scuola media',
+      '2': 'Ospedale',
+    },
     role: UserRole.operator,
   ),
   UserProfile(
@@ -26,7 +32,10 @@ const List<UserProfile> kTestUsers = <UserProfile>[
       email: 'admin@example.com',
     ),
     name: 'Alice Admin',
-    buildingsIds: [],
+    assignedBuildings: {
+      '1': 'Scuola media',
+      '2': 'Ospedale',
+    },
     role: UserRole.admin,
   ),
 ];

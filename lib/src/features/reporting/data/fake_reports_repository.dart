@@ -1,52 +1,55 @@
 import '../../../utils/delay.dart';
-import '../../../utils/in_memory_store.dart';
 import '../../authentication/domain/user_profile.dart';
 import '../domain/report.dart';
 import 'reports_repository.dart';
 import 'test_reports.dart';
 
 class FakeReportsRepository implements ReportsRepository {
+  // 1. Variabili finali
   final bool addDelay;
+  List<Report> _reports = kTestReports;
 
+  // 2. Costruttore
   FakeReportsRepository({this.addDelay = true});
 
-  final _reports = InMemoryStore<List<Report>>(kTestReports);
-
-  @override
-  Stream<List<Report>> get reportsStream => _reports.stream;
-
-  // Metodo per filtrare i report in base al ruolo dell'utente
-  bool _filterByUserRole(Report report, UserProfile userProfile) {
-    if (userProfile.role == UserRole.reporter) {
-      return report.userId == userProfile.appUser.uid;
-    } else if (userProfile.role == UserRole.operator) {
-      return userProfile.buildingsIds.contains(report.buildingId);
+  // 3. Metodi privati
+  String _generateNewReportId() {
+    if (_reports.isEmpty) {
+      return '1';
     }
-    // Se è un admin, mostra tutti i report
-    return true;
+    final highestId =
+        _reports.map((r) => int.tryParse(r.id) ?? 0).reduce((a, b) => a > b ? a : b);
+    return (highestId + 1).toString();
   }
 
-// Metodo per filtrare i report in base all'edificio
+  bool _filterByUserRole(Report report, UserProfile userProfile) {
+    if (userProfile.role == UserRole.reporter) {
+      return report.createdBy == userProfile.appUser.uid;
+    } else if (userProfile.role == UserRole.operator) {
+      return userProfile.assignedBuildings.containsKey(report.buildingId);
+    }
+    return true; // Se è un admin, mostra tutti i report
+  }
+
   bool _filterByBuilding(Report report, String? buildingId) {
     if (buildingId != null) {
       return report.buildingId == buildingId;
     }
-    // Se nessun edificio specifico è selezionato, mostra tutti i report
     return true;
   }
 
-// Metodo per filtrare i report in base allo stato
   bool _filterByStatus(Report report, bool showCompleted, bool showDeleted) {
-    if (report.status == ReportStatus.open || report.status == ReportStatus.assigned) {
-      return true; // Mostra sempre report attivi e assegnati
+    if (report.status == ReportStatus.opened || report.status == ReportStatus.assigned) {
+      return true;
     } else if (report.status == ReportStatus.completed) {
-      return showCompleted; // Mostra solo se showCompleted è abilitato
+      return showCompleted;
     } else if (report.status == ReportStatus.deleted) {
-      return showDeleted; // Mostra solo se showDeleted è abilitato
+      return showDeleted;
     }
     return false;
   }
 
+  // 4. Metodi pubblici
   @override
   Future<List<Report>> fetchReportsList({
     required UserProfile userProfile,
@@ -57,17 +60,14 @@ class FakeReportsRepository implements ReportsRepository {
   }) async {
     await delay(addDelay);
 
-    // Filtra i report
-    List<Report> filteredReports = _reports.value
+    List<Report> filteredReports = _reports
         .where((report) => _filterByUserRole(report, userProfile))
         .where((report) => _filterByBuilding(report, buildingId))
         .where((report) => _filterByStatus(report, showCompleted, showDeleted))
         .toList();
 
-    // Ordina i report per data
-    filteredReports.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+    filteredReports.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
-    // Inverti l'ordine se necessario
     if (reverseOrder) {
       filteredReports = filteredReports.reversed.toList();
     }
@@ -76,36 +76,8 @@ class FakeReportsRepository implements ReportsRepository {
   }
 
   @override
-  Stream<List<Report>> watchReportsList({
-    required bool showCompleted,
-    required bool showDeleted,
-    required bool reverseOrder,
-    required UserProfile userProfile,
-    String? buildingId,
-  }) {
-    return reportsStream.map((reports) {
-      // Filtra i report
-      List<Report> filteredReports = _reports.value
-          .where((report) => _filterByUserRole(report, userProfile))
-          .where((report) => _filterByBuilding(report, buildingId))
-          .where((report) => _filterByStatus(report, showCompleted, showDeleted))
-          .toList();
-
-      // Ordina i report per data
-      filteredReports.sort((a, b) => a.timestamp.compareTo(b.timestamp));
-
-      // Inverti l'ordine se necessario
-      if (reverseOrder) {
-        filteredReports = filteredReports.reversed.toList();
-      }
-
-      return filteredReports;
-    });
-  }
-
-  @override
-  Future<void> addReport({
-    required String userId,
+  Future<Report> addReport({
+    required String createdBy,
     required String buildingId,
     required String buildingSpot,
     required PriorityLevel priority,
@@ -116,21 +88,25 @@ class FakeReportsRepository implements ReportsRepository {
     await delay(addDelay);
 
     final newReport = Report(
-      userId: userId,
+      id: _generateNewReportId(),
+      createdBy: createdBy,
+      assignedTo: '', // Non assegnato inizialmente
       buildingId: buildingId,
       buildingSpot: buildingSpot,
       priority: priority,
       title: title,
       description: description,
-      status: ReportStatus.open,
-      timestamp: DateTime.now(),
+      status: ReportStatus.opened,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
       photoUrls: photoUrls ?? [],
-      operatorId: '',
-      repairDescription: '',
-      repairPhotosUrls: [],
+      maintenanceDescription: '',
+      maintenancePhotoUrls: [],
     );
 
-    _reports.value = [..._reports.value, newReport];
+    _reports = [..._reports, newReport];
+
+    return newReport;
   }
 
   @override
@@ -143,16 +119,16 @@ class FakeReportsRepository implements ReportsRepository {
     String? description,
     ReportStatus? status,
     List<String>? photoUrls,
-    String? operatorId,
-    String? repairDescription,
-    List<String>? repairPhotosUrls,
+    String? assignedTo,
+    String? maintenanceDescription,
+    List<String>? maintenancePhotoUrls,
   }) async {
     await delay(addDelay);
 
-    final index = _reports.value.indexOf(report);
+    final index = _reports.indexOf(report);
     if (index != -1) {
-      final updatedReports = List<Report>.from(_reports.value);
-      updatedReports[index] = report.copyWith(
+      final updatedReports = List<Report>.from(_reports);
+      final newReport = report.copyWith(
         buildingId: buildingId,
         buildingSpot: buildingSpot,
         priority: priority,
@@ -160,18 +136,20 @@ class FakeReportsRepository implements ReportsRepository {
         description: description,
         status: status,
         photoUrls: photoUrls,
-        operatorId: operatorId,
-        repairDescription: repairDescription,
-        repairPhotosUrls: repairPhotosUrls,
+        assignedTo: assignedTo,
+        maintenanceDescription: maintenanceDescription,
+        maintenancePhotoUrls: maintenancePhotoUrls,
+        updatedAt: DateTime.now(),
       );
+      updatedReports[index] = newReport;
 
-      _reports.value = updatedReports;
+      _reports = updatedReports;
     }
   }
 
   @override
   Future<void> deleteReport(Report report) async {
-    if (report.status != ReportStatus.open) {
+    if (report.status != ReportStatus.opened) {
       throw Exception("Only unassigned reports can be deleted.");
     }
     await delay(addDelay);
@@ -187,8 +165,8 @@ class FakeReportsRepository implements ReportsRepository {
     if (report.status != ReportStatus.assigned) {
       throw Exception("Only assigned reports can be completed.");
     }
-    if (report.repairDescription.isEmpty && report.repairPhotosUrls.isEmpty) {
-      throw Exception("At least repair description or photos must be provided.");
+    if (report.maintenanceDescription.isEmpty && report.maintenancePhotoUrls.isEmpty) {
+      throw Exception("At least maintenance description or photos must be provided.");
     }
     updateReport(
       report: report,
@@ -201,29 +179,27 @@ class FakeReportsRepository implements ReportsRepository {
     required Report report,
     required String operatorId,
   }) async {
-    // Assicura che il report sia ancora open
-    if (report.status != ReportStatus.open) {
+    if (report.status != ReportStatus.opened) {
       throw Exception("Report is already assigned.");
     }
 
     await updateReport(
       report: report,
       status: ReportStatus.assigned,
-      operatorId: operatorId,
+      assignedTo: operatorId,
     );
   }
 
   @override
   Future<void> unassignReportFromOperator(Report report) async {
-    // Assicura che il report sia attualmente assegnato
     if (report.status != ReportStatus.assigned) {
       throw Exception("Only assigned reports can be unassigned.");
     }
 
     await updateReport(
       report: report,
-      status: ReportStatus.open,
-      operatorId: '',
+      status: ReportStatus.opened,
+      assignedTo: '',
     );
   }
 }

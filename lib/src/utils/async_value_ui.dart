@@ -1,9 +1,9 @@
+import 'context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../common_widgets/alert_dialogs.dart';
 import '../exceptions/app_exception.dart';
-import '../localization/string_hardcoded.dart';
 
 /// A helper [AsyncValue] extension to show an alert dialog on error
 extension AsyncValueUI on AsyncValue {
@@ -14,7 +14,7 @@ extension AsyncValueUI on AsyncValue {
       final message = _errorMessage(error);
       showExceptionAlertDialog(
         context: context,
-        title: 'Error'.hardcoded,
+        title: context.loc.error,
         exception: message,
       );
     }

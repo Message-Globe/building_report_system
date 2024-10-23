@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:building_report_system/src/exceptions/app_exception.dart';
+import '../../../exceptions/app_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -21,7 +21,53 @@ class HttpAuthRepository with ChangeNotifier implements AuthRepository {
   @override
   UserProfile? get currentUser => _currentUser;
 
-  // 4. Metodi pubblici
+  // 4. Metodi privati
+  Future<void> _saveToken(String token) async {
+    _token = token;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_tokenKey, token);
+  }
+
+  Future<void> _loadToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    _token = prefs.getString(_tokenKey);
+  }
+
+  Future<void> _clearToken() async {
+    _token = null;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_tokenKey);
+  }
+
+  UserProfile _getUserProfileFromApiResponse(Map<String, dynamic> data) {
+    // Supponendo che `data['structures']` sia una mappa in cui la chiave è l'ID e il valore è il nome dell'edificio.
+    final Map<String, String> assignedBuildings = Map<String, String>.from(
+      data['structures'] as Map<String, dynamic>,
+    );
+
+    return UserProfile(
+      appUser: AppUser(
+        uid: data['uid'].toString(),
+        email: data['email'],
+      ),
+      name: data['name'],
+      assignedBuildings: assignedBuildings, // Assegna la mappa di edifici
+      role: _mapRoleToUserRole(data['role']),
+    );
+  }
+
+  UserRole _mapRoleToUserRole(String apiRole) {
+    switch (apiRole) {
+      case 'segnalatore':
+        return UserRole.reporter;
+      case 'manutentore':
+        return UserRole.operator;
+      default:
+        return UserRole.admin;
+    }
+  }
+
+  // 5. Metodi pubblici
   @override
   Future<UserProfile?> checkToken() async {
     await _loadToken();
@@ -77,50 +123,5 @@ class HttpAuthRepository with ChangeNotifier implements AuthRepository {
     _currentUser = null;
     notifyListeners();
     await _clearToken();
-  }
-
-  // 5. Metodi privati
-  Future<void> _saveToken(String token) async {
-    _token = token;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_tokenKey, token);
-  }
-
-  Future<void> _loadToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    _token = prefs.getString(_tokenKey);
-  }
-
-  Future<void> _clearToken() async {
-    _token = null;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_tokenKey);
-  }
-
-  UserProfile _getUserProfileFromApiResponse(Map<String, dynamic> data) {
-    final Map<String, dynamic> structuresMap = data['structures'] as Map<String, dynamic>;
-    final List<String> buildingsIds =
-        structuresMap.values.map((e) => e.toString()).toList();
-
-    return UserProfile(
-      appUser: AppUser(
-        uid: data['uid'].toString(),
-        email: data['email'],
-      ),
-      name: data['name'],
-      buildingsIds: buildingsIds,
-      role: _mapRoleToUserRole(data['role']),
-    );
-  }
-
-  UserRole _mapRoleToUserRole(String apiRole) {
-    switch (apiRole) {
-      case 'segnalatore':
-        return UserRole.reporter;
-      case 'manutentore':
-        return UserRole.operator;
-      default:
-        return UserRole.admin;
-    }
   }
 }

@@ -1,3 +1,4 @@
+import '../../../../utils/context_extensions.dart';
 import 'package:flutter/material.dart';
 import '../../domain/report.dart';
 
@@ -15,7 +16,7 @@ class PrioritySelectionDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return DropdownButton<PriorityLevel>(
       value: selectedPriority,
-      hint: const Text('Select Priority'),
+      hint: Text(context.loc.selectPriority),
       onChanged: (newValue) {
         onPrioritySelected(newValue);
       },

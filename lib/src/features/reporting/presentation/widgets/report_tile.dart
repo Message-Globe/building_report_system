@@ -1,3 +1,4 @@
+import 'package:building_report_system/src/features/authentication/data/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -15,6 +16,9 @@ class ReportTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final userProfile = ref.read(authRepositoryProvider).currentUser!;
+    final building = userProfile.assignedBuildings[report.buildingId];
+
     return Card(
       margin: const EdgeInsets.symmetric(
         vertical: Sizes.p8,
@@ -36,7 +40,7 @@ class ReportTile extends ConsumerWidget {
             overflow: TextOverflow.ellipsis,
           ),
           subtitle: Text(
-            '${report.buildingId} - ${ref.read(dateFormatterProvider).format(report.timestamp)}',
+            '$building - ${ref.read(dateFormatterProvider).format(report.createdAt)}',
             overflow: TextOverflow.ellipsis,
           ),
           trailing: report.priority == PriorityLevel.urgent

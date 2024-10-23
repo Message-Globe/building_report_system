@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import '../../../../utils/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -36,7 +37,7 @@ class PhotoViewGalleryScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Photo Gallery'),
+        title: Text(context.loc.photoGallery),
       ),
       body: PhotoViewGallery.builder(
         itemCount: isShowingUrls ? imageUrls!.length : imageFiles!.length,

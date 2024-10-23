@@ -6,7 +6,23 @@ part of 'date_formatter.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dateFormatterHash() => r'928ece23dc18c8608f829feb441df2759a50f4a5';
+String _$dateAndTimeFormatterHash() =>
+    r'1042596d55403a9ef4ddf43c3ea9c3834a0f4905';
+
+/// See also [dateAndTimeFormatter].
+@ProviderFor(dateAndTimeFormatter)
+final dateAndTimeFormatterProvider = AutoDisposeProvider<DateFormat>.internal(
+  dateAndTimeFormatter,
+  name: r'dateAndTimeFormatterProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$dateAndTimeFormatterHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef DateAndTimeFormatterRef = AutoDisposeProviderRef<DateFormat>;
+String _$dateFormatterHash() => r'58d90b84628f86bcc7663eae06463329c9c0c6ce';
 
 /// See also [dateFormatter].
 @ProviderFor(dateFormatter)

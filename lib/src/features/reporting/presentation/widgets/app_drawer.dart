@@ -1,3 +1,4 @@
+import '../../../../utils/context_extensions.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../constants/app_sizes.dart';
@@ -28,12 +29,12 @@ class AppDrawer extends ConsumerWidget {
                 color: Colors.blue,
                 borderRadius: BorderRadius.circular(Sizes.p20),
               ),
-              child: const Center(
+              child: Center(
                 child: Text(
-                  'Building Report System',
-                  style: TextStyle(
+                  context.loc.buildingReportSystem,
+                  style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 24,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -42,7 +43,7 @@ class AppDrawer extends ConsumerWidget {
           ),
           ListTile(
             leading: const Icon(Icons.person),
-            title: const Text('Profile'),
+            title: Text(context.loc.profile),
             onTap: () {
               context.goNamed(AppRoute.profile.name);
             },

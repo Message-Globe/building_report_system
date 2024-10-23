@@ -1,5 +1,5 @@
-import 'package:building_report_system/src/exceptions/app_exception.dart';
-import 'package:building_report_system/src/utils/delay.dart';
+import '../../../exceptions/app_exception.dart';
+import '../../../utils/delay.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../domain/user_profile.dart';
@@ -31,7 +31,25 @@ class FakeAuthRepository with ChangeNotifier implements AuthRepository {
   @override
   UserProfile? get currentUser => _currentUser;
 
-  // 6. Metodi pubblici
+  // 6. Metodi privati
+  Future<void> _loadToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    _fakeToken = prefs.getString(_tokenKey);
+  }
+
+  Future<void> _saveToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    _fakeToken = token;
+    await prefs.setString(_tokenKey, token);
+  }
+
+  Future<void> _clearToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    _fakeToken = null;
+    await prefs.remove(_tokenKey);
+  }
+
+  // 7. Metodi pubblici
   @override
   Future<UserProfile?> checkToken() async {
     await delay(addDelay, 1000);
@@ -54,11 +72,16 @@ class FakeAuthRepository with ChangeNotifier implements AuthRepository {
     // Simula un ritardo
     await delay(addDelay, 1000);
 
-    // Simula il login e assegna un token in base all'utente
+    // Verifica se l'utente esiste
     final user = kTestUsers.firstWhere(
       (profile) => profile.appUser.email == email,
       orElse: () => throw UserNotFoundException(),
     );
+
+    // Controlla se la password corrisponde
+    if (kTestUserPasswords[email] != password) {
+      throw WrongPasswordException();
+    }
 
     // Genera un token diverso per ogni utente
     _fakeToken = 'fakeToken123_${user.role.name}';
@@ -72,24 +95,6 @@ class FakeAuthRepository with ChangeNotifier implements AuthRepository {
   Future<void> signOut() async {
     _currentUser = null;
     notifyListeners();
-    await _clearToken(); // Cancella il token dallo storage
-  }
-
-  // 7. Metodi privati
-  Future<void> _loadToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    _fakeToken = prefs.getString(_tokenKey);
-  }
-
-  Future<void> _saveToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    _fakeToken = token;
-    await prefs.setString(_tokenKey, token);
-  }
-
-  Future<void> _clearToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    _fakeToken = null;
-    await prefs.remove(_tokenKey);
+    await _clearToken();
   }
 }

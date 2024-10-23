@@ -1,8 +1,8 @@
-import 'package:building_report_system/src/features/authentication/data/http_auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../domain/user_profile.dart';
+import 'fake_auth_repository.dart';
 
 part 'auth_repository.g.dart';
 
@@ -15,6 +15,6 @@ abstract class AuthRepository with ChangeNotifier {
 
 @Riverpod(keepAlive: true)
 AuthRepository authRepository(AuthRepositoryRef ref) {
-  // return FakeAuthRepository();
-  return HttpAuthRepository();
+  return FakeAuthRepository();
+  // return HttpAuthRepository();
 }

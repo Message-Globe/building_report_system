@@ -37,21 +37,5 @@ final reportsListFutureProvider =
 );
 
 typedef ReportsListFutureRef = AutoDisposeFutureProviderRef<List<Report>>;
-String _$reportsListStreamHash() => r'2ab10ba28a0aefe57a23471360d6a17d20b6f6d2';
-
-/// See also [reportsListStream].
-@ProviderFor(reportsListStream)
-final reportsListStreamProvider =
-    AutoDisposeStreamProvider<List<Report>>.internal(
-  reportsListStream,
-  name: r'reportsListStreamProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$reportsListStreamHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef ReportsListStreamRef = AutoDisposeStreamProviderRef<List<Report>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

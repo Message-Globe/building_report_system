@@ -1,11 +1,12 @@
+import '../controllers/reports_list_controller.dart';
+import '../../../../utils/context_extensions.dart';
+
 import '../../domain/report.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/date_display.dart';
 import '../widgets/priority_selection_dropdown.dart';
-import '../../../../localization/string_hardcoded.dart';
 import '../widgets/local_image_gallery.dart';
 import '../../../authentication/data/auth_repository.dart';
-import '../controllers/create_report_screen_controller.dart';
 import '../../../../routing/app_router.dart';
 import '../../../../utils/async_value_ui.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,7 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
         buildingSpot.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please complete all fields'.hardcoded),
+          content: Text(context.loc.completeAllFields),
         ),
       );
       return;
@@ -57,7 +58,7 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
     final imagesUrls = _images.map((image) => image.path).toList();
 
     // Chiama il metodo addReport
-    await ref.read(createReportScreenControllerProvider.notifier).addReport(
+    await ref.read(reportsListControllerProvider.notifier).addReport(
           buildingId: _selectedBuilding!,
           buildingSpot: buildingSpot,
           priority: _selectedPriority,
@@ -73,20 +74,20 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
   @override
   Widget build(BuildContext context) {
     ref.listen<AsyncValue>(
-      createReportScreenControllerProvider,
+      reportsListControllerProvider,
       (_, state) {
         state.showAlertDialogOnError(context);
       },
     );
 
-    final isLoading = ref.watch(createReportScreenControllerProvider).isLoading;
+    final isLoading = ref.watch(reportsListControllerProvider).isLoading;
     final userProfile = ref.watch(authRepositoryProvider).currentUser!;
 
     return Stack(
       children: <Widget>[
         Scaffold(
           appBar: AppBar(
-            title: const Text('Add Report'),
+            title: Text(context.loc.addReport),
             actions: <Widget>[
               IconButton(
                 icon: const Icon(Icons.save),
@@ -100,7 +101,7 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
               children: <Widget>[
                 CustomTextField(
                   controller: _titleController,
-                  labelText: 'Report Title',
+                  labelText: context.loc.title,
                 ),
                 gapH16,
 
@@ -111,14 +112,14 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
                 // Campo per la descrizione
                 CustomTextField(
                   controller: _descriptionController,
-                  labelText: 'Description',
+                  labelText: context.loc.description,
                   maxLines: 3,
                 ),
                 gapH16,
 
                 // Dropdown per selezionare l'edificio
                 BuildingSelectionDropdown(
-                  buildingIds: userProfile.buildingsIds,
+                  buildings: userProfile.assignedBuildings.values.toList(),
                   selectedBuilding: _selectedBuilding,
                   onBuildingSelected: (newBuilding) => setState(
                     () => _selectedBuilding = newBuilding,
@@ -130,7 +131,7 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
                 // Campo di testo per buildingSpot
                 CustomTextField(
                   controller: _buildingSpotController,
-                  labelText: 'Building Spot',
+                  labelText: context.loc.buildingSpot,
                 ),
                 gapH16,
 

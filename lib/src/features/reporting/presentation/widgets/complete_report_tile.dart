@@ -1,4 +1,5 @@
-import '../../../../localization/string_hardcoded.dart';
+import '../../../../utils/context_extensions.dart';
+
 import 'package:flutter/material.dart';
 
 import '../../../../constants/app_sizes.dart';
@@ -19,7 +20,7 @@ class CompleteReportTile extends StatelessWidget {
 
     return Column(
       children: <Widget>[
-        const Text('Swipe to complete report:'),
+        Text(context.loc.swipeToComplete),
         gapH8,
         Dismissible(
           key: const Key('reportStatusDismissible'),
@@ -49,7 +50,7 @@ class CompleteReportTile extends StatelessWidget {
           onDismissed: (_) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Report status Completed'.hardcoded),
+                content: Text(context.loc.reportStatusCompleted),
               ),
             );
           },
@@ -66,14 +67,14 @@ class CompleteReportTile extends StatelessWidget {
                 ),
               ],
             ),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  'Swipe right to mark as Completed',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  context.loc.swipeRightToComplete,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
-                Icon(
+                const Icon(
                   Icons.swipe_right,
                   color: Colors.greenAccent,
                 ),

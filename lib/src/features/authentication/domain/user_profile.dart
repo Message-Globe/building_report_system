@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -14,7 +15,7 @@ class UserProfile {
   const UserProfile({
     required this.appUser,
     required this.name,
-    required this.buildingsIds,
+    required this.assignedBuildings,
     required this.role,
   });
 
@@ -23,19 +24,19 @@ class UserProfile {
 
   // Dati specifici del profilo
   final String name;
-  final List<String> buildingsIds; // Lista degli ID degli edifici associati
+  final Map<String, String> assignedBuildings;
   final UserRole role;
 
   UserProfile copyWith({
     AppUser? appUser,
     String? name,
-    List<String>? buildingsIds,
+    Map<String, String>? assignedBuildings,
     UserRole? role,
   }) {
     return UserProfile(
       appUser: appUser ?? this.appUser,
       name: name ?? this.name,
-      buildingsIds: buildingsIds ?? this.buildingsIds,
+      assignedBuildings: assignedBuildings ?? this.assignedBuildings,
       role: role ?? this.role,
     );
   }
@@ -44,7 +45,7 @@ class UserProfile {
     return <String, dynamic>{
       'appUser': appUser.toMap(),
       'name': name,
-      'buildingsIds': buildingsIds,
+      'assignedBuildings': assignedBuildings,
       'role': role.name,
     };
   }
@@ -53,7 +54,8 @@ class UserProfile {
     return UserProfile(
       appUser: AppUser.fromMap(map['appUser'] as Map<String, dynamic>),
       name: map['name'] as String,
-      buildingsIds: List<String>.from((map['buildingsIds'] as List<String>)),
+      assignedBuildings:
+          Map<String, String>.from((map['assignedBuildings'] as Map<String, String>)),
       role: UserRole.values.byName(map['role']),
     );
   }
@@ -65,7 +67,7 @@ class UserProfile {
 
   @override
   String toString() {
-    return 'UserProfile(appUser: $appUser, name: $name, buildingsIds: $buildingsIds, role: $role)';
+    return 'UserProfile(appUser: $appUser, name: $name, assignedBuildings: $assignedBuildings, role: $role)';
   }
 
   @override
@@ -74,12 +76,12 @@ class UserProfile {
 
     return other.appUser == appUser &&
         other.name == name &&
-        listEquals(other.buildingsIds, buildingsIds) &&
+        mapEquals(other.assignedBuildings, assignedBuildings) &&
         other.role == role;
   }
 
   @override
   int get hashCode {
-    return appUser.hashCode ^ name.hashCode ^ buildingsIds.hashCode ^ role.hashCode;
+    return appUser.hashCode ^ name.hashCode ^ assignedBuildings.hashCode ^ role.hashCode;
   }
 }

@@ -9,8 +9,6 @@ import 'fake_reports_repository.dart';
 part 'reports_repository.g.dart';
 
 abstract class ReportsRepository {
-  Stream<List<Report>> get reportsStream;
-
   Future<List<Report>> fetchReportsList({
     required bool showCompleted,
     required bool showDeleted,
@@ -19,16 +17,8 @@ abstract class ReportsRepository {
     String? buildingId,
   });
 
-  Stream<List<Report>> watchReportsList({
-    required bool showCompleted,
-    required bool showDeleted,
-    required bool reverseOrder,
-    required UserProfile userProfile,
-    String? buildingId,
-  });
-
-  Future<void> addReport({
-    required String userId,
+  Future<Report> addReport({
+    required String createdBy,
     required String buildingId,
     required String buildingSpot,
     required PriorityLevel priority,
@@ -48,14 +38,14 @@ abstract class ReportsRepository {
     String? description,
     ReportStatus? status,
     List<String>? photoUrls,
-    String? operatorId,
-    String? repairDescription,
-    List<String>? repairPhotosUrls,
+    String? assignedTo, // Modificato da operatorId a assignedTo
+    String? maintenanceDescription,
+    List<String>? maintenancePhotoUrls,
   });
 
   Future<void> assignReportToOperator({
     required Report report,
-    required String operatorId,
+    required String operatorId, // Modificato da operatorId a assignedTo
   });
 
   Future<void> unassignReportFromOperator(Report report);
@@ -79,30 +69,6 @@ Future<List<Report>> reportsListFuture(ReportsListFutureRef ref) {
   final selectedBuilding = ref.watch(selectedBuildingFilterProvider);
 
   return reportsRepository.fetchReportsList(
-    showCompleted: showCompleted,
-    showDeleted: showDeleted,
-    reverseOrder: reverseOrder,
-    userProfile: userProfile,
-    buildingId: selectedBuilding,
-  );
-}
-
-@riverpod
-Stream<List<Report>> reportsListStream(ReportsListStreamRef ref) {
-  final reportsRepository = ref.watch(reportsRepositoryProvider);
-  final userProfile = ref.watch(authRepositoryProvider).currentUser;
-
-  if (userProfile == null) {
-    // Gestisci un caso in cui `userProfile` è null per evitare il null check error
-    throw Exception("User profile not available");
-  }
-
-  final showCompleted = ref.watch(showworkedFilterProvider);
-  final showDeleted = ref.watch(showDeletedFilterProvider);
-  final reverseOrder = ref.watch(reverseOrderFilterProvider);
-  final selectedBuilding = ref.watch(selectedBuildingFilterProvider);
-
-  return reportsRepository.watchReportsList(
     showCompleted: showCompleted,
     showDeleted: showDeleted,
     reverseOrder: reverseOrder,

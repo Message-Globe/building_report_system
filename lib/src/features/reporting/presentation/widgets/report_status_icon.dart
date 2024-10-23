@@ -12,7 +12,7 @@ class ReportStatusIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     switch (status) {
-      case ReportStatus.open:
+      case ReportStatus.opened:
         return const Icon(
           Icons.report,
           color: Colors.red,

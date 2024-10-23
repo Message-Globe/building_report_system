@@ -1,11 +1,9 @@
-import '../../../../localization/string_hardcoded.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../constants/app_sizes.dart';
 import '../../../../routing/app_router.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../utils/async_value_ui.dart';
-
 import '../controller/login_screen_controller.dart';
 import '../email_password_validators.dart';
 
@@ -29,8 +27,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with EmailPasswordVal
   @override
   void initState() {
     super.initState();
-    _emailController.text = "dedalus80@gmail.com";
-    _passwordController.text = "AIP@5q^7^lMc";
+    _emailController.text = "reporter@example.com";
+    _passwordController.text = "password123";
+    // _emailController.text = "operator@example.com";
+    // _passwordController.text = "password123";
+
+    // _emailController.text = "dedalus80@gmail.com";
+    // _passwordController.text = "AIP@5q^7^lMc";
+    // _emailController.text = "manutentore@test.it";
+    // _passwordController.text = "AIP@5q^7^lMc";
   }
 
   @override
@@ -91,8 +96,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with EmailPasswordVal
                 TextFormField(
                   controller: _emailController,
                   decoration: InputDecoration(
-                    labelText: 'Email'.hardcoded,
-                    hintText: 'test@example.com'.hardcoded,
+                    labelText: 'Email',
+                    hintText: 'test@example.com',
                     enabled: !state.isLoading,
                   ),
                   autovalidateMode: AutovalidateMode.onUserInteraction,

@@ -1,4 +1,5 @@
 import 'dart:io';
+import '../../../../utils/context_extensions.dart';
 import 'package:go_router/go_router.dart';
 import '../screens/photo_view_gallery_screen.dart';
 import '../../../../routing/app_router.dart';
@@ -30,7 +31,7 @@ class RemoteImageGallery extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("${isOperator ? 'Repair ' : ''}Photos:"),
+        Text("${isOperator ? '${context.loc.repair} ' : ''}${context.loc.photos}"),
         gapH4,
         Wrap(
           spacing: Sizes.p12,

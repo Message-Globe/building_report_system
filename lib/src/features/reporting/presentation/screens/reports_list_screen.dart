@@ -1,5 +1,8 @@
-import '../widgets/report_dismissible_tile.dart.dart';
+import '../controllers/reports_list_controller.dart';
 import '../../../../utils/async_value_ui.dart';
+import '../../../../utils/context_extensions.dart';
+
+import '../widgets/report_dismissible_tile.dart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,7 +11,6 @@ import '../../../../common_widgets/async_value_widget.dart';
 import '../../../../routing/app_router.dart';
 import '../../../authentication/data/auth_repository.dart';
 import '../../../authentication/domain/user_profile.dart';
-import '../../data/reports_repository.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/filters_button.dart';
 import '../widgets/reverse_order_button.dart';
@@ -20,16 +22,16 @@ class ReportsListScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userProfile = ref.watch(authRepositoryProvider).currentUser!;
     final userRole = userProfile.role;
-    final reportsListValue = ref.watch(reportsListStreamProvider);
+    final reportsListValue = ref.watch(reportsListControllerProvider);
 
     ref.listen(
-      reportsListStreamProvider,
+      reportsListControllerProvider,
       (_, state) => state.showAlertDialogOnError(context),
     );
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Report List'),
+        title: Text(context.loc.reportList),
         actions: const <Widget>[
           ReverseOrderButton(),
           FiltersButton(),
@@ -39,10 +41,8 @@ class ReportsListScreen extends ConsumerWidget {
       body: AsyncValueWidget(
         value: reportsListValue,
         data: (reports) => RefreshIndicator(
-          onRefresh: () async {
-            // Invalida il provider per forzare un nuovo fetch dello stream
-            ref.invalidate(reportsListStreamProvider);
-          },
+          onRefresh: () async =>
+              await ref.read(reportsListControllerProvider.notifier).refreshReports(),
           child: ListView.builder(
             itemCount: reports.length,
             itemBuilder: (context, index) {

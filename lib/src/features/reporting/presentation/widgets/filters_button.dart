@@ -1,4 +1,5 @@
-import 'package:building_report_system/src/features/authentication/data/auth_repository.dart';
+import '../../../authentication/data/auth_repository.dart';
+import '../../../../utils/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -58,12 +59,12 @@ class FiltersButton extends ConsumerWidget {
                 final userProfile = ref.watch(authRepositoryProvider).currentUser!;
 
                 return AlertDialog(
-                  title: const Text('Filter Reports'),
+                  title: Text(context.loc.filterReports),
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       BuildingSelectionDropdown(
-                        buildingIds: userProfile.buildingsIds,
+                        buildings: userProfile.assignedBuildings.values.toList(),
                         selectedBuilding: tempSelectedBuilding,
                         onBuildingSelected: (newValue) {
                           setDialogState(() {
@@ -74,7 +75,7 @@ class FiltersButton extends ConsumerWidget {
                       ),
                       // Checkbox per "Show completed Reports"
                       CheckboxListTile(
-                        title: const Text('Show completed Reports'),
+                        title: Text(context.loc.showCompletedReports),
                         value: tempShowworked,
                         onChanged: (value) {
                           setDialogState(() {
@@ -84,7 +85,7 @@ class FiltersButton extends ConsumerWidget {
                       ),
                       // Checkbox per "Show Deleted Reports"
                       CheckboxListTile(
-                        title: const Text('Show Deleted Reports'),
+                        title: Text(context.loc.showDeletedReports),
                         value: tempShowDeleted,
                         onChanged: (value) {
                           setDialogState(() {
@@ -104,13 +105,13 @@ class FiltersButton extends ConsumerWidget {
                           tempSelectedBuilding = null;
                         });
                       },
-                      child: const Text('Clear'),
+                      child: Text(context.loc.clear),
                     ),
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: const Text('Cancel'),
+                      child: Text(context.loc.cancel),
                     ),
                     TextButton(
                       onPressed: () {
@@ -126,7 +127,7 @@ class FiltersButton extends ConsumerWidget {
                             .update(tempSelectedBuilding);
                         Navigator.of(context).pop();
                       },
-                      child: const Text('Apply'),
+                      child: Text(context.loc.apply),
                     ),
                   ],
                 );

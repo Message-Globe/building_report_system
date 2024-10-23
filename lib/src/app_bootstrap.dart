@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'l10n/string_hardcoded.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -67,7 +68,7 @@ class AppBootstrap {
       return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.red,
-          title: const Text('An error occurred'),
+          title: Text('An error occurred'.hardcoded),
         ),
         body: Center(child: Text(details.toString())),
       );

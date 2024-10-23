@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 
 enum ReportStatus {
-  open,
+  opened,
   assigned,
   completed,
   deleted,
@@ -16,95 +16,108 @@ enum PriorityLevel {
 }
 
 class Report {
-  final String userId;
+  final String id;
+  final String createdBy;
+  final String assignedTo;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final ReportStatus status;
   final String buildingId;
   final String buildingSpot;
   final PriorityLevel priority;
   final String title;
   final String description;
-  final ReportStatus status;
-  final DateTime timestamp;
+  final String maintenanceDescription;
   final List<String> photoUrls;
-  final String operatorId;
-  final String repairDescription;
-  final List<String> repairPhotosUrls;
+  final List<String> maintenancePhotoUrls;
 
   Report({
-    required this.userId,
+    required this.id,
+    required this.createdBy,
+    required this.assignedTo,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.status,
     required this.buildingId,
     required this.buildingSpot,
     required this.priority,
     required this.title,
     required this.description,
-    required this.status,
-    required this.timestamp,
+    required this.maintenanceDescription,
     required this.photoUrls,
-    required this.operatorId,
-    required this.repairDescription,
-    required this.repairPhotosUrls,
+    required this.maintenancePhotoUrls,
   });
 
   Report copyWith({
-    String? userId,
+    String? id,
+    String? createdBy,
+    String? assignedTo,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    ReportStatus? status,
     String? buildingId,
     String? buildingSpot,
     PriorityLevel? priority,
     String? title,
     String? description,
-    ReportStatus? status,
-    DateTime? timestamp,
+    String? maintenanceDescription,
     List<String>? photoUrls,
-    String? operatorId,
-    String? repairDescription,
-    List<String>? repairPhotosUrls,
+    List<String>? maintenancePhotoUrls,
   }) {
     return Report(
-      userId: userId ?? this.userId,
+      id: id ?? this.id,
+      createdBy: createdBy ?? this.createdBy,
+      assignedTo: assignedTo ?? this.assignedTo,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      status: status ?? this.status,
       buildingId: buildingId ?? this.buildingId,
       buildingSpot: buildingSpot ?? this.buildingSpot,
       priority: priority ?? this.priority,
       title: title ?? this.title,
       description: description ?? this.description,
-      status: status ?? this.status,
-      timestamp: timestamp ?? this.timestamp,
+      maintenanceDescription: maintenanceDescription ?? this.maintenanceDescription,
       photoUrls: photoUrls ?? this.photoUrls,
-      operatorId: operatorId ?? this.operatorId,
-      repairDescription: repairDescription ?? this.repairDescription,
-      repairPhotosUrls: repairPhotosUrls ?? this.repairPhotosUrls,
+      maintenancePhotoUrls: maintenancePhotoUrls ?? this.maintenancePhotoUrls,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'userId': userId,
+      'id': id,
+      'createdBy': createdBy,
+      'assignedTo': assignedTo,
+      'createdAt': createdAt.millisecondsSinceEpoch,
+      'updatedAt': updatedAt.millisecondsSinceEpoch,
+      'status': status.name,
       'buildingId': buildingId,
       'buildingSpot': buildingSpot,
       'priority': priority.name,
       'title': title,
       'description': description,
-      'status': status.name,
-      'timestamp': timestamp.millisecondsSinceEpoch,
+      'maintenanceDescription': maintenanceDescription,
       'photoUrls': photoUrls,
-      'operatorId': operatorId,
-      'repairDescription': repairDescription,
-      'repairPhotosUrls': repairPhotosUrls,
+      'maintenancePhotoUrls': maintenancePhotoUrls,
     };
   }
 
   factory Report.fromMap(Map<String, dynamic> map) {
     return Report(
-      userId: map['userId'] as String,
+      id: map['id'] as String,
+      createdBy: map['createdBy'] as String,
+      assignedTo: map['assignedTo'] as String,
+      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
+      updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int),
+      status: ReportStatus.values.byName(map['status']),
       buildingId: map['buildingId'] as String,
       buildingSpot: map['buildingSpot'] as String,
       priority: PriorityLevel.values.byName(map['priority']),
       title: map['title'] as String,
       description: map['description'] as String,
-      status: ReportStatus.values.byName(map['status']),
-      timestamp: DateTime.fromMillisecondsSinceEpoch(map['timestamp'] as int),
+      maintenanceDescription: map['maintenanceDescription'] as String,
       photoUrls: List<String>.from((map['photoUrls'] as List<String>)),
-      operatorId: map['operatorId'] as String,
-      repairDescription: map['repairDescription'] as String,
-      repairPhotosUrls: List<String>.from((map['repairPhotosUrls'] as List<String>)),
+      maintenancePhotoUrls:
+          List<String>.from((map['maintenancePhotoUrls'] as List<String>)),
     );
   }
 
@@ -115,40 +128,44 @@ class Report {
 
   @override
   String toString() {
-    return 'Report(userId: $userId, buildingId: $buildingId, buildingSpot: $buildingSpot, priority: $priority, title: $title, description: $description, status: $status, timestamp: $timestamp, photoUrls: $photoUrls, operatorId: $operatorId, repairDescription: $repairDescription, repairPhotosUrls: $repairPhotosUrls)';
+    return 'Report(id: $id, createdBy: $createdBy, assignedTo: $assignedTo, createdAt: $createdAt, updatedAt: $updatedAt, status: $status, buildingId: $buildingId, buildingSpot: $buildingSpot, priority: $priority, title: $title, description: $description, maintenanceDescription: $maintenanceDescription, photoUrls: $photoUrls, maintenancePhotoUrls: $maintenancePhotoUrls)';
   }
 
   @override
   bool operator ==(covariant Report other) {
     if (identical(this, other)) return true;
 
-    return other.userId == userId &&
+    return other.id == id &&
+        other.createdBy == createdBy &&
+        other.assignedTo == assignedTo &&
+        other.createdAt == createdAt &&
+        other.updatedAt == updatedAt &&
+        other.status == status &&
         other.buildingId == buildingId &&
         other.buildingSpot == buildingSpot &&
         other.priority == priority &&
         other.title == title &&
         other.description == description &&
-        other.status == status &&
-        other.timestamp == timestamp &&
+        other.maintenanceDescription == maintenanceDescription &&
         listEquals(other.photoUrls, photoUrls) &&
-        other.operatorId == operatorId &&
-        other.repairDescription == repairDescription &&
-        listEquals(other.repairPhotosUrls, repairPhotosUrls);
+        listEquals(other.maintenancePhotoUrls, maintenancePhotoUrls);
   }
 
   @override
   int get hashCode {
-    return userId.hashCode ^
+    return id.hashCode ^
+        createdBy.hashCode ^
+        assignedTo.hashCode ^
+        createdAt.hashCode ^
+        updatedAt.hashCode ^
+        status.hashCode ^
         buildingId.hashCode ^
         buildingSpot.hashCode ^
         priority.hashCode ^
         title.hashCode ^
         description.hashCode ^
-        status.hashCode ^
-        timestamp.hashCode ^
+        maintenanceDescription.hashCode ^
         photoUrls.hashCode ^
-        operatorId.hashCode ^
-        repairDescription.hashCode ^
-        repairPhotosUrls.hashCode;
+        maintenancePhotoUrls.hashCode;
   }
 }

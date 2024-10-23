@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'src/app_bootstrap.dart';
 import 'src/exceptions/async_error_logger.dart';
 

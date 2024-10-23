@@ -1,7 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../../authentication/data/auth_repository.dart';
-import '../../data/reports_repository.dart';
+
+import '../../../authentication/domain/user_profile.dart';
 import '../../domain/report.dart';
+import 'reports_list_controller.dart';
 
 part 'report_dismissible_tile_controller.g.dart';
 
@@ -10,18 +11,13 @@ class ReportDismissibleTileController extends _$ReportDismissibleTileController 
   @override
   FutureOr<void> build() {}
 
-  Future<void> deleteReport(Report report) async {
+  Future<void> assignReport(
+    Report report,
+    UserProfile userProfile,
+  ) async {
     state = const AsyncLoading();
-    await AsyncValue.guard(
-      () => ref.read(reportsRepositoryProvider).deleteReport(report),
-    );
-  }
-
-  Future<void> assignReport(Report report) async {
-    state = const AsyncLoading();
-    final userProfile = ref.read(authRepositoryProvider).currentUser!;
     state = await AsyncValue.guard(
-      () => ref.read(reportsRepositoryProvider).assignReportToOperator(
+      () => ref.read(reportsListControllerProvider.notifier).assignReport(
             report: report,
             operatorId: userProfile.appUser.uid,
           ),
@@ -31,7 +27,13 @@ class ReportDismissibleTileController extends _$ReportDismissibleTileController 
   Future<void> unassignReport(Report report) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(
-      () => ref.read(reportsRepositoryProvider).unassignReportFromOperator(report),
+        () => ref.read(reportsListControllerProvider.notifier).unassignReport(report));
+  }
+
+  Future<void> deleteReport(Report report) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(
+      () => ref.read(reportsListControllerProvider.notifier).deleteReport(report),
     );
   }
 }

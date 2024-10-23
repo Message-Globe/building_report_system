@@ -1,0 +1,155 @@
+{
+    "@@locale": "en",
+    "errorOccurred": "An error occurred",
+    "@errorOccurred": {
+        "description": "A message displayed when a general error occurs"
+    },
+    "notImplemented": "Not implemented",
+    "@notImplemented": {
+        "description": "Message indicating that a feature is not implemented"
+    },
+    "wrongCredentials": "Wrong credentials",
+    "@wrongCredentials": {
+        "description": "Error message for incorrect credentials"
+    },
+    "userNotFound": "User not found",
+    "@userNotFound": {
+        "description": "Error message when the user is not found"
+    },
+    "wrongPassword": "Wrong password",
+    "@wrongPassword": {
+        "description": "Error message for an incorrect password"
+    },
+    "completeAllFields": "Please complete all fields",
+    "@completeAllFields": {
+        "description": "Message asking the user to complete all fields"
+    },
+    "addReport": "Add Report",
+    "@addReport": {
+        "description": "Button label to add a report"
+    },
+    "provideRepairDetailsOrPhotos": "Please provide repair details or photos",
+    "@provideRepairDetailsOrPhotos": {
+        "description": "Message asking the user to provide details or photos of the repair"
+    },
+    "provideRepairDetails": "Please provide repair details",
+    "@provideRepairDetails": {
+        "description": "Message asking the user to provide details of the repair"
+    },
+    "editReport": "Edit Report",
+    "@editReport": {
+        "description": "Label for the edit report screen"
+    },
+    "title": "Title",
+    "@title": {
+        "description": "Label for the report title"
+    },
+    "description": "Description",
+    "@description": {
+        "description": "Label for the report description"
+    },
+    "building": "Building",
+    "@building": {
+        "description": "Label for the building name"
+    },
+    "buildingSpot": "Building Spot",
+    "@buildingSpot": {
+        "description": "Label for the specific spot in the building"
+    },
+    "priority": "Priority",
+    "@priority": {
+        "description": "Label for the report priority level"
+    },
+    "repairDescription": "Repair Description",
+    "@repairDescription": {
+        "description": "Label for repair details"
+    },
+    "photoGallery": "Photo Gallery",
+    "@photoGallery": {
+        "description": "Label for photo gallery section"
+    },
+    "reportList": "Report List",
+    "@reportList": {
+        "description": "Label for the list of reports"
+    },
+    "profile": "Profile",
+    "@profile": {
+        "description": "Label for the user profile section"
+    },
+    "selectBuilding": "Select Building",
+    "@selectBuilding": {
+        "description": "Label for selecting a building"
+    },
+    "allBuildings": "All Buildings",
+    "@allBuildings": {
+        "description": "Label to select all buildings"
+    },
+    "swipeToComplete": "Swipe to complete report:",
+    "@swipeToComplete": {
+        "description": "Instruction to swipe to complete a report"
+    },
+    "reportStatusCompleted": "Report status Completed",
+    "@reportStatusCompleted": {
+        "description": "Message indicating that the report is completed"
+    },
+    "datetime": "Datetime",
+    "@datetime": {
+        "description": "Label for displaying date and time"
+    },
+    "filterReports": "Filter Reports",
+    "@filterReports": {
+        "description": "Label for the filter reports dialog"
+    },
+    "showCompletedReports": "Show completed Reports",
+    "@showCompletedReports": {
+        "description": "Option to show completed reports"
+    },
+    "showDeletedReports": "Show Deleted Reports",
+    "@showDeletedReports": {
+        "description": "Option to show deleted reports"
+    },
+    "clear": "Clear",
+    "@clear": {
+        "description": "Button label to clear the filters"
+    },
+    "cancel": "Cancel",
+    "@cancel": {
+        "description": "Button label to cancel an action"
+    },
+    "apply": "Apply",
+    "@apply": {
+        "description": "Button label to apply filters or changes"
+    },
+    "local": "Local",
+    "@local": {
+        "description": "Label for local context"
+    },
+    "repair": "repair",
+    "@repair": {
+        "description": "Label for repair context"
+    },
+    "photos": "photos:",
+    "@photos": {
+        "description": "Label for showing photos"
+    },
+    "addPhoto": "Add Photo",
+    "@addPhoto": {
+        "description": "Button label to add a photo"
+    },
+    "selectPriority": "Select Priority",
+    "@selectPriority": {
+        "description": "Label for selecting the priority level"
+    },
+    "error": "Error",
+    "@error": {
+        "description": "Label for showing an error"
+    },
+    "buildingReportSystem": "Building Report System",
+    "@buildingReportSystem": {
+        "description": "App title for the Building Report System"
+    },
+    "swipeRightToComplete": "Swipe right to mark as Completed",
+    "@swipeRightToComplete": {
+        "description": "Instruction to swipe right to mark the report as completed"
+    }
+}

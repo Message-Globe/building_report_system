@@ -1,4 +1,6 @@
-import '../controllers/edit_report_screen_controller.dart';
+import '../controllers/reports_list_controller.dart';
+import '../../../../utils/context_extensions.dart';
+
 import '../widgets/building_selection_dropdown.dart';
 import '../widgets/complete_report_tile.dart';
 import '../widgets/custom_text_field.dart';
@@ -27,7 +29,7 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _buildingSpotController = TextEditingController();
-  late String _selectedBuilding;
+  late String _selectedBuildingId;
   late PriorityLevel _selectedPriority;
   final List<File> _localImages = [];
   final List<String> _remoteImages = [];
@@ -41,11 +43,11 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
     _titleController.text = widget.report.title;
     _descriptionController.text = widget.report.description;
     _buildingSpotController.text = widget.report.buildingSpot;
-    _selectedBuilding = widget.report.buildingId;
+    _selectedBuildingId = widget.report.buildingId;
     _selectedPriority = widget.report.priority;
     _remoteImages.addAll(widget.report.photoUrls);
-    _repairDescriptionController.text = widget.report.repairDescription;
-    _repairRemoteImages.addAll(widget.report.repairPhotosUrls);
+    _repairDescriptionController.text = widget.report.maintenanceDescription;
+    _repairRemoteImages.addAll(widget.report.maintenancePhotoUrls);
   }
 
   @override
@@ -61,7 +63,7 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
     final title = _titleController.text;
     final description = _descriptionController.text;
     final buildingSpot = _buildingSpotController.text;
-    final repairDescription = _repairDescriptionController.text;
+    final maintenanceDescription = _repairDescriptionController.text;
     final allImages = [
       ..._remoteImages,
       ..._localImages.map((file) => file.path),
@@ -74,50 +76,50 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
     if (isReporter) {
       if (title.isEmpty || description.isEmpty || buildingSpot.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please complete all fields')),
+          SnackBar(content: Text(context.loc.completeAllFields)),
         );
         return;
       }
     } else {
-      final hasRepairContent = repairDescription.isNotEmpty ||
+      final hasRepairContent = maintenanceDescription.isNotEmpty ||
           _repairLocalImages.isNotEmpty ||
           _repairRemoteImages.isNotEmpty;
       if (!hasRepairContent) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please provide repair details or photos')),
+          SnackBar(content: Text(context.loc.provideRepairDetailsOrPhotos)),
         );
         return;
       }
     }
 
-    await ref.read(editReportScreenControllerProvider.notifier).updateReport(
+    await ref.read(reportsListControllerProvider.notifier).updateReport(
           report: widget.report,
-          buildingId: _selectedBuilding,
+          buildingId: _selectedBuildingId,
           buildingSpot: buildingSpot,
           priority: _selectedPriority,
           title: title,
           description: description,
           photoUrls: allImages,
-          repairDescription: repairDescription,
-          repairPhotosUrls: allRepairImages,
+          maintenanceDescription: maintenanceDescription,
+          maintenancePhotoUrls: allRepairImages,
         );
 
     ref.read(goRouterProvider).pop();
   }
 
   Future<bool> _completeReport() async {
-    final repairDescription = _repairDescriptionController.text;
-    if (repairDescription.isEmpty) {
+    final maintenanceDescription = _repairDescriptionController.text;
+    if (maintenanceDescription.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please provide repair details')),
+        SnackBar(content: Text(context.loc.provideRepairDetails)),
       );
       return Future.value(false);
     }
 
-    await ref.read(editReportScreenControllerProvider.notifier).completeReport(
+    await ref.read(reportsListControllerProvider.notifier).completeReport(
           report: widget.report,
-          repairDescription: repairDescription,
-          repairPhotosUrls: _repairRemoteImages,
+          maintenanceDescription: maintenanceDescription,
+          maintenancePhotoUrls: _repairRemoteImages,
         );
 
     ref.read(goRouterProvider).pop();
@@ -129,16 +131,16 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
     final userProfile = ref.watch(authRepositoryProvider).currentUser!;
     final isReporter = userProfile.role == UserRole.reporter;
     final isOperator = userProfile.role == UserRole.operator;
-    final reportEditable = widget.report.status == ReportStatus.open;
-    final isLoading = ref.watch(editReportScreenControllerProvider).isLoading;
-    final isAssignedToMe = widget.report.operatorId == userProfile.appUser.uid &&
+    final reportEditable = widget.report.status == ReportStatus.opened;
+    final isLoading = ref.watch(reportsListControllerProvider).isLoading;
+    final isAssignedToMe = widget.report.assignedTo == userProfile.appUser.uid &&
         widget.report.status == ReportStatus.assigned;
 
     return Stack(
       children: <Widget>[
         Scaffold(
           appBar: AppBar(
-            title: const Text('Edit Report'),
+            title: Text(context.loc.editReport),
             actions: <Widget>[
               if ((isReporter && reportEditable) || isAssignedToMe)
                 IconButton(
@@ -153,48 +155,54 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
               children: <Widget>[
                 // Titolo
                 if (isReporter && reportEditable)
-                  CustomTextField(controller: _titleController, labelText: 'Report Title')
+                  CustomTextField(
+                    controller: _titleController,
+                    labelText: context.loc.title,
+                  )
                 else
-                  Text('Title: ${widget.report.title}'),
+                  Text("${context.loc.title}: ${widget.report.title}"),
                 gapH16,
 
                 // Data
-                DateDisplay(date: DateTime.now()),
+                DateDisplay(date: widget.report.createdAt),
                 gapH16,
 
                 // Descrizione
                 if (isReporter && reportEditable)
                   CustomTextField(
                     controller: _descriptionController,
-                    labelText: 'Description',
+                    labelText: context.loc.description,
                     maxLines: 3,
                   )
                 else
-                  Text('Description: ${widget.report.description}'),
+                  Text("${context.loc.description}: ${widget.report.description}"),
                 gapH16,
 
                 if (isReporter && reportEditable)
                   BuildingSelectionDropdown(
-                    buildingIds: userProfile.buildingsIds,
-                    selectedBuilding: _selectedBuilding,
+                    buildings: userProfile.assignedBuildings.values.toList(),
+                    selectedBuilding: userProfile.assignedBuildings[_selectedBuildingId],
                     onBuildingSelected: (newBuilding) {
                       if (newBuilding != null) {
-                        setState(() => _selectedBuilding = newBuilding);
+                        setState(() => _selectedBuildingId = userProfile
+                            .assignedBuildings.entries
+                            .firstWhere((element) => element.value == newBuilding)
+                            .key);
                       }
                     },
                   )
                 else
-                  Text('Building: ${widget.report.buildingId}'),
+                  Text("${context.loc.building}: ${widget.report.buildingId}"),
                 gapH16,
 
                 // Building Spot (solo per reporter e se modificabile)
                 if (isReporter && reportEditable)
                   CustomTextField(
                     controller: _buildingSpotController,
-                    labelText: 'Building Spot',
+                    labelText: context.loc.buildingSpot,
                   )
                 else
-                  Text('Building Spot: ${widget.report.buildingSpot}'),
+                  Text("${context.loc.buildingSpot}: ${widget.report.buildingSpot}"),
                 gapH16,
 
                 // Priority Level (Dropdown)
@@ -208,7 +216,7 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
                     },
                   )
                 else
-                  Text('Priority: ${widget.report.priority.name}'),
+                  Text("${context.loc.priority}: ${widget.report.priority.name}"),
                 gapH16,
 
                 // Galleria combinata (locali e remote)
@@ -229,11 +237,12 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
                   if (isAssignedToMe)
                     CustomTextField(
                       controller: _repairDescriptionController,
-                      labelText: 'Repair Description',
+                      labelText: context.loc.repairDescription,
                       maxLines: 3,
                     )
                   else
-                    Text('Repair Description: ${widget.report.repairDescription}'),
+                    Text(
+                        "${context.loc.repairDescription}: ${widget.report.maintenanceDescription}"),
                   gapH16,
                   CombinedImageGallery(
                     isOperator: true,

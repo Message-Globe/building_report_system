@@ -1,4 +1,5 @@
-import '../../../../localization/string_hardcoded.dart';
+import '../../../../utils/context_extensions.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -12,10 +13,10 @@ class DateDisplay extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final dateFormatter = ref.read(dateFormatterProvider);
+    final dateAndTimeFormatter = ref.read(dateAndTimeFormatterProvider);
 
     return Text(
-      'Datetime: ${dateFormatter.format(date)}'.hardcoded,
+      "${context.loc.datetime}: ${dateAndTimeFormatter.format(date)}",
       style: const TextStyle(
         fontSize: Sizes.p16,
         fontWeight: FontWeight.bold,

@@ -1,6 +1,6 @@
+import 'package:building_report_system/src/features/reporting/data/reports_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../authentication/domain/user_profile.dart';
 import '../../domain/report.dart';
 import 'reports_list_controller.dart';
 
@@ -11,29 +11,78 @@ class ReportDismissibleTileController extends _$ReportDismissibleTileController 
   @override
   FutureOr<void> build() {}
 
-  Future<void> assignReport(
-    Report report,
-    UserProfile userProfile,
-  ) async {
+  // Gestisci l'assegnazione del report
+  FutureOr<void> assignReport(Report report, String operatorId) async {
+    // Mostra il caricamento solo per la tile corrente
     state = const AsyncLoading();
+
     state = await AsyncValue.guard(
-      () => ref.read(reportsListControllerProvider.notifier).assignReport(
-            report: report,
-            operatorId: userProfile.appUser.uid,
-          ),
+      () async {
+        // Chiama il backend per assegnare il report
+        await ref.read(reportsRepositoryProvider).assignReportToOperator(
+              report: report,
+              operatorId: operatorId,
+            );
+
+        // Notifica il controller della lista che il report è stato aggiornato
+        ref.read(reportsListControllerProvider.notifier).updateReportInList(
+              report.copyWith(
+                assignedTo: operatorId,
+                status: ReportStatus.assigned,
+              ),
+            );
+
+        // Una volta completato, rimuovi lo stato di caricamento
+        return;
+      },
     );
   }
 
-  Future<void> unassignReport(Report report) async {
+  // Gestisci la disassegnazione del report
+  FutureOr<void> unassignReport(Report report) async {
+    // Mostra il caricamento solo per la tile corrente
     state = const AsyncLoading();
-    state = await AsyncValue.guard(
-        () => ref.read(reportsListControllerProvider.notifier).unassignReport(report));
-  }
 
-  Future<void> deleteReport(Report report) async {
-    state = const AsyncLoading();
     state = await AsyncValue.guard(
-      () => ref.read(reportsListControllerProvider.notifier).deleteReport(report),
+      () async {
+        // Chiama il backend per disassegnare il report
+        await ref.read(reportsRepositoryProvider).unassignReportFromOperator(report);
+
+        // Notifica il controller della lista che il report è stato aggiornato
+        ref.read(reportsListControllerProvider.notifier).updateReportInList(
+              report.copyWith(
+                assignedTo: '', // Nessun operatore assegnato
+                status: ReportStatus.opened, // Cambia lo stato a 'opened'
+              ),
+            );
+
+        // Una volta completato, rimuovi lo stato di caricamento
+        return;
+      },
     );
   }
+
+  // Gestisci l'eliminazione del report
+  FutureOr<void> deleteReport(Report report) async {
+    // Mostra il caricamento solo per la tile corrente
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(
+      () async {
+        // Chiama il backend per eliminare il report
+        await ref.read(reportsRepositoryProvider).deleteReport(report);
+
+        // Notifica il controller della lista che il report è stato rimosso
+        ref.read(reportsListControllerProvider.notifier).updateReportInList(
+              report.copyWith(
+                status: ReportStatus.deleted, // Cambia lo stato a 'deleted'
+              ),
+            );
+
+        // Una volta completato, rimuovi lo stato di caricamento
+        return;
+      },
+    );
+  }
+  // TODO: check why missing animation after dismissing
 }

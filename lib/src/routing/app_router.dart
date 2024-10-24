@@ -1,3 +1,5 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../features/reporting/domain/report.dart';
 import '../features/reporting/presentation/screens/create_report_screen.dart';
 import '../features/reporting/presentation/screens/edit_report_screen.dart';
@@ -22,7 +24,7 @@ enum AppRoute {
 }
 
 @riverpod
-GoRouter goRouter(GoRouterRef ref) {
+GoRouter goRouter(Ref ref) {
   final authRepository = ref.watch(authRepositoryProvider);
 
   return GoRouter(

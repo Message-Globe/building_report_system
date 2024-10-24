@@ -7,7 +7,7 @@ part of 'report_dismissible_tile_controller.dart';
 // **************************************************************************
 
 String _$reportDismissibleTileControllerHash() =>
-    r'a0c0ec4c18814b70c4c7003be4372b18192bb1b8';
+    r'6668ab10f711dbd2c1e5f7c49cb9d7b992c332d3';
 
 /// See also [ReportDismissibleTileController].
 @ProviderFor(ReportDismissibleTileController)
@@ -25,4 +25,4 @@ final reportDismissibleTileControllerProvider =
 
 typedef _$ReportDismissibleTileController = AutoDisposeAsyncNotifier<void>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -1,4 +1,6 @@
-import '../controllers/reports_list_controller.dart';
+import 'package:building_report_system/src/features/reporting/presentation/controllers/create_report_screen_controller.dart';
+
+import '../../../authentication/domain/user_profile.dart';
 import '../../../../utils/context_extensions.dart';
 
 import '../../domain/report.dart';
@@ -38,10 +40,13 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
     super.dispose();
   }
 
-  void _submitReport() async {
+  void _submitReport(UserProfile userProfile) async {
     final title = _titleController.text;
     final description = _descriptionController.text;
     final buildingSpot = _buildingSpotController.text;
+    final buildingId = userProfile.assignedBuildings.entries
+        .firstWhere((element) => element.value == _selectedBuilding)
+        .key;
 
     if (title.isEmpty ||
         description.isEmpty ||
@@ -58,8 +63,8 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
     final imagesUrls = _images.map((image) => image.path).toList();
 
     // Chiama il metodo addReport
-    await ref.read(reportsListControllerProvider.notifier).addReport(
-          buildingId: _selectedBuilding!,
+    await ref.read(createReportScreenControllerProvider.notifier).createReport(
+          buildingId: buildingId,
           buildingSpot: buildingSpot,
           priority: _selectedPriority,
           title: title,
@@ -74,13 +79,13 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
   @override
   Widget build(BuildContext context) {
     ref.listen<AsyncValue>(
-      reportsListControllerProvider,
+      createReportScreenControllerProvider,
       (_, state) {
         state.showAlertDialogOnError(context);
       },
     );
 
-    final isLoading = ref.watch(reportsListControllerProvider).isLoading;
+    final isLoading = ref.watch(createReportScreenControllerProvider).isLoading;
     final userProfile = ref.watch(authRepositoryProvider).currentUser!;
 
     return Stack(
@@ -91,7 +96,7 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
             actions: <Widget>[
               IconButton(
                 icon: const Icon(Icons.save),
-                onPressed: _submitReport,
+                onPressed: () => _submitReport(userProfile),
               ),
             ],
           ),

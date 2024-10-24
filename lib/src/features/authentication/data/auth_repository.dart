@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../domain/user_profile.dart';
@@ -14,7 +15,7 @@ abstract class AuthRepository with ChangeNotifier {
 }
 
 @Riverpod(keepAlive: true)
-AuthRepository authRepository(AuthRepositoryRef ref) {
+AuthRepository authRepository(Ref ref) {
   // TODO: switch with real repo after completation
   return FakeAuthRepository();
   // return HttpAuthRepository();

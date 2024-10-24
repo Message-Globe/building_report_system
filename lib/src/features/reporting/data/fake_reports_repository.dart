@@ -183,6 +183,8 @@ class FakeReportsRepository implements ReportsRepository {
       throw Exception("Report is already assigned.");
     }
 
+    // throw Exception('test');
+
     await updateReport(
       report: report,
       status: ReportStatus.assigned,

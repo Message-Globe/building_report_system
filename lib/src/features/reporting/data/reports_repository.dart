@@ -1,3 +1,5 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../authentication/domain/user_profile.dart';
 import '../domain/report.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -54,13 +56,13 @@ abstract class ReportsRepository {
 }
 
 @Riverpod(keepAlive: true)
-ReportsRepository reportsRepository(ReportsRepositoryRef ref) {
+ReportsRepository reportsRepository(Ref ref) {
   // TODO: switch with real repo after completation
   return FakeReportsRepository();
 }
 
 @riverpod
-Future<List<Report>> reportsListFuture(ReportsListFutureRef ref) {
+Future<List<Report>> reportsListFuture(Ref ref) {
   final reportsRepository = ref.watch(reportsRepositoryProvider);
   final userProfile = ref.watch(authRepositoryProvider).currentUser!;
 

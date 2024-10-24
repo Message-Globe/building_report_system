@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'app_exception.dart';
@@ -18,11 +19,11 @@ class ErrorLogger {
 }
 
 @riverpod
-Future<void> triggerError(TriggerErrorRef ref) async {
+Future<void> triggerError(Ref ref) async {
   throw Exception('Simulated error for logging test');
 }
 
 @riverpod
-ErrorLogger errorLogger(ErrorLoggerRef ref) {
+ErrorLogger errorLogger(Ref ref) {
   return ErrorLogger();
 }

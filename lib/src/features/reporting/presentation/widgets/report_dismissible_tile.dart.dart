@@ -51,7 +51,7 @@ class ReportDismissibleTile extends ConsumerWidget {
       if (confirm == true) {
         await ref
             .read(reportDismissibleTileControllerProvider.notifier)
-            .assignReport(report, userProfile);
+            .assignReport(report, userProfile.appUser.uid);
       }
 
       return confirm ?? false;

@@ -1,4 +1,5 @@
-import '../controllers/reports_list_controller.dart';
+import 'package:building_report_system/src/features/reporting/presentation/controllers/edit_report_screen_controller.dart';
+
 import '../../../../utils/context_extensions.dart';
 
 import '../widgets/building_selection_dropdown.dart';
@@ -92,7 +93,7 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
       }
     }
 
-    await ref.read(reportsListControllerProvider.notifier).updateReport(
+    await ref.read(editReportScreenControllerProvider.notifier).updateReport(
           report: widget.report,
           buildingId: _selectedBuildingId,
           buildingSpot: buildingSpot,
@@ -116,7 +117,7 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
       return Future.value(false);
     }
 
-    await ref.read(reportsListControllerProvider.notifier).completeReport(
+    await ref.read(editReportScreenControllerProvider.notifier).completeReport(
           report: widget.report,
           maintenanceDescription: maintenanceDescription,
           maintenancePhotoUrls: _repairRemoteImages,
@@ -132,7 +133,7 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
     final isReporter = userProfile.role == UserRole.reporter;
     final isOperator = userProfile.role == UserRole.operator;
     final reportEditable = widget.report.status == ReportStatus.opened;
-    final isLoading = ref.watch(reportsListControllerProvider).isLoading;
+    final isLoading = ref.watch(editReportScreenControllerProvider).isLoading;
     final isAssignedToMe = widget.report.assignedTo == userProfile.appUser.uid &&
         widget.report.status == ReportStatus.assigned;
 

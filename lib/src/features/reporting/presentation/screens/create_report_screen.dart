@@ -1,3 +1,4 @@
+import 'package:building_report_system/src/features/authentication/domain/building.dart';
 import 'package:building_report_system/src/features/reporting/presentation/controllers/create_report_screen_controller.dart';
 
 import '../../../authentication/domain/user_profile.dart';
@@ -28,7 +29,7 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _buildingSpotController = TextEditingController();
-  String? _selectedBuilding;
+  Building? _selectedBuilding;
   PriorityLevel _selectedPriority = PriorityLevel.normal;
   final List<File> _images = [];
 
@@ -44,9 +45,6 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
     final title = _titleController.text;
     final description = _descriptionController.text;
     final buildingSpot = _buildingSpotController.text;
-    final buildingId = userProfile.assignedBuildings.entries
-        .firstWhere((element) => element.value == _selectedBuilding)
-        .key;
 
     if (title.isEmpty ||
         description.isEmpty ||
@@ -64,7 +62,7 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
 
     // Chiama il metodo addReport
     await ref.read(createReportScreenControllerProvider.notifier).createReport(
-          buildingId: buildingId,
+          building: _selectedBuilding!,
           buildingSpot: buildingSpot,
           priority: _selectedPriority,
           title: title,
@@ -124,7 +122,7 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
 
                 // Dropdown per selezionare l'edificio
                 BuildingSelectionDropdown(
-                  buildings: userProfile.assignedBuildings.values.toList(),
+                  buildings: userProfile.assignedBuildings,
                   selectedBuilding: _selectedBuilding,
                   onBuildingSelected: (newBuilding) => setState(
                     () => _selectedBuilding = newBuilding,

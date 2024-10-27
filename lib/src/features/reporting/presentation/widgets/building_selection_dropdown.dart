@@ -1,10 +1,12 @@
-import '../../../../utils/context_extensions.dart';
+import 'package:building_report_system/src/utils/context_extensions.dart';
 import 'package:flutter/material.dart';
 
+import '../../../authentication/domain/building.dart';
+
 class BuildingSelectionDropdown extends StatelessWidget {
-  final List<String> buildings;
-  final String? selectedBuilding;
-  final Function(String?) onBuildingSelected;
+  final List<Building> buildings;
+  final Building? selectedBuilding;
+  final Function(Building?) onBuildingSelected;
   final bool showAllBuildings;
 
   const BuildingSelectionDropdown({
@@ -17,7 +19,7 @@ class BuildingSelectionDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButton<String>(
+    return DropdownButton<Building>(
       value: selectedBuilding,
       hint: Text(context.loc.selectBuilding),
       onChanged: (newValue) {
@@ -25,15 +27,15 @@ class BuildingSelectionDropdown extends StatelessWidget {
       },
       items: [
         if (showAllBuildings)
-          DropdownMenuItem<String>(
+          DropdownMenuItem<Building>(
             value: null,
             child: Text(context.loc.allBuildings),
           ),
-        ...buildings.map<DropdownMenuItem<String>>(
-          (String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
+        ...buildings.map<DropdownMenuItem<Building>>(
+          (Building building) {
+            return DropdownMenuItem<Building>(
+              value: building,
+              child: Text(building.name),
             );
           },
         ),

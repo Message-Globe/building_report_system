@@ -6,22 +6,23 @@ part of 'filters_controllers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$showworkedFilterHash() => r'a0409ec64012563837639671cf4c9ca2576891f2';
+String _$showCompletedFilterHash() =>
+    r'b604f98508a8f2226dd3b550d611a4fdef900562';
 
-/// See also [ShowworkedFilter].
-@ProviderFor(ShowworkedFilter)
-final showworkedFilterProvider =
-    AutoDisposeNotifierProvider<ShowworkedFilter, bool>.internal(
-  ShowworkedFilter.new,
-  name: r'showworkedFilterProvider',
+/// See also [ShowCompletedFilter].
+@ProviderFor(ShowCompletedFilter)
+final showCompletedFilterProvider =
+    AutoDisposeNotifierProvider<ShowCompletedFilter, bool>.internal(
+  ShowCompletedFilter.new,
+  name: r'showCompletedFilterProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$showworkedFilterHash,
+      : _$showCompletedFilterHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ShowworkedFilter = AutoDisposeNotifier<bool>;
+typedef _$ShowCompletedFilter = AutoDisposeNotifier<bool>;
 String _$showDeletedFilterHash() => r'aad047a947ebad759cd031ba27a5168e8ebfc7f2';
 
 /// See also [ShowDeletedFilter].
@@ -56,12 +57,12 @@ final reverseOrderFilterProvider =
 
 typedef _$ReverseOrderFilter = AutoDisposeNotifier<bool>;
 String _$selectedBuildingFilterHash() =>
-    r'b829c60f0b6963ebbf2e5e252f7e1239981fae8a';
+    r'bfed2db1fc35d47a1a5e1db60efe532ba5fecef7';
 
 /// See also [SelectedBuildingFilter].
 @ProviderFor(SelectedBuildingFilter)
 final selectedBuildingFilterProvider =
-    AutoDisposeNotifierProvider<SelectedBuildingFilter, String?>.internal(
+    AutoDisposeNotifierProvider<SelectedBuildingFilter, Building?>.internal(
   SelectedBuildingFilter.new,
   name: r'selectedBuildingFilterProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -71,6 +72,6 @@ final selectedBuildingFilterProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$SelectedBuildingFilter = AutoDisposeNotifier<String?>;
+typedef _$SelectedBuildingFilter = AutoDisposeNotifier<Building?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

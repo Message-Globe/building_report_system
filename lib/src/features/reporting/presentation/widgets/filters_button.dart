@@ -3,6 +3,7 @@ import '../../../../utils/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../authentication/domain/building.dart';
 import '../controllers/filters_controllers.dart';
 import 'building_selection_dropdown.dart';
 
@@ -12,9 +13,9 @@ class FiltersButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Controlla se ci sono filtri attivi
-    final bool showWorked = ref.watch(showworkedFilterProvider);
+    final bool showWorked = ref.watch(showCompletedFilterProvider);
     final bool showDeleted = ref.watch(showDeletedFilterProvider);
-    final String? selectedBuilding = ref.watch(selectedBuildingFilterProvider);
+    final Building? selectedBuilding = ref.watch(selectedBuildingFilterProvider);
 
     // Se uno dei filtri è attivo, mostra il badge
     bool isFilterActive = showWorked || showDeleted || selectedBuilding != null;
@@ -50,9 +51,9 @@ class FiltersButton extends ConsumerWidget {
         return Consumer(
           builder: (_, ref, __) {
             // Usa variabili temporanee per i filtri
-            bool tempShowworked = ref.watch(showworkedFilterProvider);
+            bool tempShowWorked = ref.watch(showCompletedFilterProvider);
             bool tempShowDeleted = ref.watch(showDeletedFilterProvider);
-            String? tempSelectedBuilding = ref.watch(selectedBuildingFilterProvider);
+            Building? tempSelectedBuilding = ref.watch(selectedBuildingFilterProvider);
 
             return StatefulBuilder(
               builder: (context, setDialogState) {
@@ -64,11 +65,11 @@ class FiltersButton extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       BuildingSelectionDropdown(
-                        buildings: userProfile.assignedBuildings.values.toList(),
+                        buildings: userProfile.assignedBuildings,
                         selectedBuilding: tempSelectedBuilding,
-                        onBuildingSelected: (newValue) {
+                        onBuildingSelected: (newBuilding) {
                           setDialogState(() {
-                            tempSelectedBuilding = newValue;
+                            tempSelectedBuilding = newBuilding;
                           });
                         },
                         showAllBuildings: true,
@@ -76,10 +77,10 @@ class FiltersButton extends ConsumerWidget {
                       // Checkbox per "Show completed Reports"
                       CheckboxListTile(
                         title: Text(context.loc.showCompletedReports),
-                        value: tempShowworked,
+                        value: tempShowWorked,
                         onChanged: (value) {
                           setDialogState(() {
-                            tempShowworked = value ?? false;
+                            tempShowWorked = value ?? false;
                           });
                         },
                       ),
@@ -100,7 +101,7 @@ class FiltersButton extends ConsumerWidget {
                       onPressed: () {
                         // Reset di tutti i filtri
                         setDialogState(() {
-                          tempShowworked = false;
+                          tempShowWorked = false;
                           tempShowDeleted = false;
                           tempSelectedBuilding = null;
                         });
@@ -117,8 +118,8 @@ class FiltersButton extends ConsumerWidget {
                       onPressed: () {
                         // Applica i filtri solo quando si preme "Apply"
                         ref
-                            .read(showworkedFilterProvider.notifier)
-                            .update(tempShowworked);
+                            .read(showCompletedFilterProvider.notifier)
+                            .update(tempShowWorked);
                         ref
                             .read(showDeletedFilterProvider.notifier)
                             .update(tempShowDeleted);

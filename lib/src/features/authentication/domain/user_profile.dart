@@ -3,6 +3,8 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
+import 'package:building_report_system/src/features/authentication/domain/building.dart';
+
 import 'app_user.dart';
 
 enum UserRole {
@@ -12,6 +14,14 @@ enum UserRole {
 }
 
 class UserProfile {
+  // Dati base dell'utente (da AppUser)
+  final AppUser appUser;
+
+  // Dati specifici del profilo
+  final String name;
+  final List<Building> assignedBuildings;
+  final UserRole role;
+
   const UserProfile({
     required this.appUser,
     required this.name,
@@ -19,18 +29,10 @@ class UserProfile {
     required this.role,
   });
 
-  // Dati base dell'utente (da AppUser)
-  final AppUser appUser;
-
-  // Dati specifici del profilo
-  final String name;
-  final Map<String, String> assignedBuildings;
-  final UserRole role;
-
   UserProfile copyWith({
     AppUser? appUser,
     String? name,
-    Map<String, String>? assignedBuildings,
+    List<Building>? assignedBuildings,
     UserRole? role,
   }) {
     return UserProfile(
@@ -45,7 +47,7 @@ class UserProfile {
     return <String, dynamic>{
       'appUser': appUser.toMap(),
       'name': name,
-      'assignedBuildings': assignedBuildings,
+      'assignedBuildings': assignedBuildings.map((x) => x.toMap()).toList(),
       'role': role.name,
     };
   }
@@ -54,8 +56,11 @@ class UserProfile {
     return UserProfile(
       appUser: AppUser.fromMap(map['appUser'] as Map<String, dynamic>),
       name: map['name'] as String,
-      assignedBuildings:
-          Map<String, String>.from((map['assignedBuildings'] as Map<String, String>)),
+      assignedBuildings: List<Building>.from(
+        (map['assignedBuildings'] as List<int>).map<Building>(
+          (x) => Building.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
       role: UserRole.values.byName(map['role']),
     );
   }
@@ -76,7 +81,7 @@ class UserProfile {
 
     return other.appUser == appUser &&
         other.name == name &&
-        mapEquals(other.assignedBuildings, assignedBuildings) &&
+        listEquals(other.assignedBuildings, assignedBuildings) &&
         other.role == role;
   }
 

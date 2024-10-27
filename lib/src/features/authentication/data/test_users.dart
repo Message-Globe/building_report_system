@@ -1,17 +1,22 @@
+import '../domain/building.dart';
 import '../domain/user_profile.dart';
 import '../domain/app_user.dart';
 
-const List<UserProfile> kTestUsers = <UserProfile>[
+// Definizione degli edifici
+final Building schoolBuilding = Building(id: '1', name: 'Scuola Media');
+final Building hospitalBuilding = Building(id: '2', name: 'Ospedale');
+
+List<UserProfile> kTestUsers = <UserProfile>[
   UserProfile(
     appUser: AppUser(
       uid: '1',
       email: 'reporter@example.com',
     ),
     name: 'John Reporter',
-    assignedBuildings: {
-      '1': 'Scuola media',
-      '2': 'Ospedale',
-    },
+    assignedBuildings: [
+      schoolBuilding,
+      hospitalBuilding,
+    ],
     role: UserRole.reporter,
   ),
   UserProfile(
@@ -20,10 +25,10 @@ const List<UserProfile> kTestUsers = <UserProfile>[
       email: 'operator@example.com',
     ),
     name: 'Jane Operator',
-    assignedBuildings: {
-      '1': 'Scuola media',
-      '2': 'Ospedale',
-    },
+    assignedBuildings: [
+      schoolBuilding,
+      hospitalBuilding,
+    ],
     role: UserRole.operator,
   ),
   UserProfile(
@@ -32,10 +37,10 @@ const List<UserProfile> kTestUsers = <UserProfile>[
       email: 'admin@example.com',
     ),
     name: 'Alice Admin',
-    assignedBuildings: {
-      '1': 'Scuola media',
-      '2': 'Ospedale',
-    },
+    assignedBuildings: [
+      schoolBuilding,
+      hospitalBuilding,
+    ],
     role: UserRole.admin,
   ),
 ];

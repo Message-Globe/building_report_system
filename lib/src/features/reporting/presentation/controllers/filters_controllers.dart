@@ -1,9 +1,11 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../authentication/domain/building.dart';
+
 part 'filters_controllers.g.dart';
 
 @riverpod
-class ShowworkedFilter extends _$ShowworkedFilter {
+class ShowCompletedFilter extends _$ShowCompletedFilter {
   @override
   bool build() {
     return false;
@@ -41,11 +43,11 @@ class ReverseOrderFilter extends _$ReverseOrderFilter {
 @riverpod
 class SelectedBuildingFilter extends _$SelectedBuildingFilter {
   @override
-  String? build() {
+  Building? build() {
     return null;
   }
 
-  void update(String? buildingId) {
-    state = buildingId;
+  void update(Building? building) {
+    state = building;
   }
 }

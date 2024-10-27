@@ -3,6 +3,8 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
+import 'package:building_report_system/src/features/authentication/domain/building.dart';
+
 enum ReportStatus {
   opened,
   assigned,
@@ -22,7 +24,7 @@ class Report {
   final DateTime createdAt;
   final DateTime updatedAt;
   final ReportStatus status;
-  final String buildingId;
+  final Building building;
   final String buildingSpot;
   final PriorityLevel priority;
   final String title;
@@ -38,7 +40,7 @@ class Report {
     required this.createdAt,
     required this.updatedAt,
     required this.status,
-    required this.buildingId,
+    required this.building,
     required this.buildingSpot,
     required this.priority,
     required this.title,
@@ -55,7 +57,7 @@ class Report {
     DateTime? createdAt,
     DateTime? updatedAt,
     ReportStatus? status,
-    String? buildingId,
+    Building? building,
     String? buildingSpot,
     PriorityLevel? priority,
     String? title,
@@ -71,7 +73,7 @@ class Report {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       status: status ?? this.status,
-      buildingId: buildingId ?? this.buildingId,
+      building: building ?? this.building,
       buildingSpot: buildingSpot ?? this.buildingSpot,
       priority: priority ?? this.priority,
       title: title ?? this.title,
@@ -90,7 +92,7 @@ class Report {
       'createdAt': createdAt.millisecondsSinceEpoch,
       'updatedAt': updatedAt.millisecondsSinceEpoch,
       'status': status.name,
-      'buildingId': buildingId,
+      'building': building.toMap(),
       'buildingSpot': buildingSpot,
       'priority': priority.name,
       'title': title,
@@ -109,7 +111,7 @@ class Report {
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
       updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int),
       status: ReportStatus.values.byName(map['status']),
-      buildingId: map['buildingId'] as String,
+      building: Building.fromMap(map['building'] as Map<String, dynamic>),
       buildingSpot: map['buildingSpot'] as String,
       priority: PriorityLevel.values.byName(map['priority']),
       title: map['title'] as String,
@@ -128,7 +130,7 @@ class Report {
 
   @override
   String toString() {
-    return 'Report(id: $id, createdBy: $createdBy, assignedTo: $assignedTo, createdAt: $createdAt, updatedAt: $updatedAt, status: $status, buildingId: $buildingId, buildingSpot: $buildingSpot, priority: $priority, title: $title, description: $description, maintenanceDescription: $maintenanceDescription, photoUrls: $photoUrls, maintenancePhotoUrls: $maintenancePhotoUrls)';
+    return 'Report(id: $id, createdBy: $createdBy, assignedTo: $assignedTo, createdAt: $createdAt, updatedAt: $updatedAt, status: $status, building: $building, buildingSpot: $buildingSpot, priority: $priority, title: $title, description: $description, maintenanceDescription: $maintenanceDescription, photoUrls: $photoUrls, maintenancePhotoUrls: $maintenancePhotoUrls)';
   }
 
   @override
@@ -141,7 +143,7 @@ class Report {
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt &&
         other.status == status &&
-        other.buildingId == buildingId &&
+        other.building == building &&
         other.buildingSpot == buildingSpot &&
         other.priority == priority &&
         other.title == title &&
@@ -159,7 +161,7 @@ class Report {
         createdAt.hashCode ^
         updatedAt.hashCode ^
         status.hashCode ^
-        buildingId.hashCode ^
+        building.hashCode ^
         buildingSpot.hashCode ^
         priority.hashCode ^
         title.hashCode ^

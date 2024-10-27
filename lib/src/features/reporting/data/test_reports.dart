@@ -1,22 +1,26 @@
+import '../../authentication/domain/building.dart';
 import '../domain/report.dart';
 
+// Definizione degli edifici
+final Building schoolBuilding = Building(id: '1', name: 'Scuola Media');
+final Building hospitalBuilding = Building(id: '2', name: 'Ospedale');
+
+// Lista dei report di test
 final kTestReports = <Report>[
   Report(
     id: '1',
     createdBy: "1",
     assignedTo: "2",
-    buildingId: "1",
+    building: schoolBuilding,
     buildingSpot: "Aula 3",
     priority: PriorityLevel.urgent,
     title: 'Interruttore luce rotto',
     description:
-        "L'interruttore della luca presenta dei problemi nei cavi in prossimità di ...",
+        "L'interruttore della luce presenta dei problemi nei cavi in prossimità di ...",
     status: ReportStatus.assigned,
     createdAt: DateTime.parse('2024-10-08'),
-    updatedAt: DateTime.parse('2024-10-08'), // Uguale a createdAt per ora
+    updatedAt: DateTime.parse('2024-10-08'),
     photoUrls: [
-      "https://static.italiaoggi.it/content_upload/img/2608/75/2608751/dannimaltempo-631775.jpg",
-      "https://media-assets.wired.it/photos/646b383a14e3921f4e7c7c3b/16:9/w_2560%2Cc_limit/1256998159",
       "https://static.italiaoggi.it/content_upload/img/2608/75/2608751/dannimaltempo-631775.jpg",
       "https://media-assets.wired.it/photos/646b383a14e3921f4e7c7c3b/16:9/w_2560%2Cc_limit/1256998159",
     ],
@@ -27,7 +31,7 @@ final kTestReports = <Report>[
     id: '2',
     createdBy: "1",
     assignedTo: "",
-    buildingId: "2",
+    building: hospitalBuilding,
     buildingSpot: "Sala verde - Reparto Chirurgia",
     priority: PriorityLevel.normal,
     title: 'Sistema di raffreddamento rotto',
@@ -46,7 +50,7 @@ final kTestReports = <Report>[
     id: '3',
     createdBy: "1",
     assignedTo: "2",
-    buildingId: "1",
+    building: schoolBuilding,
     buildingSpot: "Aula 5",
     priority: PriorityLevel.urgent,
     title: 'Porta da riparare',
@@ -65,7 +69,7 @@ final kTestReports = <Report>[
     id: '4',
     createdBy: "1",
     assignedTo: "2",
-    buildingId: "2",
+    building: hospitalBuilding,
     buildingSpot: "Corridoio ingresso",
     priority: PriorityLevel.normal,
     title: 'Finestra rotta',
@@ -84,7 +88,7 @@ final kTestReports = <Report>[
     id: '5',
     createdBy: "1",
     assignedTo: "2",
-    buildingId: "1",
+    building: schoolBuilding,
     buildingSpot: "Scale piano terra - primo piano",
     priority: PriorityLevel.normal,
     title: 'Corrimano pericoloso',

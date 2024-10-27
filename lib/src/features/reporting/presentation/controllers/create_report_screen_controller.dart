@@ -1,3 +1,4 @@
+import 'package:building_report_system/src/features/authentication/domain/building.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../data/reports_repository.dart';
 import '../../domain/report.dart';
@@ -15,7 +16,7 @@ class CreateReportScreenController extends _$CreateReportScreenController {
 
   // Metodo per creare un nuovo report
   Future<void> createReport({
-    required String buildingId,
+    required Building building,
     required String buildingSpot,
     required PriorityLevel priority,
     required String title,
@@ -32,7 +33,7 @@ class CreateReportScreenController extends _$CreateReportScreenController {
       // Effettua la chiamata al backend per creare il nuovo report
       final newReport = await ref.read(reportsRepositoryProvider).addReport(
             createdBy: userProfile.appUser.uid,
-            buildingId: buildingId,
+            building: building,
             buildingSpot: buildingSpot,
             priority: priority,
             title: title,

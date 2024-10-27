@@ -41,8 +41,7 @@ class ReportsListScreen extends ConsumerWidget {
       body: AsyncValueWidget(
         value: reportsListValue,
         data: (reports) => RefreshIndicator(
-          onRefresh: () async =>
-              await ref.read(reportsListControllerProvider.notifier).refreshReports(),
+          onRefresh: ref.read(reportsListControllerProvider.notifier).refreshReports,
           child: ListView.builder(
             itemCount: reports.length,
             itemBuilder: (context, index) {

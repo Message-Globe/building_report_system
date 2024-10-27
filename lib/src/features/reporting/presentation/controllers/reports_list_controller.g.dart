@@ -7,7 +7,7 @@ part of 'reports_list_controller.dart';
 // **************************************************************************
 
 String _$reportsListControllerHash() =>
-    r'59f14ee7a0b21026efd4162676731a639fb0a0a6';
+    r'6ba5891bb602ba5d71be48b1a0aa123d9fdf2cab';
 
 /// See also [ReportsListController].
 @ProviderFor(ReportsListController)

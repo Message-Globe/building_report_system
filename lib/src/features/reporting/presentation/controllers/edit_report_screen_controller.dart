@@ -1,3 +1,4 @@
+import 'package:building_report_system/src/features/authentication/domain/building.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../data/reports_repository.dart';
@@ -13,7 +14,7 @@ class EditReportScreenController extends _$EditReportScreenController {
 
   Future<void> updateReport({
     required Report report,
-    required String buildingId,
+    required Building building,
     required String buildingSpot,
     required PriorityLevel priority,
     required String title,
@@ -28,7 +29,7 @@ class EditReportScreenController extends _$EditReportScreenController {
       // Effettua la chiamata al backend per aggiornare il report
       await ref.read(reportsRepositoryProvider).updateReport(
             report: report,
-            buildingId: buildingId,
+            building: building,
             buildingSpot: buildingSpot,
             priority: priority,
             title: title,
@@ -41,7 +42,7 @@ class EditReportScreenController extends _$EditReportScreenController {
       // Aggiorna il controller della lista dei reports
       ref.read(reportsListControllerProvider.notifier).updateReportInList(
             report.copyWith(
-              buildingId: buildingId,
+              building: building,
               buildingSpot: buildingSpot,
               priority: priority,
               title: title,

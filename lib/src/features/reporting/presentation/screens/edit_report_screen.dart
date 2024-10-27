@@ -1,3 +1,4 @@
+import 'package:building_report_system/src/features/authentication/domain/building.dart';
 import 'package:building_report_system/src/features/reporting/presentation/controllers/edit_report_screen_controller.dart';
 
 import '../../../../utils/context_extensions.dart';
@@ -30,7 +31,7 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _buildingSpotController = TextEditingController();
-  late String _selectedBuildingId;
+  late Building _selectedBuilding;
   late PriorityLevel _selectedPriority;
   final List<File> _localImages = [];
   final List<String> _remoteImages = [];
@@ -44,7 +45,7 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
     _titleController.text = widget.report.title;
     _descriptionController.text = widget.report.description;
     _buildingSpotController.text = widget.report.buildingSpot;
-    _selectedBuildingId = widget.report.buildingId;
+    _selectedBuilding = widget.report.building;
     _selectedPriority = widget.report.priority;
     _remoteImages.addAll(widget.report.photoUrls);
     _repairDescriptionController.text = widget.report.maintenanceDescription;
@@ -95,7 +96,7 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
 
     await ref.read(editReportScreenControllerProvider.notifier).updateReport(
           report: widget.report,
-          buildingId: _selectedBuildingId,
+          building: _selectedBuilding,
           buildingSpot: buildingSpot,
           priority: _selectedPriority,
           title: title,
@@ -181,19 +182,16 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
 
                 if (isReporter && reportEditable)
                   BuildingSelectionDropdown(
-                    buildings: userProfile.assignedBuildings.values.toList(),
-                    selectedBuilding: userProfile.assignedBuildings[_selectedBuildingId],
+                    buildings: userProfile.assignedBuildings,
+                    selectedBuilding: _selectedBuilding,
                     onBuildingSelected: (newBuilding) {
                       if (newBuilding != null) {
-                        setState(() => _selectedBuildingId = userProfile
-                            .assignedBuildings.entries
-                            .firstWhere((element) => element.value == newBuilding)
-                            .key);
+                        setState(() => _selectedBuilding = newBuilding);
                       }
                     },
                   )
                 else
-                  Text("${context.loc.building}: ${widget.report.buildingId}"),
+                  Text("${context.loc.building}: ${widget.report.building.name}"),
                 gapH16,
 
                 // Building Spot (solo per reporter e se modificabile)

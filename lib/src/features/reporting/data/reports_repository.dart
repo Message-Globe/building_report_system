@@ -1,27 +1,19 @@
+import 'package:building_report_system/src/features/authentication/domain/building.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../authentication/domain/user_profile.dart';
 import '../domain/report.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../authentication/data/auth_repository.dart';
-import '../presentation/controllers/filters_controllers.dart';
 import 'fake_reports_repository.dart';
 
 part 'reports_repository.g.dart';
 
 abstract class ReportsRepository {
-  Future<List<Report>> fetchReportsList({
-    required bool showCompleted,
-    required bool showDeleted,
-    required bool reverseOrder,
-    required UserProfile userProfile,
-    String? buildingId,
-  });
+  Future<List<Report>> fetchReportsList();
 
   Future<Report> addReport({
     required String createdBy,
-    required String buildingId,
+    required Building building,
     required String buildingSpot,
     required PriorityLevel priority,
     required String title,
@@ -33,7 +25,7 @@ abstract class ReportsRepository {
 
   Future<void> updateReport({
     required Report report,
-    String? buildingId,
+    Building? building,
     String? buildingSpot,
     PriorityLevel? priority,
     String? title,
@@ -61,21 +53,8 @@ ReportsRepository reportsRepository(Ref ref) {
   return FakeReportsRepository();
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<List<Report>> reportsListFuture(Ref ref) {
   final reportsRepository = ref.watch(reportsRepositoryProvider);
-  final userProfile = ref.watch(authRepositoryProvider).currentUser!;
-
-  final showCompleted = ref.watch(showworkedFilterProvider);
-  final showDeleted = ref.watch(showDeletedFilterProvider);
-  final reverseOrder = ref.watch(reverseOrderFilterProvider);
-  final selectedBuilding = ref.watch(selectedBuildingFilterProvider);
-
-  return reportsRepository.fetchReportsList(
-    showCompleted: showCompleted,
-    showDeleted: showDeleted,
-    reverseOrder: reverseOrder,
-    userProfile: userProfile,
-    buildingId: selectedBuilding,
-  );
+  return reportsRepository.fetchReportsList();
 }

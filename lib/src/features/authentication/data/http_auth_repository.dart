@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:building_report_system/src/features/authentication/domain/building.dart';
+
 import '../../../exceptions/app_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,9 +43,13 @@ class HttpAuthRepository with ChangeNotifier implements AuthRepository {
 
   UserProfile _getUserProfileFromApiResponse(Map<String, dynamic> data) {
     // Supponendo che `data['structures']` sia una mappa in cui la chiave è l'ID e il valore è il nome dell'edificio.
-    final Map<String, String> assignedBuildings = Map<String, String>.from(
-      data['structures'] as Map<String, dynamic>,
-    );
+    final List<Building> assignedBuildings = (data['structures'] as Map<String, dynamic>)
+        .entries
+        .map((entry) => Building(
+              id: entry.key,
+              name: entry.value,
+            ))
+        .toList();
 
     return UserProfile(
       appUser: AppUser(

@@ -1,5 +1,5 @@
 import '../../../utils/delay.dart';
-import '../../authentication/domain/user_profile.dart';
+import '../../authentication/domain/building.dart';
 import '../domain/report.dart';
 import 'reports_repository.dart';
 import 'test_reports.dart';
@@ -22,63 +22,27 @@ class FakeReportsRepository implements ReportsRepository {
     return (highestId + 1).toString();
   }
 
-  bool _filterByUserRole(Report report, UserProfile userProfile) {
-    if (userProfile.role == UserRole.reporter) {
-      return report.createdBy == userProfile.appUser.uid;
-    } else if (userProfile.role == UserRole.operator) {
-      return userProfile.assignedBuildings.containsKey(report.buildingId);
-    }
-    return true; // Se è un admin, mostra tutti i report
-  }
-
-  bool _filterByBuilding(Report report, String? buildingId) {
-    if (buildingId != null) {
-      return report.buildingId == buildingId;
-    }
-    return true;
-  }
-
-  bool _filterByStatus(Report report, bool showCompleted, bool showDeleted) {
-    if (report.status == ReportStatus.opened || report.status == ReportStatus.assigned) {
-      return true;
-    } else if (report.status == ReportStatus.completed) {
-      return showCompleted;
-    } else if (report.status == ReportStatus.deleted) {
-      return showDeleted;
-    }
-    return false;
-  }
+  // TODO: give me only my reports
+  // bool _filterByUserRole(Report report, UserProfile userProfile) {
+  //   if (userProfile.role == UserRole.reporter) {
+  //     return report.createdBy == userProfile.appUser.uid;
+  //   } else if (userProfile.role == UserRole.operator) {
+  //     return userProfile.assignedBuildings.containsKey(report.buildingId);
+  //   }
+  //   return true; // Se è un admin, mostra tutti i report
+  // }
 
   // 4. Metodi pubblici
   @override
-  Future<List<Report>> fetchReportsList({
-    required UserProfile userProfile,
-    required bool showCompleted,
-    required bool showDeleted,
-    required bool reverseOrder,
-    String? buildingId,
-  }) async {
+  Future<List<Report>> fetchReportsList() async {
     await delay(addDelay);
-
-    List<Report> filteredReports = _reports
-        .where((report) => _filterByUserRole(report, userProfile))
-        .where((report) => _filterByBuilding(report, buildingId))
-        .where((report) => _filterByStatus(report, showCompleted, showDeleted))
-        .toList();
-
-    filteredReports.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-
-    if (reverseOrder) {
-      filteredReports = filteredReports.reversed.toList();
-    }
-
-    return filteredReports;
+    return _reports;
   }
 
   @override
   Future<Report> addReport({
     required String createdBy,
-    required String buildingId,
+    required Building building,
     required String buildingSpot,
     required PriorityLevel priority,
     required String title,
@@ -91,7 +55,7 @@ class FakeReportsRepository implements ReportsRepository {
       id: _generateNewReportId(),
       createdBy: createdBy,
       assignedTo: '', // Non assegnato inizialmente
-      buildingId: buildingId,
+      building: building,
       buildingSpot: buildingSpot,
       priority: priority,
       title: title,
@@ -112,7 +76,7 @@ class FakeReportsRepository implements ReportsRepository {
   @override
   Future<void> updateReport({
     required Report report,
-    String? buildingId,
+    Building? building,
     String? buildingSpot,
     PriorityLevel? priority,
     String? title,
@@ -129,7 +93,7 @@ class FakeReportsRepository implements ReportsRepository {
     if (index != -1) {
       final updatedReports = List<Report>.from(_reports);
       final newReport = report.copyWith(
-        buildingId: buildingId,
+        building: building,
         buildingSpot: buildingSpot,
         priority: priority,
         title: title,

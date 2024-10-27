@@ -23,12 +23,11 @@ final reportsRepositoryProvider = Provider<ReportsRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef ReportsRepositoryRef = ProviderRef<ReportsRepository>;
-String _$reportsListFutureHash() => r'2436345e9d005fa61cff8cdb2ca85d6bcaa126be';
+String _$reportsListFutureHash() => r'e31903ec056896c6f391a7887f8e39a75a8e0ae6';
 
 /// See also [reportsListFuture].
 @ProviderFor(reportsListFuture)
-final reportsListFutureProvider =
-    AutoDisposeFutureProvider<List<Report>>.internal(
+final reportsListFutureProvider = FutureProvider<List<Report>>.internal(
   reportsListFuture,
   name: r'reportsListFutureProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -40,6 +39,6 @@ final reportsListFutureProvider =
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef ReportsListFutureRef = AutoDisposeFutureProviderRef<List<Report>>;
+typedef ReportsListFutureRef = FutureProviderRef<List<Report>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

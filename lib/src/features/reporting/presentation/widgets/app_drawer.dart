@@ -1,3 +1,5 @@
+import '../../../../l10n/string_extensions.dart';
+
 import '../../../../utils/context_extensions.dart';
 import 'package:go_router/go_router.dart';
 
@@ -31,7 +33,7 @@ class AppDrawer extends ConsumerWidget {
               ),
               child: Center(
                 child: Text(
-                  context.loc.buildingReportSystem,
+                  context.loc.buildingReportSystem.capitalizeFirst(),
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 20,
@@ -43,7 +45,7 @@ class AppDrawer extends ConsumerWidget {
           ),
           ListTile(
             leading: const Icon(Icons.person),
-            title: Text(context.loc.profile),
+            title: Text(context.loc.profile.capitalizeFirst()),
             onTap: () {
               context.goNamed(AppRoute.profile.name);
             },

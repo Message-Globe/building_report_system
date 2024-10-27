@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import '../l10n/string_extensions.dart';
+
 import '../utils/context_extensions.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -70,5 +72,5 @@ Future<void> showExceptionAlertDialog({
 Future<void> showNotImplementedAlertDialog({required BuildContext context}) =>
     showAlertDialog(
       context: context,
-      title: context.loc.notImplemented,
+      title: context.loc.notImplemented.capitalizeFirst(),
     );

@@ -7,97 +7,94 @@ class AppLocalizationsIt extends AppLocalizations {
   AppLocalizationsIt([String locale = 'it']) : super(locale);
 
   @override
-  String get errorOccurred => 'Si è verificato un errore';
+  String get errorOccurred => 'si è verificato un errore';
 
   @override
-  String get notImplemented => 'Non implementato';
+  String get notImplemented => 'non implementato';
 
   @override
-  String get wrongCredentials => 'Credenziali errate';
+  String get wrongCredentials => 'credenziali errate';
 
   @override
-  String get userNotFound => 'Utente non trovato';
+  String get userNotFound => 'utente non trovato';
 
   @override
-  String get wrongPassword => 'Password errata';
+  String get wrongPassword => 'password errata';
 
   @override
-  String get completeAllFields => 'Per favore, completa tutti i campi';
+  String get completeAllFields => 'per favore, completa tutti i campi';
 
   @override
-  String get addReport => 'Aggiungi Report';
+  String get addReport => 'aggiungi Report';
 
   @override
-  String get provideRepairDetailsOrPhotos => 'Per favore, fornisci i dettagli o le foto della riparazione';
+  String get provideRepairDetails => 'per favore, fornisci i dettagli della riparazione';
 
   @override
-  String get provideRepairDetails => 'Per favore, fornisci i dettagli della riparazione';
+  String get editReport => 'modifica Report';
 
   @override
-  String get editReport => 'Modifica Report';
+  String get title => 'titolo';
 
   @override
-  String get title => 'Titolo';
+  String get description => 'descrizione';
 
   @override
-  String get description => 'Descrizione';
+  String get building => 'edificio';
 
   @override
-  String get building => 'Edificio';
+  String get buildingSpot => 'posizione nell\'edificio';
 
   @override
-  String get buildingSpot => 'Posizione nell\'edificio';
+  String get priority => 'priorità';
 
   @override
-  String get priority => 'Priorità';
+  String get repairDescription => 'descrizione della Riparazione';
 
   @override
-  String get repairDescription => 'Descrizione della Riparazione';
+  String get photoGallery => 'galleria Fotografica';
 
   @override
-  String get photoGallery => 'Galleria Fotografica';
+  String get reportList => 'elenco Report';
 
   @override
-  String get reportList => 'Elenco Report';
+  String get profile => 'profilo';
 
   @override
-  String get profile => 'Profilo';
+  String get selectBuilding => 'seleziona Edificio';
 
   @override
-  String get selectBuilding => 'Seleziona Edificio';
+  String get allBuildings => 'tutti gli Edifici';
 
   @override
-  String get allBuildings => 'Tutti gli Edifici';
+  String get swipeToComplete => 'scorri per completare il report:';
 
   @override
-  String get swipeToComplete => 'Scorri per completare il report:';
+  String get reportStatusCompleted => 'stato del report Completato';
 
   @override
-  String get reportStatusCompleted => 'Stato del report completato';
+  String get datetime => 'data e Ora';
 
   @override
-  String get datetime => 'Data e Ora';
+  String get filterReports => 'filtra Report';
 
   @override
-  String get filterReports => 'Filtra Report';
+  String get showCompletedReports => 'mostra report completati';
 
   @override
-  String get showCompletedReports => 'Mostra report completati';
+  String get showDeletedReports => 'mostra report eliminati';
 
   @override
-  String get showDeletedReports => 'Mostra report eliminati';
+  String get clear => 'pulisci';
 
   @override
-  String get clear => 'Pulisci';
+  String get cancel => 'annulla';
 
   @override
-  String get cancel => 'Annulla';
+  String get apply => 'applica';
 
   @override
-  String get apply => 'Applica';
-
-  @override
-  String get local => 'Locale';
+  String get local => 'locale';
 
   @override
   String get repair => 'riparazione';
@@ -106,17 +103,20 @@ class AppLocalizationsIt extends AppLocalizations {
   String get photos => 'foto:';
 
   @override
-  String get addPhoto => 'Aggiungi Foto';
+  String get addPhoto => 'aggiungi Foto';
 
   @override
-  String get selectPriority => 'Seleziona Priorità';
+  String get selectPriority => 'seleziona Priorità';
 
   @override
-  String get error => 'Errore';
+  String get error => 'errore';
 
   @override
-  String get buildingReportSystem => 'Sistema di Segnalazione Edifici';
+  String get buildingReportSystem => 'sistema di Segnalazione Edifici';
 
   @override
-  String get swipeRightToComplete => 'Scorri a destra per segnare come completato';
+  String get normal => 'normale';
+
+  @override
+  String get urgent => 'urgente';
 }

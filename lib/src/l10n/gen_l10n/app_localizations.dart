@@ -98,187 +98,181 @@ abstract class AppLocalizations {
   /// A message displayed when a general error occurs
   ///
   /// In en, this message translates to:
-  /// **'An error occurred'**
+  /// **'an error occurred'**
   String get errorOccurred;
 
   /// Message indicating that a feature is not implemented
   ///
   /// In en, this message translates to:
-  /// **'Not implemented'**
+  /// **'not implemented'**
   String get notImplemented;
 
   /// Error message for incorrect credentials
   ///
   /// In en, this message translates to:
-  /// **'Wrong credentials'**
+  /// **'wrong credentials'**
   String get wrongCredentials;
 
   /// Error message when the user is not found
   ///
   /// In en, this message translates to:
-  /// **'User not found'**
+  /// **'user not found'**
   String get userNotFound;
 
   /// Error message for an incorrect password
   ///
   /// In en, this message translates to:
-  /// **'Wrong password'**
+  /// **'wrong password'**
   String get wrongPassword;
 
   /// Message asking the user to complete all fields
   ///
   /// In en, this message translates to:
-  /// **'Please complete all fields'**
+  /// **'please complete all fields'**
   String get completeAllFields;
 
   /// Button label to add a report
   ///
   /// In en, this message translates to:
-  /// **'Add Report'**
+  /// **'add Report'**
   String get addReport;
-
-  /// Message asking the user to provide details or photos of the repair
-  ///
-  /// In en, this message translates to:
-  /// **'Please provide repair details or photos'**
-  String get provideRepairDetailsOrPhotos;
 
   /// Message asking the user to provide details of the repair
   ///
   /// In en, this message translates to:
-  /// **'Please provide repair details'**
+  /// **'please provide repair details'**
   String get provideRepairDetails;
 
   /// Label for the edit report screen
   ///
   /// In en, this message translates to:
-  /// **'Edit Report'**
+  /// **'edit Report'**
   String get editReport;
 
   /// Label for the report title
   ///
   /// In en, this message translates to:
-  /// **'Title'**
+  /// **'title'**
   String get title;
 
   /// Label for the report description
   ///
   /// In en, this message translates to:
-  /// **'Description'**
+  /// **'description'**
   String get description;
 
   /// Label for the building name
   ///
   /// In en, this message translates to:
-  /// **'Building'**
+  /// **'building'**
   String get building;
 
   /// Label for the specific spot in the building
   ///
   /// In en, this message translates to:
-  /// **'Building Spot'**
+  /// **'building Spot'**
   String get buildingSpot;
 
   /// Label for the report priority level
   ///
   /// In en, this message translates to:
-  /// **'Priority'**
+  /// **'priority'**
   String get priority;
 
   /// Label for repair details
   ///
   /// In en, this message translates to:
-  /// **'Repair Description'**
+  /// **'repair Description'**
   String get repairDescription;
 
   /// Label for photo gallery section
   ///
   /// In en, this message translates to:
-  /// **'Photo Gallery'**
+  /// **'photo Gallery'**
   String get photoGallery;
 
   /// Label for the list of reports
   ///
   /// In en, this message translates to:
-  /// **'Report List'**
+  /// **'report List'**
   String get reportList;
 
   /// Label for the user profile section
   ///
   /// In en, this message translates to:
-  /// **'Profile'**
+  /// **'profile'**
   String get profile;
 
   /// Label for selecting a building
   ///
   /// In en, this message translates to:
-  /// **'Select Building'**
+  /// **'select Building'**
   String get selectBuilding;
 
   /// Label to select all buildings
   ///
   /// In en, this message translates to:
-  /// **'All Buildings'**
+  /// **'all Buildings'**
   String get allBuildings;
 
   /// Instruction to swipe to complete a report
   ///
   /// In en, this message translates to:
-  /// **'Swipe to complete report:'**
+  /// **'swipe to complete report:'**
   String get swipeToComplete;
 
   /// Message indicating that the report is completed
   ///
   /// In en, this message translates to:
-  /// **'Report status Completed'**
+  /// **'report status Completed'**
   String get reportStatusCompleted;
 
   /// Label for displaying date and time
   ///
   /// In en, this message translates to:
-  /// **'Datetime'**
+  /// **'datetime'**
   String get datetime;
 
   /// Label for the filter reports dialog
   ///
   /// In en, this message translates to:
-  /// **'Filter Reports'**
+  /// **'filter Reports'**
   String get filterReports;
 
   /// Option to show completed reports
   ///
   /// In en, this message translates to:
-  /// **'Show completed Reports'**
+  /// **'show completed Reports'**
   String get showCompletedReports;
 
   /// Option to show deleted reports
   ///
   /// In en, this message translates to:
-  /// **'Show Deleted Reports'**
+  /// **'show Deleted Reports'**
   String get showDeletedReports;
 
   /// Button label to clear the filters
   ///
   /// In en, this message translates to:
-  /// **'Clear'**
+  /// **'clear'**
   String get clear;
 
   /// Button label to cancel an action
   ///
   /// In en, this message translates to:
-  /// **'Cancel'**
+  /// **'cancel'**
   String get cancel;
 
   /// Button label to apply filters or changes
   ///
   /// In en, this message translates to:
-  /// **'Apply'**
+  /// **'apply'**
   String get apply;
 
   /// Label for local context
   ///
   /// In en, this message translates to:
-  /// **'Local'**
+  /// **'local'**
   String get local;
 
   /// Label for repair context
@@ -296,32 +290,38 @@ abstract class AppLocalizations {
   /// Button label to add a photo
   ///
   /// In en, this message translates to:
-  /// **'Add Photo'**
+  /// **'add Photo'**
   String get addPhoto;
 
   /// Label for selecting the priority level
   ///
   /// In en, this message translates to:
-  /// **'Select Priority'**
+  /// **'select Priority'**
   String get selectPriority;
 
   /// Label for showing an error
   ///
   /// In en, this message translates to:
-  /// **'Error'**
+  /// **'error'**
   String get error;
 
   /// App title for the Building Report System
   ///
   /// In en, this message translates to:
-  /// **'Building Report System'**
+  /// **'building Report System'**
   String get buildingReportSystem;
 
-  /// Instruction to swipe right to mark the report as completed
+  /// Description of a report's normal priority level
   ///
   /// In en, this message translates to:
-  /// **'Swipe right to mark as Completed'**
-  String get swipeRightToComplete;
+  /// **'normal'**
+  String get normal;
+
+  /// Description of a report's urgent priority level
+  ///
+  /// In en, this message translates to:
+  /// **'urgent'**
+  String get urgent;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

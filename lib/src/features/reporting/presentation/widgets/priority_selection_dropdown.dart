@@ -1,3 +1,5 @@
+import '../../../../l10n/string_extensions.dart';
+
 import '../../../../utils/context_extensions.dart';
 import 'package:flutter/material.dart';
 import '../../domain/report.dart';
@@ -16,7 +18,7 @@ class PrioritySelectionDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return DropdownButton<PriorityLevel>(
       value: selectedPriority,
-      hint: Text(context.loc.selectPriority),
+      hint: Text(context.loc.selectPriority.capitalizeFirst()),
       onChanged: (newValue) {
         onPrioritySelected(newValue);
       },
@@ -24,7 +26,7 @@ class PrioritySelectionDropdown extends StatelessWidget {
         (PriorityLevel value) {
           return DropdownMenuItem<PriorityLevel>(
             value: value,
-            child: Text(value.name),
+            child: Text(value.toLocalizedString(context).capitalizeFirst()),
           );
         },
       ).toList(),

@@ -1,4 +1,6 @@
 import 'dart:io';
+import '../../../../l10n/string_extensions.dart';
+
 import '../../../../utils/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -47,7 +49,7 @@ class _LocalImageGalleryState extends State<LocalImageGallery> {
         // Galleria di immagini locali in un wrap
         if (widget.imageFiles.isNotEmpty) ...[
           Text(
-              "${context.loc.local} ${widget.isOperator ? '${context.loc.repair} ' : ''}${context.loc.photos}"),
+              "${context.loc.local.capitalizeFirst()} ${widget.isOperator ? '${context.loc.repair} ' : ''}${context.loc.photos}"),
           gapH4,
           Wrap(
             spacing: Sizes.p12,
@@ -96,7 +98,7 @@ class _LocalImageGalleryState extends State<LocalImageGallery> {
         Center(
           child: ElevatedButton.icon(
             icon: const Icon(Icons.camera_alt),
-            label: Text(context.loc.addPhoto),
+            label: Text(context.loc.addPhoto.capitalizeFirst()),
             onPressed: _addPhoto,
           ),
         ),

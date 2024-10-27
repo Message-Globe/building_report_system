@@ -1,4 +1,4 @@
-import 'package:building_report_system/src/features/authentication/domain/building.dart';
+import '../../authentication/domain/building.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../domain/report.dart';

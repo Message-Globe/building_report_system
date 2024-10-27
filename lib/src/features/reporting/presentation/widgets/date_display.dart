@@ -1,3 +1,5 @@
+import '../../../../l10n/string_extensions.dart';
+
 import '../../../../utils/context_extensions.dart';
 
 import 'package:flutter/material.dart';
@@ -16,7 +18,7 @@ class DateDisplay extends ConsumerWidget {
     final dateAndTimeFormatter = ref.read(dateAndTimeFormatterProvider);
 
     return Text(
-      "${context.loc.datetime}: ${dateAndTimeFormatter.format(date)}",
+      "${context.loc.datetime.capitalizeFirst()}: ${dateAndTimeFormatter.format(date)}",
       style: const TextStyle(
         fontSize: Sizes.p16,
         fontWeight: FontWeight.bold,

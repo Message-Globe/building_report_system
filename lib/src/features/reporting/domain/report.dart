@@ -1,9 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:building_report_system/src/utils/context_extensions.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:building_report_system/src/features/authentication/domain/building.dart';
+import 'package:flutter/material.dart';
 
 enum ReportStatus {
   opened,
@@ -15,6 +17,17 @@ enum ReportStatus {
 enum PriorityLevel {
   normal,
   urgent,
+}
+
+extension PriorityLevelLocalization on PriorityLevel {
+  String toLocalizedString(BuildContext context) {
+    switch (this) {
+      case PriorityLevel.normal:
+        return context.loc.normal;
+      case PriorityLevel.urgent:
+        return context.loc.urgent;
+    }
+  }
 }
 
 class Report {

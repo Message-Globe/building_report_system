@@ -1,13 +1,15 @@
 import 'dart:ui';
-import 'l10n/string_hardcoded.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:intl/date_symbol_data_local.dart';
+
 import 'app.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'exceptions/error_logger.dart';
 import 'features/authentication/data/auth_repository.dart';
+import 'l10n/string_extensions.dart';
 
 class AppBootstrap {
   /// Metodo che inizializza l'app e la configura

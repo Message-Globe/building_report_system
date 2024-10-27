@@ -1,3 +1,5 @@
+import '../../../../l10n/string_extensions.dart';
+
 import '../controllers/reports_list_controller.dart';
 import '../../../../utils/async_value_ui.dart';
 import '../../../../utils/context_extensions.dart';
@@ -31,7 +33,7 @@ class ReportsListScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(context.loc.reportList),
+        title: Text(context.loc.reportList.capitalizeFirst()),
         actions: const <Widget>[
           ReverseOrderButton(),
           FiltersButton(),

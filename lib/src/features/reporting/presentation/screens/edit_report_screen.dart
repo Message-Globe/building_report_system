@@ -1,5 +1,6 @@
-import 'package:building_report_system/src/features/authentication/domain/building.dart';
-import 'package:building_report_system/src/features/reporting/presentation/controllers/edit_report_screen_controller.dart';
+import '../../../authentication/domain/building.dart';
+import '../controllers/edit_report_screen_controller.dart';
+import '../../../../l10n/string_extensions.dart';
 
 import '../../../../utils/context_extensions.dart';
 
@@ -78,7 +79,7 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
     if (isReporter) {
       if (title.isEmpty || description.isEmpty || buildingSpot.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(context.loc.completeAllFields)),
+          SnackBar(content: Text(context.loc.completeAllFields.capitalizeFirst())),
         );
         return;
       }
@@ -88,7 +89,7 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
           _repairRemoteImages.isNotEmpty;
       if (!hasRepairContent) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(context.loc.provideRepairDetailsOrPhotos)),
+          SnackBar(content: Text(context.loc.provideRepairDetails.capitalizeFirst())),
         );
         return;
       }
@@ -113,7 +114,7 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
     final maintenanceDescription = _repairDescriptionController.text;
     if (maintenanceDescription.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.loc.provideRepairDetails)),
+        SnackBar(content: Text(context.loc.provideRepairDetails.capitalizeFirst())),
       );
       return Future.value(false);
     }
@@ -142,7 +143,7 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
       children: <Widget>[
         Scaffold(
           appBar: AppBar(
-            title: Text(context.loc.editReport),
+            title: Text(context.loc.editReport.capitalizeFirst()),
             actions: <Widget>[
               if ((isReporter && reportEditable) || isAssignedToMe)
                 IconButton(
@@ -159,10 +160,10 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
                 if (isReporter && reportEditable)
                   CustomTextField(
                     controller: _titleController,
-                    labelText: context.loc.title,
+                    labelText: context.loc.title.capitalizeFirst(),
                   )
                 else
-                  Text("${context.loc.title}: ${widget.report.title}"),
+                  Text("${context.loc.title.capitalizeFirst()}: ${widget.report.title}"),
                 gapH16,
 
                 // Data
@@ -173,11 +174,12 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
                 if (isReporter && reportEditable)
                   CustomTextField(
                     controller: _descriptionController,
-                    labelText: context.loc.description,
+                    labelText: context.loc.description.capitalizeFirst(),
                     maxLines: 3,
                   )
                 else
-                  Text("${context.loc.description}: ${widget.report.description}"),
+                  Text(
+                      "${context.loc.description.capitalizeFirst()}: ${widget.report.description}"),
                 gapH16,
 
                 if (isReporter && reportEditable)
@@ -191,17 +193,19 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
                     },
                   )
                 else
-                  Text("${context.loc.building}: ${widget.report.building.name}"),
+                  Text(
+                      "${context.loc.building.capitalizeFirst()}: ${widget.report.building.name}"),
                 gapH16,
 
                 // Building Spot (solo per reporter e se modificabile)
                 if (isReporter && reportEditable)
                   CustomTextField(
                     controller: _buildingSpotController,
-                    labelText: context.loc.buildingSpot,
+                    labelText: context.loc.buildingSpot.capitalizeFirst(),
                   )
                 else
-                  Text("${context.loc.buildingSpot}: ${widget.report.buildingSpot}"),
+                  Text(
+                      "${context.loc.buildingSpot.capitalizeFirst()}: ${widget.report.buildingSpot}"),
                 gapH16,
 
                 // Priority Level (Dropdown)
@@ -215,7 +219,8 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
                     },
                   )
                 else
-                  Text("${context.loc.priority}: ${widget.report.priority.name}"),
+                  Text(
+                      "${context.loc.priority.capitalizeFirst()}: ${widget.report.priority.name}"),
                 gapH16,
 
                 // Galleria combinata (locali e remote)
@@ -236,12 +241,12 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
                   if (isAssignedToMe)
                     CustomTextField(
                       controller: _repairDescriptionController,
-                      labelText: context.loc.repairDescription,
+                      labelText: context.loc.repairDescription.capitalizeFirst(),
                       maxLines: 3,
                     )
                   else
                     Text(
-                        "${context.loc.repairDescription}: ${widget.report.maintenanceDescription}"),
+                        "${context.loc.repairDescription.capitalizeFirst()}: ${widget.report.maintenanceDescription}"),
                   gapH16,
                   CombinedImageGallery(
                     isOperator: true,

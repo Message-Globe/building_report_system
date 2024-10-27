@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:building_report_system/src/features/authentication/domain/building.dart';
+import '../domain/building.dart';
 
 import '../../../exceptions/app_exception.dart';
 import 'package:flutter/material.dart';

@@ -1,3 +1,5 @@
+import '../../../../l10n/string_extensions.dart';
+
 import '../../../../utils/context_extensions.dart';
 
 import 'package:flutter/material.dart';
@@ -20,7 +22,7 @@ class CompleteReportTile extends StatelessWidget {
 
     return Column(
       children: <Widget>[
-        Text(context.loc.swipeToComplete),
+        Text(context.loc.swipeToComplete.capitalizeFirst()),
         gapH8,
         Dismissible(
           key: const Key('reportStatusDismissible'),
@@ -50,7 +52,7 @@ class CompleteReportTile extends StatelessWidget {
           onDismissed: (_) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(context.loc.reportStatusCompleted),
+                content: Text(context.loc.reportStatusCompleted.capitalizeFirst()),
               ),
             );
           },
@@ -71,7 +73,7 @@ class CompleteReportTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  context.loc.swipeRightToComplete,
+                  context.loc.swipeToComplete.capitalizeFirst(),
                   style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const Icon(

@@ -1,4 +1,5 @@
-import 'package:building_report_system/src/utils/context_extensions.dart';
+import '../../../../l10n/string_extensions.dart';
+import '../../../../utils/context_extensions.dart';
 import 'package:flutter/material.dart';
 
 import '../../../authentication/domain/building.dart';
@@ -21,7 +22,7 @@ class BuildingSelectionDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return DropdownButton<Building>(
       value: selectedBuilding,
-      hint: Text(context.loc.selectBuilding),
+      hint: Text(context.loc.selectBuilding.capitalizeFirst()),
       onChanged: (newValue) {
         onBuildingSelected(newValue);
       },
@@ -29,7 +30,7 @@ class BuildingSelectionDropdown extends StatelessWidget {
         if (showAllBuildings)
           DropdownMenuItem<Building>(
             value: null,
-            child: Text(context.loc.allBuildings),
+            child: Text(context.loc.allBuildings.capitalizeFirst()),
           ),
         ...buildings.map<DropdownMenuItem<Building>>(
           (Building building) {

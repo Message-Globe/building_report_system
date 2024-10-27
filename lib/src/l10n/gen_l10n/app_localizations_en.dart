@@ -7,97 +7,94 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get errorOccurred => 'An error occurred';
+  String get errorOccurred => 'an error occurred';
 
   @override
-  String get notImplemented => 'Not implemented';
+  String get notImplemented => 'not implemented';
 
   @override
-  String get wrongCredentials => 'Wrong credentials';
+  String get wrongCredentials => 'wrong credentials';
 
   @override
-  String get userNotFound => 'User not found';
+  String get userNotFound => 'user not found';
 
   @override
-  String get wrongPassword => 'Wrong password';
+  String get wrongPassword => 'wrong password';
 
   @override
-  String get completeAllFields => 'Please complete all fields';
+  String get completeAllFields => 'please complete all fields';
 
   @override
-  String get addReport => 'Add Report';
+  String get addReport => 'add Report';
 
   @override
-  String get provideRepairDetailsOrPhotos => 'Please provide repair details or photos';
+  String get provideRepairDetails => 'please provide repair details';
 
   @override
-  String get provideRepairDetails => 'Please provide repair details';
+  String get editReport => 'edit Report';
 
   @override
-  String get editReport => 'Edit Report';
+  String get title => 'title';
 
   @override
-  String get title => 'Title';
+  String get description => 'description';
 
   @override
-  String get description => 'Description';
+  String get building => 'building';
 
   @override
-  String get building => 'Building';
+  String get buildingSpot => 'building Spot';
 
   @override
-  String get buildingSpot => 'Building Spot';
+  String get priority => 'priority';
 
   @override
-  String get priority => 'Priority';
+  String get repairDescription => 'repair Description';
 
   @override
-  String get repairDescription => 'Repair Description';
+  String get photoGallery => 'photo Gallery';
 
   @override
-  String get photoGallery => 'Photo Gallery';
+  String get reportList => 'report List';
 
   @override
-  String get reportList => 'Report List';
+  String get profile => 'profile';
 
   @override
-  String get profile => 'Profile';
+  String get selectBuilding => 'select Building';
 
   @override
-  String get selectBuilding => 'Select Building';
+  String get allBuildings => 'all Buildings';
 
   @override
-  String get allBuildings => 'All Buildings';
+  String get swipeToComplete => 'swipe to complete report:';
 
   @override
-  String get swipeToComplete => 'Swipe to complete report:';
+  String get reportStatusCompleted => 'report status Completed';
 
   @override
-  String get reportStatusCompleted => 'Report status Completed';
+  String get datetime => 'datetime';
 
   @override
-  String get datetime => 'Datetime';
+  String get filterReports => 'filter Reports';
 
   @override
-  String get filterReports => 'Filter Reports';
+  String get showCompletedReports => 'show completed Reports';
 
   @override
-  String get showCompletedReports => 'Show completed Reports';
+  String get showDeletedReports => 'show Deleted Reports';
 
   @override
-  String get showDeletedReports => 'Show Deleted Reports';
+  String get clear => 'clear';
 
   @override
-  String get clear => 'Clear';
+  String get cancel => 'cancel';
 
   @override
-  String get cancel => 'Cancel';
+  String get apply => 'apply';
 
   @override
-  String get apply => 'Apply';
-
-  @override
-  String get local => 'Local';
+  String get local => 'local';
 
   @override
   String get repair => 'repair';
@@ -106,17 +103,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get photos => 'photos:';
 
   @override
-  String get addPhoto => 'Add Photo';
+  String get addPhoto => 'add Photo';
 
   @override
-  String get selectPriority => 'Select Priority';
+  String get selectPriority => 'select Priority';
 
   @override
-  String get error => 'Error';
+  String get error => 'error';
 
   @override
-  String get buildingReportSystem => 'Building Report System';
+  String get buildingReportSystem => 'building Report System';
 
   @override
-  String get swipeRightToComplete => 'Swipe right to mark as Completed';
+  String get normal => 'normal';
+
+  @override
+  String get urgent => 'urgent';
 }

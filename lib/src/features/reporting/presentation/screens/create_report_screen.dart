@@ -1,5 +1,6 @@
-import 'package:building_report_system/src/features/authentication/domain/building.dart';
-import 'package:building_report_system/src/features/reporting/presentation/controllers/create_report_screen_controller.dart';
+import '../../../authentication/domain/building.dart';
+import '../controllers/create_report_screen_controller.dart';
+import '../../../../l10n/string_extensions.dart';
 
 import '../../../authentication/domain/user_profile.dart';
 import '../../../../utils/context_extensions.dart';
@@ -52,7 +53,7 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
         buildingSpot.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(context.loc.completeAllFields),
+          content: Text(context.loc.completeAllFields.capitalizeFirst()),
         ),
       );
       return;
@@ -90,7 +91,7 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
       children: <Widget>[
         Scaffold(
           appBar: AppBar(
-            title: Text(context.loc.addReport),
+            title: Text(context.loc.addReport.capitalizeFirst()),
             actions: <Widget>[
               IconButton(
                 icon: const Icon(Icons.save),
@@ -104,7 +105,7 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
               children: <Widget>[
                 CustomTextField(
                   controller: _titleController,
-                  labelText: context.loc.title,
+                  labelText: context.loc.title.capitalizeFirst(),
                 ),
                 gapH16,
 
@@ -115,7 +116,7 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
                 // Campo per la descrizione
                 CustomTextField(
                   controller: _descriptionController,
-                  labelText: context.loc.description,
+                  labelText: context.loc.description.capitalizeFirst(),
                   maxLines: 3,
                 ),
                 gapH16,
@@ -134,7 +135,7 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
                 // Campo di testo per buildingSpot
                 CustomTextField(
                   controller: _buildingSpotController,
-                  labelText: context.loc.buildingSpot,
+                  labelText: context.loc.buildingSpot.capitalizeFirst(),
                 ),
                 gapH16,
 

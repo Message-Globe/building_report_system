@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import '../../../../l10n/string_extensions.dart';
+
 import '../../../../utils/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
@@ -37,7 +39,7 @@ class PhotoViewGalleryScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(context.loc.photoGallery),
+        title: Text(context.loc.photoGallery.capitalizeFirst()),
       ),
       body: PhotoViewGallery.builder(
         itemCount: isShowingUrls ? imageUrls!.length : imageFiles!.length,

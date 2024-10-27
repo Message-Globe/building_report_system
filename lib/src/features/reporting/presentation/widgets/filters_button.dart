@@ -1,3 +1,5 @@
+import '../../../../l10n/string_extensions.dart';
+
 import '../../../authentication/data/auth_repository.dart';
 import '../../../../utils/context_extensions.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +62,7 @@ class FiltersButton extends ConsumerWidget {
                 final userProfile = ref.watch(authRepositoryProvider).currentUser!;
 
                 return AlertDialog(
-                  title: Text(context.loc.filterReports),
+                  title: Text(context.loc.filterReports.capitalizeFirst()),
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -76,7 +78,7 @@ class FiltersButton extends ConsumerWidget {
                       ),
                       // Checkbox per "Show completed Reports"
                       CheckboxListTile(
-                        title: Text(context.loc.showCompletedReports),
+                        title: Text(context.loc.showCompletedReports.capitalizeFirst()),
                         value: tempShowWorked,
                         onChanged: (value) {
                           setDialogState(() {
@@ -86,7 +88,7 @@ class FiltersButton extends ConsumerWidget {
                       ),
                       // Checkbox per "Show Deleted Reports"
                       CheckboxListTile(
-                        title: Text(context.loc.showDeletedReports),
+                        title: Text(context.loc.showDeletedReports.capitalizeFirst()),
                         value: tempShowDeleted,
                         onChanged: (value) {
                           setDialogState(() {
@@ -106,13 +108,13 @@ class FiltersButton extends ConsumerWidget {
                           tempSelectedBuilding = null;
                         });
                       },
-                      child: Text(context.loc.clear),
+                      child: Text(context.loc.clear.capitalizeFirst()),
                     ),
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: Text(context.loc.cancel),
+                      child: Text(context.loc.cancel.capitalizeFirst()),
                     ),
                     TextButton(
                       onPressed: () {
@@ -128,7 +130,7 @@ class FiltersButton extends ConsumerWidget {
                             .update(tempSelectedBuilding);
                         Navigator.of(context).pop();
                       },
-                      child: Text(context.loc.apply),
+                      child: Text(context.loc.apply.capitalizeFirst()),
                     ),
                   ],
                 );

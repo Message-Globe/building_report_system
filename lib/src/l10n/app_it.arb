@@ -1,126 +1,122 @@
 {
     "@@locale": "it",
-    "errorOccurred": "Si è verificato un errore",
+    "errorOccurred": "si è verificato un errore",
     "@errorOccurred": {
         "description": "Messaggio visualizzato quando si verifica un errore generale"
     },
-    "notImplemented": "Non implementato",
+    "notImplemented": "non implementato",
     "@notImplemented": {
         "description": "Messaggio che indica che una funzionalità non è implementata"
     },
-    "wrongCredentials": "Credenziali errate",
+    "wrongCredentials": "credenziali errate",
     "@wrongCredentials": {
         "description": "Messaggio di errore per credenziali errate"
     },
-    "userNotFound": "Utente non trovato",
+    "userNotFound": "utente non trovato",
     "@userNotFound": {
         "description": "Messaggio di errore quando l'utente non è trovato"
     },
-    "wrongPassword": "Password errata",
+    "wrongPassword": "password errata",
     "@wrongPassword": {
         "description": "Messaggio di errore per password errata"
     },
-    "completeAllFields": "Per favore, completa tutti i campi",
+    "completeAllFields": "per favore, completa tutti i campi",
     "@completeAllFields": {
         "description": "Messaggio che chiede all'utente di completare tutti i campi"
     },
-    "addReport": "Aggiungi Report",
+    "addReport": "aggiungi Report",
     "@addReport": {
         "description": "Etichetta del pulsante per aggiungere un report"
     },
-    "provideRepairDetailsOrPhotos": "Per favore, fornisci i dettagli o le foto della riparazione",
-    "@provideRepairDetailsOrPhotos": {
-        "description": "Messaggio che chiede all'utente di fornire dettagli o foto della riparazione"
-    },
-    "provideRepairDetails": "Per favore, fornisci i dettagli della riparazione",
+    "provideRepairDetails": "per favore, fornisci i dettagli della riparazione",
     "@provideRepairDetails": {
         "description": "Messaggio che chiede all'utente di fornire i dettagli della riparazione"
     },
-    "editReport": "Modifica Report",
+    "editReport": "modifica Report",
     "@editReport": {
         "description": "Etichetta per la schermata di modifica del report"
     },
-    "title": "Titolo",
+    "title": "titolo",
     "@title": {
         "description": "Etichetta per il titolo del report"
     },
-    "description": "Descrizione",
+    "description": "descrizione",
     "@description": {
         "description": "Etichetta per la descrizione del report"
     },
-    "building": "Edificio",
+    "building": "edificio",
     "@building": {
         "description": "Etichetta per il nome dell'edificio"
     },
-    "buildingSpot": "Posizione nell'edificio",
+    "buildingSpot": "posizione nell'edificio",
     "@buildingSpot": {
         "description": "Etichetta per il punto specifico nell'edificio"
     },
-    "priority": "Priorità",
+    "priority": "priorità",
     "@priority": {
         "description": "Etichetta per il livello di priorità del report"
     },
-    "repairDescription": "Descrizione della Riparazione",
+    "repairDescription": "descrizione della Riparazione",
     "@repairDescription": {
         "description": "Etichetta per i dettagli della riparazione"
     },
-    "photoGallery": "Galleria Fotografica",
+    "photoGallery": "galleria Fotografica",
     "@photoGallery": {
         "description": "Etichetta per la sezione della galleria fotografica"
     },
-    "reportList": "Elenco Report",
+    "reportList": "elenco Report",
     "@reportList": {
         "description": "Etichetta per l'elenco dei report"
     },
-    "profile": "Profilo",
+    "profile": "profilo",
     "@profile": {
         "description": "Etichetta per la sezione del profilo utente"
     },
-    "selectBuilding": "Seleziona Edificio",
+    "selectBuilding": "seleziona Edificio",
     "@selectBuilding": {
         "description": "Etichetta per selezionare un edificio"
     },
-    "allBuildings": "Tutti gli Edifici",
+    "allBuildings": "tutti gli Edifici",
     "@allBuildings": {
         "description": "Etichetta per selezionare tutti gli edifici"
     },
-    "swipeToComplete": "Scorri per completare il report:",
+    "swipeToComplete": "scorri per completare il report:",
     "@swipeToComplete": {
         "description": "Istruzione per scorrere e completare un report"
     },
-    "reportStatusCompleted": "Stato del report completato",
+    "reportStatusCompleted": "stato del report Completato",
     "@reportStatusCompleted": {
         "description": "Messaggio che indica che il report è stato completato"
     },
-    "datetime": "Data e Ora",
+    "datetime": "data e Ora",
     "@datetime": {
         "description": "Etichetta per visualizzare data e ora"
     },
-    "filterReports": "Filtra Report",
+    "filterReports": "filtra Report",
     "@filterReports": {
         "description": "Etichetta per il filtro dei report"
     },
-    "showCompletedReports": "Mostra report completati",
+    "showCompletedReports": "mostra report completati",
     "@showCompletedReports": {
         "description": "Opzione per mostrare i report completati"
     },
-    "showDeletedReports": "Mostra report eliminati",
+    "showDeletedReports": "mostra report eliminati",
     "@showDeletedReports": {
         "description": "Opzione per mostrare i report eliminati"
     },
-    "clear": "Pulisci",
+    "clear": "pulisci",
     "@clear": {
         "description": "Etichetta del pulsante per pulire i filtri"
     },
-    "cancel": "Annulla",
+    "cancel": "annulla",
     "@cancel": {
         "description": "Etichetta del pulsante per annullare un'azione"
     },
-    "apply": "Applica",
+    "apply": "applica",
     "@apply": {
         "description": "Etichetta del pulsante per applicare i filtri o le modifiche"
     },
-    "local": "Locale",
+    "local": "locale",
     "@local": {
         "description": "Etichetta per il contesto locale"
     },
@@ -132,24 +128,28 @@
     "@photos": {
         "description": "Etichetta per mostrare le foto"
     },
-    "addPhoto": "Aggiungi Foto",
+    "addPhoto": "aggiungi Foto",
     "@addPhoto": {
         "description": "Etichetta del pulsante per aggiungere una foto"
     },
-    "selectPriority": "Seleziona Priorità",
+    "selectPriority": "seleziona Priorità",
     "@selectPriority": {
         "description": "Etichetta per selezionare il livello di priorità"
     },
-    "error": "Errore",
+    "error": "errore",
     "@error": {
         "description": "Etichetta per mostrare un errore"
     },
-    "buildingReportSystem": "Sistema di Segnalazione Edifici",
+    "buildingReportSystem": "sistema di Segnalazione Edifici",
     "@buildingReportSystem": {
         "description": "Titolo dell'app per il Sistema di Segnalazione Edifici"
     },
-    "swipeRightToComplete": "Scorri a destra per segnare come completato",
-    "@swipeRightToComplete": {
-        "description": "Istruzione per scorrere a destra per segnare il rapporto come completato"
+    "normal": "normale",
+    "@normal": {
+        "description": "Descrizione del livello di priorità normale di un report"
+    },
+    "urgent": "urgente",
+    "@urgent": {
+        "description": "Descrizione del livello di priorità urgente di un report"
     }
 }

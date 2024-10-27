@@ -1,3 +1,5 @@
+import '../l10n/string_extensions.dart';
+
 import 'context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,7 +16,7 @@ extension AsyncValueUI on AsyncValue {
       final message = _errorMessage(error);
       showExceptionAlertDialog(
         context: context,
-        title: context.loc.error,
+        title: context.loc.error.capitalizeFirst(),
         exception: message,
       );
     }

@@ -1,4 +1,4 @@
-import 'package:building_report_system/src/features/reporting/data/reports_repository.dart';
+import '../../data/reports_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../domain/report.dart';

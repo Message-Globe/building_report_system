@@ -33,7 +33,10 @@ class _LocalImageGalleryState extends State<LocalImageGallery> {
 
   // Funzione per scattare una foto e aggiungerla alla lista
   Future<void> _addPhoto() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+    final pickedFile = await _picker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 80,
+    );
     if (pickedFile != null) {
       setState(() {
         widget.imageFiles.add(File(pickedFile.path));

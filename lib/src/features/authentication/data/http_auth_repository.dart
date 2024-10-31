@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+
 import '../domain/building.dart';
 
 import '../../../exceptions/app_exception.dart';
@@ -13,32 +14,46 @@ import 'auth_repository.dart';
 class HttpAuthRepository with ChangeNotifier implements AuthRepository {
   // 1. Costanti statiche
   static const String _baseUrl = "https://api.cooperativadoc.it";
-  static const String _tokenKey = 'auth_token';
+  static const String _userTokenKey = 'auth_token';
 
   // 2. Variabili di istanza
   UserProfile? _currentUser;
-  String? _token;
+  String? _userToken;
 
-  // 3. Getter
+  late final String _fcmToken;
+  late final String _deviceType;
+  late final String? _deviceId;
+
+  // 3. Getter / Setter
   @override
   UserProfile? get currentUser => _currentUser;
 
+  @override
+  String get userToken => _userToken!;
+
+  @override
+  set fcmToken(String fcmToken) => _fcmToken = fcmToken;
+  @override
+  set deviceType(String deviceType) => _deviceType = deviceType;
+  @override
+  set deviceId(String? deviceId) => _deviceId = deviceId;
+
   // 4. Metodi privati
-  Future<void> _saveToken(String token) async {
-    _token = token;
+  Future<void> _saveUserToken(String token) async {
+    _userToken = token;
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_tokenKey, token);
+    await prefs.setString(_userTokenKey, token);
   }
 
-  Future<void> _loadToken() async {
+  Future<void> _loadUserToken() async {
     final prefs = await SharedPreferences.getInstance();
-    _token = prefs.getString(_tokenKey);
+    _userToken = prefs.getString(_userTokenKey);
   }
 
-  Future<void> _clearToken() async {
-    _token = null;
+  Future<void> _clearUserToken() async {
+    _userToken = null;
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_tokenKey);
+    await prefs.remove(_userTokenKey);
   }
 
   UserProfile _getUserProfileFromApiResponse(Map<String, dynamic> data) {
@@ -75,17 +90,25 @@ class HttpAuthRepository with ChangeNotifier implements AuthRepository {
 
   // 5. Metodi pubblici
   @override
-  Future<UserProfile?> checkToken() async {
-    await _loadToken();
-    if (_token == null) {
+  Future<UserProfile?> checkUserToken() async {
+    await _loadUserToken();
+    if (_userToken == null) {
       return null; // Token non presente
     }
 
     // API per verificare il token
     final url = Uri.parse("$_baseUrl/api/token/check");
-    final response = await http.get(
+    final response = await http.post(
       url,
-      headers: {'Authorization': 'Bearer $_token'},
+      headers: {
+        'Authorization': 'Bearer $_userToken',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'fcm_token': _fcmToken,
+        'device_id': _deviceId,
+        'device_type': _deviceType,
+      }),
     );
 
     if (response.statusCode == 200) {
@@ -94,15 +117,25 @@ class HttpAuthRepository with ChangeNotifier implements AuthRepository {
       return _currentUser;
     } else {
       // Token non valido o scaduto
-      await _clearToken();
+      await _clearUserToken();
       return null;
     }
   }
 
   @override
   Future<UserProfile?> signInWithEmailAndPassword(String email, String password) async {
-    final url = Uri.parse("$_baseUrl/api/login?email=$email&password=$password");
-    final response = await http.post(url);
+    final url = Uri.parse("$_baseUrl/api/login");
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'email': email,
+        'password': password,
+        'fcm_token': _fcmToken,
+        'device_id': _deviceId,
+        'device_type': _deviceType
+      }),
+    );
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body)['data'];
@@ -111,7 +144,7 @@ class HttpAuthRepository with ChangeNotifier implements AuthRepository {
       final token = data['token'];
 
       // Salva il token in SharedPreferences
-      await _saveToken(token);
+      await _saveUserToken(token);
 
       // Crea il profilo utente dall'API
       _currentUser = _getUserProfileFromApiResponse(data);
@@ -128,6 +161,6 @@ class HttpAuthRepository with ChangeNotifier implements AuthRepository {
   Future<void> signOut() async {
     _currentUser = null;
     notifyListeners();
-    await _clearToken();
+    await _clearUserToken();
   }
 }

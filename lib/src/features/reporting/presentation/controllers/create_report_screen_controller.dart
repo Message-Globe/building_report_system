@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '../../../authentication/domain/building.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../data/reports_repository.dart';
@@ -21,7 +23,7 @@ class CreateReportScreenController extends _$CreateReportScreenController {
     required PriorityLevel priority,
     required String title,
     required String description,
-    required List<String> photoUrls,
+    required List<File> photos,
   }) async {
     // Mostra lo stato di caricamento per lo screen
     state = const AsyncLoading();
@@ -32,13 +34,13 @@ class CreateReportScreenController extends _$CreateReportScreenController {
 
       // Effettua la chiamata al backend per creare il nuovo report
       final newReport = await ref.read(reportsRepositoryProvider).addReport(
-            createdBy: userProfile.appUser.uid,
+            currentUser: userProfile,
             building: building,
             buildingSpot: buildingSpot,
             priority: priority,
             title: title,
             description: description,
-            photoUrls: photoUrls,
+            photos: photos,
           );
 
       // Aggiorna il controller della lista dei report con il nuovo report

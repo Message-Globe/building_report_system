@@ -1,3 +1,4 @@
+import 'package:building_report_system/src/features/authentication/data/auth_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../authentication/domain/building.dart';
@@ -67,8 +68,9 @@ class ReportsListController extends _$ReportsListController {
 
     // Carica i report dal backend e aggiorna lo stato
     state = await AsyncValue.guard(() async {
+      final currentUser = ref.read(authRepositoryProvider).currentUser;
       // Recupera i nuovi report dal backend
-      _allReports = await reportsRepository.fetchReportsList();
+      _allReports = await reportsRepository.fetchReportsList(currentUser!);
 
       // Applica i filtri aggiornati e ritorna la lista filtrata
       return _applyLocalFilters();

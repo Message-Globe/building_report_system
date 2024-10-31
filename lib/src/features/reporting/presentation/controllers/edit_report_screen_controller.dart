@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:building_report_system/src/features/authentication/data/auth_repository.dart';
+
 import '../../../authentication/domain/building.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -14,44 +18,40 @@ class EditReportScreenController extends _$EditReportScreenController {
 
   Future<void> updateReport({
     required Report report,
-    required Building building,
-    required String buildingSpot,
-    required PriorityLevel priority,
-    required String title,
-    required String description,
-    List<String>? photoUrls,
-    required String maintenanceDescription,
+    String? title,
+    String? description,
+    Building? building,
+    String? buildingSpot,
+    PriorityLevel? priority,
+    List<String>? photosUrls,
+    List<File>? newPhotos,
+    String? maintenanceDescription,
     List<String>? maintenancePhotoUrls,
+    List<File>? newMaintenancePhotos,
   }) async {
     state = const AsyncLoading();
 
+    final currentUser = ref.read(authRepositoryProvider).currentUser!;
+
     state = await AsyncValue.guard(() async {
       // Effettua la chiamata al backend per aggiornare il report
-      await ref.read(reportsRepositoryProvider).updateReport(
-            report: report,
+      final updatedReport = await ref.read(reportsRepositoryProvider).updateReport(
+            currentUser: currentUser,
+            reportId: report.id,
             building: building,
             buildingSpot: buildingSpot,
             priority: priority,
             title: title,
             description: description,
-            photoUrls: photoUrls,
+            photosUrls: photosUrls,
+            newPhotos: newPhotos,
             maintenanceDescription: maintenanceDescription,
             maintenancePhotoUrls: maintenancePhotoUrls,
+            newMaintenancePhotos: newMaintenancePhotos,
           );
 
       // Aggiorna il controller della lista dei reports
-      ref.read(reportsListControllerProvider.notifier).updateReportInList(
-            report.copyWith(
-              building: building,
-              buildingSpot: buildingSpot,
-              priority: priority,
-              title: title,
-              description: description,
-              photoUrls: photoUrls ?? report.photoUrls,
-              maintenanceDescription: maintenanceDescription,
-              maintenancePhotoUrls: maintenancePhotoUrls ?? report.maintenancePhotoUrls,
-            ),
-          );
+      ref.read(reportsListControllerProvider.notifier).updateReportInList(updatedReport);
 
       // Quando la chiamata al backend è completata, puoi chiudere la schermata di edit
       return;
@@ -61,17 +61,19 @@ class EditReportScreenController extends _$EditReportScreenController {
   Future<void> completeReport({
     required Report report,
     required String maintenanceDescription,
-    List<String>? maintenancePhotoUrls,
+    required List<String> maintenancePhotoUrls,
   }) async {
     state = const AsyncLoading();
+
+    final currentUser = ref.read(authRepositoryProvider).currentUser!;
 
     state = await AsyncValue.guard(() async {
       // Effettua la chiamata al backend per completare il report
       await ref.read(reportsRepositoryProvider).completeReport(
-            report.copyWith(
-              maintenanceDescription: maintenanceDescription,
-              maintenancePhotoUrls: maintenancePhotoUrls ?? [],
-            ),
+            currentUser: currentUser,
+            reportId: report.id,
+            maintenanceDescription: maintenanceDescription,
+            maintenancePhotosUrls: maintenancePhotoUrls,
           );
 
       // Aggiorna il controller della lista con il report completato
@@ -79,7 +81,7 @@ class EditReportScreenController extends _$EditReportScreenController {
             report.copyWith(
               status: ReportStatus.completed,
               maintenanceDescription: maintenanceDescription,
-              maintenancePhotoUrls: maintenancePhotoUrls ?? report.maintenancePhotoUrls,
+              maintenancePhotoUrls: maintenancePhotoUrls,
             ),
           );
 

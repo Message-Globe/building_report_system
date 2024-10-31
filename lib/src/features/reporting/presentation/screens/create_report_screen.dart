@@ -59,8 +59,6 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
       return;
     }
 
-    final imagesUrls = _images.map((image) => image.path).toList();
-
     // Chiama il metodo addReport
     await ref.read(createReportScreenControllerProvider.notifier).createReport(
           building: _selectedBuilding!,
@@ -68,7 +66,7 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
           priority: _selectedPriority,
           title: title,
           description: description,
-          photoUrls: imagesUrls,
+          photos: _images,
         );
 
     // Ritorna alla schermata precedente dopo la creazione del report

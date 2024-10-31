@@ -1,3 +1,4 @@
+import '../../../authentication/data/auth_repository.dart';
 import '../../data/reports_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -12,16 +13,21 @@ class ReportDismissibleTileController extends _$ReportDismissibleTileController 
   FutureOr<void> build() {}
 
   // Gestisci l'assegnazione del report
-  FutureOr<void> assignReport(Report report, String operatorId) async {
+  FutureOr<void> assignReport({
+    required Report report,
+    required String operatorId,
+  }) async {
     // Mostra il caricamento solo per la tile corrente
     state = const AsyncLoading();
+
+    final currentUser = ref.read(authRepositoryProvider).currentUser!;
 
     state = await AsyncValue.guard(
       () async {
         // Chiama il backend per assegnare il report
         await ref.read(reportsRepositoryProvider).assignReportToOperator(
-              report: report,
-              operatorId: operatorId,
+              currentUser: currentUser,
+              reportId: report.id,
             );
 
         // Notifica il controller della lista che il report è stato aggiornato
@@ -43,10 +49,15 @@ class ReportDismissibleTileController extends _$ReportDismissibleTileController 
     // Mostra il caricamento solo per la tile corrente
     state = const AsyncLoading();
 
+    final currentUser = ref.read(authRepositoryProvider).currentUser!;
+
     state = await AsyncValue.guard(
       () async {
         // Chiama il backend per disassegnare il report
-        await ref.read(reportsRepositoryProvider).unassignReportFromOperator(report);
+        await ref.read(reportsRepositoryProvider).unassignReportFromOperator(
+              currentUser: currentUser,
+              reportId: report.id,
+            );
 
         // Notifica il controller della lista che il report è stato aggiornato
         ref.read(reportsListControllerProvider.notifier).updateReportInList(
@@ -70,7 +81,7 @@ class ReportDismissibleTileController extends _$ReportDismissibleTileController 
     state = await AsyncValue.guard(
       () async {
         // Chiama il backend per eliminare il report
-        await ref.read(reportsRepositoryProvider).deleteReport(report);
+        await ref.read(reportsRepositoryProvider).deleteReport(report.id);
 
         // Notifica il controller della lista che il report è stato rimosso
         ref.read(reportsListControllerProvider.notifier).updateReportInList(

@@ -1,171 +1,190 @@
-import '../../../utils/delay.dart';
-import '../../authentication/domain/building.dart';
-import '../domain/report.dart';
-import 'reports_repository.dart';
-import 'test_reports.dart';
+// import 'package:building_report_system/src/features/authentication/domain/user_profile.dart';
 
-class FakeReportsRepository implements ReportsRepository {
-  // 1. Variabili finali
-  final bool addDelay;
-  List<Report> _reports = kTestReports;
+// import '../../../utils/delay.dart';
+// import '../../authentication/domain/building.dart';
+// import '../domain/report.dart';
+// import 'reports_repository.dart';
+// import 'test_reports.dart';
 
-  // 2. Costruttore
-  FakeReportsRepository({this.addDelay = true});
+// class FakeReportsRepository implements ReportsRepository {
+//   // 1. Variabili finali
+//   final bool addDelay;
+//   List<Report> _reports = kTestReports;
 
-  // 3. Metodi privati
-  String _generateNewReportId() {
-    if (_reports.isEmpty) {
-      return '1';
-    }
-    final highestId =
-        _reports.map((r) => int.tryParse(r.id) ?? 0).reduce((a, b) => a > b ? a : b);
-    return (highestId + 1).toString();
-  }
+//   // 2. Costruttore
+//   FakeReportsRepository({this.addDelay = true});
 
-  // TODO: give me only my reports
-  // bool _filterByUserRole(Report report, UserProfile userProfile) {
-  //   if (userProfile.role == UserRole.reporter) {
-  //     return report.createdBy == userProfile.appUser.uid;
-  //   } else if (userProfile.role == UserRole.operator) {
-  //     return userProfile.assignedBuildings.containsKey(report.buildingId);
-  //   }
-  //   return true; // Se è un admin, mostra tutti i report
-  // }
+//   // 3. Metodi privati
+//   String _generateNewReportId() {
+//     if (_reports.isEmpty) {
+//       return '1';
+//     }
+//     final highestId =
+//         _reports.map((r) => int.tryParse(r.id) ?? 0).reduce((a, b) => a > b ? a : b);
+//     return (highestId + 1).toString();
+//   }
 
-  // 4. Metodi pubblici
-  @override
-  Future<List<Report>> fetchReportsList() async {
-    await delay(addDelay);
-    return _reports;
-  }
+//   // TODO: give me only my reports
+//   // bool _filterByUserRole(Report report, UserProfile userProfile) {
+//   //   if (userProfile.role == UserRole.reporter) {
+//   //     return report.createdBy == userProfile.appUser.uid;
+//   //   } else if (userProfile.role == UserRole.operator) {
+//   //     return userProfile.assignedBuildings.containsKey(report.buildingId);
+//   //   }
+//   //   return true; // Se è un admin, mostra tutti i report
+//   // }
 
-  @override
-  Future<Report> addReport({
-    required String createdBy,
-    required Building building,
-    required String buildingSpot,
-    required PriorityLevel priority,
-    required String title,
-    required String description,
-    required List<String>? photoUrls,
-  }) async {
-    await delay(addDelay);
+//   // 4. Metodi pubblici
+//   @override
+//   Future<List<Report>> fetchReportsList(UserProfile currentUser) async {
+//     await delay(addDelay);
+//     return _reports;
+//   }
 
-    final newReport = Report(
-      id: _generateNewReportId(),
-      createdBy: createdBy,
-      assignedTo: '', // Non assegnato inizialmente
-      building: building,
-      buildingSpot: buildingSpot,
-      priority: priority,
-      title: title,
-      description: description,
-      status: ReportStatus.opened,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-      photoUrls: photoUrls ?? [],
-      maintenanceDescription: '',
-      maintenancePhotoUrls: [],
-    );
+//   @override
+//   Future<Report> addReport({
+//     required UserProfile currentUser,
+//     required Building building,
+//     required String buildingSpot,
+//     required PriorityLevel priority,
+//     required String title,
+//     required String description,
+//     List<String>? photoUrls,
+//   }) async {
+//     await delay(addDelay);
 
-    _reports = [..._reports, newReport];
+//     final newReport = Report(
+//       id: _generateNewReportId(),
+//       createdBy: currentUser.appUser.uid,
+//       assignedTo: '', // Non assegnato inizialmente
+//       building: building,
+//       buildingSpot: buildingSpot,
+//       priority: priority,
+//       title: title,
+//       description: description,
+//       status: ReportStatus.opened,
+//       createdAt: DateTime.now(),
+//       updatedAt: DateTime.now(),
+//       photoUrls: photoUrls ?? [],
+//       maintenanceDescription: '',
+//       maintenancePhotoUrls: [],
+//     );
 
-    return newReport;
-  }
+//     _reports = [..._reports, newReport];
 
-  @override
-  Future<void> updateReport({
-    required Report report,
-    Building? building,
-    String? buildingSpot,
-    PriorityLevel? priority,
-    String? title,
-    String? description,
-    ReportStatus? status,
-    List<String>? photoUrls,
-    String? assignedTo,
-    String? maintenanceDescription,
-    List<String>? maintenancePhotoUrls,
-  }) async {
-    await delay(addDelay);
+//     return newReport;
+//   }
 
-    final index = _reports.indexOf(report);
-    if (index != -1) {
-      final updatedReports = List<Report>.from(_reports);
-      final newReport = report.copyWith(
-        building: building,
-        buildingSpot: buildingSpot,
-        priority: priority,
-        title: title,
-        description: description,
-        status: status,
-        photoUrls: photoUrls,
-        assignedTo: assignedTo,
-        maintenanceDescription: maintenanceDescription,
-        maintenancePhotoUrls: maintenancePhotoUrls,
-        updatedAt: DateTime.now(),
-      );
-      updatedReports[index] = newReport;
+//   @override
+//   Future<void> updateReport({
+//     required String reportId,
+//     ReportStatus? status,
+//     String? assignedTo,
+//     Building? building,
+//     String? buildingSpot,
+//     PriorityLevel? priority,
+//     String? title,
+//     String? description,
+//     List<String>? photoUrls,
+//     String? maintenanceDescription,
+//     List<String>? maintenancePhotoUrls,
+//   }) async {
+//     await delay(addDelay);
 
-      _reports = updatedReports;
-    }
-  }
+//     // Trova l'indice del report con il reportId specificato
+//     final index = _reports.indexWhere((r) => r.id == reportId);
+//     if (index != -1) {
+//       // Crea una nuova lista copiando quella esistente
+//       final updatedReports = List<Report>.from(_reports);
 
-  @override
-  Future<void> deleteReport(Report report) async {
-    if (report.status != ReportStatus.opened) {
-      throw Exception("Only unassigned reports can be deleted.");
-    }
-    await delay(addDelay);
+//       // Usa il report corrente e aggiorna solo i campi specificati
+//       final currentReport = _reports[index];
+//       final newReport = currentReport.copyWith(
+//         status: status ?? currentReport.status,
+//         building: building ?? currentReport.building,
+//         buildingSpot: buildingSpot ?? currentReport.buildingSpot,
+//         priority: priority ?? currentReport.priority,
+//         title: title ?? currentReport.title,
+//         description: description ?? currentReport.description,
+//         photoUrls: photoUrls ?? currentReport.photoUrls,
+//         maintenanceDescription:
+//             maintenanceDescription ?? currentReport.maintenanceDescription,
+//         maintenancePhotoUrls: maintenancePhotoUrls ?? currentReport.maintenancePhotoUrls,
+//         updatedAt: DateTime.now(),
+//       );
 
-    updateReport(
-      report: report,
-      status: ReportStatus.deleted,
-    );
-  }
+//       // Sostituisci il report esistente con il nuovo nella lista aggiornata
+//       updatedReports[index] = newReport;
 
-  @override
-  Future<void> completeReport(Report report) async {
-    if (report.status != ReportStatus.assigned) {
-      throw Exception("Only assigned reports can be completed.");
-    }
-    if (report.maintenanceDescription.isEmpty && report.maintenancePhotoUrls.isEmpty) {
-      throw Exception("At least maintenance description or photos must be provided.");
-    }
-    updateReport(
-      report: report,
-      status: ReportStatus.completed,
-    );
-  }
+//       // Aggiorna la lista dei report
+//       _reports = updatedReports;
+//     } else {
+//       throw Exception('Report not found');
+//     }
+//   }
 
-  @override
-  Future<void> assignReportToOperator({
-    required Report report,
-    required String operatorId,
-  }) async {
-    if (report.status != ReportStatus.opened) {
-      throw Exception("Report is already assigned.");
-    }
+//   @override
+//   Future<void> deleteReport(String reportId) async {
+//     final report = _reports.firstWhere((r) => r.id == reportId);
+//     if (report.status != ReportStatus.opened) {
+//       throw Exception("Only unassigned reports can be deleted.");
+//     }
+//     await delay(addDelay);
 
-    // throw Exception('test');
+//     updateReport(
+//       reportId: reportId,
+//       status: ReportStatus.deleted,
+//     );
+//   }
 
-    await updateReport(
-      report: report,
-      status: ReportStatus.assigned,
-      assignedTo: operatorId,
-    );
-  }
+//   @override
+//   Future<void> completeReport({
+//     required String reportId,
+//     required String maintenanceDescription,
+//     List<String>? maintenancePhotosUrls,
+//   }) async {
+//     final report = _reports.firstWhere((r) => r.id == reportId);
+//     if (report.status != ReportStatus.assigned) {
+//       throw Exception("Only assigned reports can be completed.");
+//     }
+//     if (report.maintenanceDescription.isEmpty && report.maintenancePhotoUrls.isEmpty) {
+//       throw Exception("At least maintenance description or photos must be provided.");
+//     }
+//     updateReport(
+//       reportId: reportId,
+//       status: ReportStatus.completed,
+//       maintenanceDescription: maintenanceDescription,
+//       maintenancePhotoUrls: maintenancePhotosUrls,
+//     );
+//   }
 
-  @override
-  Future<void> unassignReportFromOperator(Report report) async {
-    if (report.status != ReportStatus.assigned) {
-      throw Exception("Only assigned reports can be unassigned.");
-    }
+//   @override
+//   Future<void> assignReportToOperator(String reportId, [String? operatorId]) async {
+//     final report = _reports.firstWhere((r) => r.id == reportId);
+//     if (report.status != ReportStatus.opened) {
+//       throw Exception("Report is already assigned.");
+//     }
 
-    await updateReport(
-      report: report,
-      status: ReportStatus.opened,
-      assignedTo: '',
-    );
-  }
-}
+//     // throw Exception('test');
+
+//     await updateReport(
+//       reportId: reportId,
+//       status: ReportStatus.assigned,
+//       assignedTo: operatorId,
+//     );
+//   }
+
+//   @override
+//   Future<void> unassignReportFromOperator(String reportId) async {
+//     final report = _reports.firstWhere((r) => r.id == reportId);
+//     if (report.status != ReportStatus.assigned) {
+//       throw Exception("Only assigned reports can be unassigned.");
+//     }
+
+//     await updateReport(
+//       reportId: reportId,
+//       status: ReportStatus.opened,
+//       assignedTo: '',
+//     );
+//   }
+// }

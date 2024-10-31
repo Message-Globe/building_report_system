@@ -1,11 +1,7 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
 import 'package:building_report_system/src/utils/context_extensions.dart';
 import 'package:flutter/foundation.dart';
-
-import 'package:building_report_system/src/features/authentication/domain/building.dart';
 import 'package:flutter/material.dart';
+import '../../authentication/domain/building.dart';
 
 enum ReportStatus {
   opened,
@@ -63,6 +59,36 @@ class Report {
     required this.maintenancePhotoUrls,
   });
 
+  /// Metodo `fromJson` personalizzato
+  factory Report.fromJson(Map<String, dynamic> json, List<Building> assignedBuildings) {
+    // Recupera l'ID della struttura e trova l'oggetto Building corrispondente
+    final buildingId = json['structure_id']?.toString() ?? '';
+    final building = assignedBuildings.firstWhere(
+      (b) => b.id == buildingId,
+      orElse: () => Building(id: buildingId, name: 'Unknown'),
+    );
+
+    return Report(
+      id: json['id'].toString(),
+      createdBy: json['created_by']?.toString() ?? '',
+      assignedTo: json['assigned_to']?.toString() ?? '',
+      createdAt: DateTime.fromMillisecondsSinceEpoch(json['created_at'] * 1000),
+      updatedAt: DateTime.fromMillisecondsSinceEpoch(json['updated_at'] * 1000),
+      status: ReportStatus.values.byName(json['status']),
+      building: building,
+      buildingSpot: json['site'] ?? '',
+      priority: PriorityLevel.values.firstWhere(
+        (e) => e.toString().split('.').last == json['priority'],
+        orElse: () => PriorityLevel.normal,
+      ),
+      title: json['subject'] ?? '',
+      description: json['description'] ?? '',
+      maintenanceDescription: json['maintenance_description'] ?? '',
+      photoUrls: List<String>.from(json['report_pictures'] ?? []),
+      maintenancePhotoUrls: List<String>.from(json['maintenance_pictures'] ?? []),
+    );
+  }
+
   Report copyWith({
     String? id,
     String? createdBy,
@@ -96,50 +122,6 @@ class Report {
       maintenancePhotoUrls: maintenancePhotoUrls ?? this.maintenancePhotoUrls,
     );
   }
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'createdBy': createdBy,
-      'assignedTo': assignedTo,
-      'createdAt': createdAt.millisecondsSinceEpoch,
-      'updatedAt': updatedAt.millisecondsSinceEpoch,
-      'status': status.name,
-      'building': building.toMap(),
-      'buildingSpot': buildingSpot,
-      'priority': priority.name,
-      'title': title,
-      'description': description,
-      'maintenanceDescription': maintenanceDescription,
-      'photoUrls': photoUrls,
-      'maintenancePhotoUrls': maintenancePhotoUrls,
-    };
-  }
-
-  factory Report.fromMap(Map<String, dynamic> map) {
-    return Report(
-      id: map['id'] as String,
-      createdBy: map['createdBy'] as String,
-      assignedTo: map['assignedTo'] as String,
-      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
-      updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int),
-      status: ReportStatus.values.byName(map['status']),
-      building: Building.fromMap(map['building'] as Map<String, dynamic>),
-      buildingSpot: map['buildingSpot'] as String,
-      priority: PriorityLevel.values.byName(map['priority']),
-      title: map['title'] as String,
-      description: map['description'] as String,
-      maintenanceDescription: map['maintenanceDescription'] as String,
-      photoUrls: List<String>.from((map['photoUrls'] as List<String>)),
-      maintenancePhotoUrls:
-          List<String>.from((map['maintenancePhotoUrls'] as List<String>)),
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Report.fromJson(String source) =>
-      Report.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {

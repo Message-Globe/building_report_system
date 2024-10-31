@@ -1,15 +1,17 @@
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:building_report_system/src/features/authentication/data/auth_repository.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
 import '../../../../l10n/string_extensions.dart';
-
 import '../../../../utils/context_extensions.dart';
 import 'package:go_router/go_router.dart';
 import '../screens/photo_view_gallery_screen.dart';
 import '../../../../routing/app_router.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../constants/app_sizes.dart';
 
-class RemoteImageGallery extends StatelessWidget {
+class RemoteImageGallery extends ConsumerWidget {
   final bool isOperator;
   final List<String> imageUrls;
   final bool canRemove;
@@ -24,12 +26,26 @@ class RemoteImageGallery extends StatelessWidget {
   });
 
   bool _isLocalImage(String url) {
-    // Verifica se l'URL è un percorso di file locale
     return url.startsWith('file://') || File(url).existsSync();
   }
 
+  Future<Uint8List> _fetchImageWithToken(String url, String token) async {
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      return response.bodyBytes;
+    } else {
+      throw Exception('Failed to load image');
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final token = ref.read(authRepositoryProvider).userToken;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -47,7 +63,7 @@ class RemoteImageGallery extends StatelessWidget {
                     builder: (_, ref, __) {
                       return GestureDetector(
                         onTap: () {
-                          context.goNamed(
+                          context.pushNamed(
                             AppRoute.photoGallery.name,
                             extra: PhotoViewGalleryArgs(
                               imageUrls: imageUrls,
@@ -55,19 +71,29 @@ class RemoteImageGallery extends StatelessWidget {
                             ),
                           );
                         },
-                        child: _isLocalImage(url)
-                            ? Image.file(
-                                File(url), // Usa Image.file per immagini locali
+                        child: FutureBuilder<Uint8List>(
+                          future: _isLocalImage(url)
+                              ? Future.value(File(url).readAsBytesSync())
+                              : _fetchImageWithToken(url, token),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return const Icon(
+                                Icons.error,
+                                color: Colors.grey,
+                                size: 100,
+                              );
+                            } else {
+                              return Image.memory(
+                                snapshot.data!,
                                 width: 100,
                                 height: 100,
                                 fit: BoxFit.cover,
-                              )
-                            : Image.network(
-                                url, // Usa Image.network per immagini remote
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.cover,
-                              ),
+                              );
+                            }
+                          },
+                        ),
                       );
                     },
                   ),
@@ -76,7 +102,7 @@ class RemoteImageGallery extends StatelessWidget {
                       right: 0,
                       child: IconButton(
                         icon: const Icon(Icons.remove_circle, color: Colors.red),
-                        onPressed: () => onRemove(url), // Rimuove l'immagine
+                        onPressed: () => onRemove(url),
                       ),
                     ),
                 ],

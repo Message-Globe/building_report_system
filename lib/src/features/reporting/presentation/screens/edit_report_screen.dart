@@ -67,14 +67,6 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
     final description = _descriptionController.text;
     final buildingSpot = _buildingSpotController.text;
     final maintenanceDescription = _repairDescriptionController.text;
-    final allImages = [
-      ..._remoteImages,
-      ..._localImages.map((file) => file.path),
-    ];
-    final allRepairImages = [
-      ..._repairRemoteImages,
-      ..._repairLocalImages.map((file) => file.path),
-    ];
 
     if (isReporter) {
       if (title.isEmpty || description.isEmpty || buildingSpot.isEmpty) {
@@ -84,10 +76,7 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
         return;
       }
     } else {
-      final hasRepairContent = maintenanceDescription.isNotEmpty ||
-          _repairLocalImages.isNotEmpty ||
-          _repairRemoteImages.isNotEmpty;
-      if (!hasRepairContent) {
+      if (maintenanceDescription.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(context.loc.provideRepairDetails.capitalizeFirst())),
         );
@@ -102,9 +91,11 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
           priority: _selectedPriority,
           title: title,
           description: description,
-          photoUrls: allImages,
+          photosUrls: _remoteImages,
+          newPhotos: _localImages,
           maintenanceDescription: maintenanceDescription,
-          maintenancePhotoUrls: allRepairImages,
+          maintenancePhotoUrls: _repairRemoteImages,
+          newMaintenancePhotos: _repairLocalImages,
         );
 
     ref.read(goRouterProvider).pop();

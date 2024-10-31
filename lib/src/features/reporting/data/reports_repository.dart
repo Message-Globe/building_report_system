@@ -1,60 +1,77 @@
+import 'dart:io';
+
+import 'package:building_report_system/src/features/authentication/data/auth_repository.dart';
+import 'package:building_report_system/src/features/reporting/data/http_reports_repository.dart';
+
 import '../../authentication/domain/building.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../authentication/domain/user_profile.dart';
 import '../domain/report.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import 'fake_reports_repository.dart';
 
 part 'reports_repository.g.dart';
 
 abstract class ReportsRepository {
-  Future<List<Report>> fetchReportsList();
+  Future<List<Report>> fetchReportsList(UserProfile currentUser);
 
   Future<Report> addReport({
-    required String createdBy,
+    required UserProfile currentUser,
+    required String title,
+    required String description,
     required Building building,
     required String buildingSpot,
     required PriorityLevel priority,
-    required String title,
-    required String description,
-    required List<String>? photoUrls,
+    List<File>? photos,
   });
 
-  Future<void> deleteReport(Report report);
+  Future<void> deleteReport(String reportId);
 
-  Future<void> updateReport({
-    required Report report,
+  Future<Report> updateReport({
+    required UserProfile currentUser,
+    required String reportId,
+    ReportStatus? status,
+    String? title,
+    String? description,
     Building? building,
     String? buildingSpot,
     PriorityLevel? priority,
-    String? title,
-    String? description,
-    ReportStatus? status,
-    List<String>? photoUrls,
-    String? assignedTo, // Modificato da operatorId a assignedTo
+    List<String>? photosUrls,
+    List<File>? newPhotos,
     String? maintenanceDescription,
     List<String>? maintenancePhotoUrls,
+    List<File>? newMaintenancePhotos,
   });
 
   Future<void> assignReportToOperator({
-    required Report report,
-    required String operatorId, // Modificato da operatorId a assignedTo
+    required UserProfile currentUser,
+    required String reportId,
   });
 
-  Future<void> unassignReportFromOperator(Report report);
+  Future<void> unassignReportFromOperator({
+    required UserProfile currentUser,
+    required String reportId,
+  });
 
-  Future<void> completeReport(Report report);
+  Future<void> completeReport({
+    required UserProfile currentUser,
+    required String reportId,
+    required String maintenanceDescription,
+    List<String>? maintenancePhotosUrls,
+  });
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 ReportsRepository reportsRepository(Ref ref) {
   // TODO: switch with real repo after completation
-  return FakeReportsRepository();
+  final userToken = ref.watch(authRepositoryProvider).userToken;
+  return HttpReportsRepository(userToken: userToken);
+  // return FakeReportsRepository();
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 Future<List<Report>> reportsListFuture(Ref ref) {
   final reportsRepository = ref.watch(reportsRepositoryProvider);
-  return reportsRepository.fetchReportsList();
+  final currentUser = ref.read(authRepositoryProvider).currentUser;
+  return reportsRepository.fetchReportsList(currentUser!);
 }

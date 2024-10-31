@@ -1,300 +1,234 @@
-// import 'dart:async';
-// import 'dart:convert';
-// import 'package:http/http.dart' as http;
-// import '../../authentication/domain/user_profile.dart';
-// import '../domain/report.dart';
-// import 'reports_repository.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'package:building_report_system/src/features/authentication/domain/user_profile.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
+import 'package:path/path.dart';
+import '../../authentication/domain/building.dart';
+import '../domain/report.dart';
+import 'reports_repository.dart';
 
-// class HttpReportsRepository implements ReportsRepository {
-//   // 1. Costanti
-//   static const String _baseUrl = "https://api.cooperativadoc.it";
-//   String? _token;
+class HttpReportsRepository implements ReportsRepository {
+  final String userToken;
 
-//   // 2. StreamController per simulare lo stream locale
-//   final _reportsStreamController = StreamController<List<Report>>.broadcast();
-//   List<Report> _reportsCache = [];
+  const HttpReportsRepository({required this.userToken});
 
-//   // 3. Getter per lo stream
-//   @override
-//   Stream<List<Report>> get reportsStream => _reportsStreamController.stream;
+  static const String _baseUrl = "https://api.cooperativadoc.it";
 
-//   // 4. Metodi per gestire i report
+  Map<String, String> get _headers => {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $userToken',
+      };
 
-//   @override
-//   Future<List<Report>> fetchReportsList({
-//     required bool showCompleted,
-//     required bool showDeleted,
-//     required bool reverseOrder,
-//     required UserProfile userProfile,
-//     String? buildingId,
-//   }) async {
-//     final url = Uri.parse("$_baseUrl/api/reports");
-//     final response = await http.get(
-//       url,
-//       headers: {'Authorization': 'Bearer $_token'},
-//     );
+  @override
+  Future<List<Report>> fetchReportsList(UserProfile currentUser) async {
+    final response = await http.get(
+      Uri.parse('$_baseUrl/api/reports'),
+      headers: _headers,
+    );
 
-//     if (response.statusCode == 200) {
-//       final List<dynamic> data = json.decode(response.body)['data'];
-//       _reportsCache = _parseReportsFromJson(data);
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseBody = json.decode(response.body);
 
-//       _reportsStreamController.add(_filterReports(
-//         userProfile: userProfile,
-//         showCompleted: showCompleted,
-//         showDeleted: showDeleted,
-//         reverseOrder: reverseOrder,
-//         buildingId: buildingId,
-//       ));
+      if (responseBody['success'] == true) {
+        final List<dynamic> data = responseBody['data'];
+        return data
+            .map((json) => Report.fromJson(json, currentUser.assignedBuildings))
+            .toList();
+      } else {
+        throw Exception('Failed to load reports: success flag is false');
+      }
+    } else {
+      throw Exception('Failed to load reports');
+    }
+  }
 
-//       return _reportsCache;
-//     } else {
-//       throw Exception("Failed to fetch reports: ${response.body}");
-//     }
-//   }
+  @override
+  Future<Report> addReport({
+    required UserProfile currentUser,
+    required Building building,
+    required String buildingSpot,
+    required PriorityLevel priority,
+    required String title,
+    required String description,
+    List<File>? photos,
+  }) async {
+    var request = http.MultipartRequest('POST', Uri.parse('$_baseUrl/api/reports'));
 
-//   @override
-//   Stream<List<Report>> watchReportsList({
-//     required bool showCompleted,
-//     required bool showDeleted,
-//     required bool reverseOrder,
-//     required UserProfile userProfile,
-//     String? buildingId,
-//   }) {
-//     // Filtra i report ogni volta che cambia qualcosa
-//     _reportsStreamController.add(_filterReports(
-//       userProfile: userProfile,
-//       showCompleted: showCompleted,
-//       showDeleted: showDeleted,
-//       reverseOrder: reverseOrder,
-//       buildingId: buildingId,
-//     ));
+    request.fields['created_by'] = currentUser.appUser.uid;
+    request.fields['structure_id'] = building.id;
+    request.fields['site'] = buildingSpot;
+    request.fields['priority'] = priority.toString().split('.').last;
+    request.fields['subject'] = title;
+    request.fields['description'] = description;
 
-//     return reportsStream;
-//   }
+    if (photos != null && photos.isNotEmpty) {
+      for (var photo in photos) {
+        final mimeType = lookupMimeType(photo.path) ?? 'application/octet-stream';
+        request.files.add(await http.MultipartFile.fromPath(
+          'upload_report_pictures[]',
+          photo.path,
+          filename: basename(photo.path),
+          contentType: MediaType.parse(mimeType),
+        ));
+      }
+    }
 
-//   @override
-//   Future<Report> addReport({
-//     required String createdBy,
-//     required String buildingId,
-//     required String buildingSpot,
-//     required PriorityLevel priority,
-//     required String title,
-//     required String description,
-//     required List<String>? photoUrls,
-//   }) async {
-//     final url = Uri.parse("$_baseUrl/api/reports");
-//     final response = await http.post(
-//       url,
-//       headers: {'Authorization': 'Bearer $_token'},
-//       body: {
-//         "user_id": createdBy,
-//         "building_id": buildingId,
-//         "building_spot": buildingSpot,
-//         "priority": priority.toString(),
-//         "title": title,
-//         "description": description,
-//         "photos": photoUrls ?? [],
-//       },
-//     );
+    request.headers['Authorization'] = 'Bearer $userToken';
 
-//     if (response.statusCode == 201) {
-//       final data = json.decode(response.body)['data'];
+    final response = await request.send();
 
-//       final newReport = Report(
-//         id: data['id'], // Usa l'ID generato dal backend
-//         createdBy: createdBy,
-//         assignedTo: '', // Inizialmente vuoto
-//         createdAt: DateTime.parse(data['created_at']),
-//         updatedAt: DateTime.parse(data['updated_at']),
-//         status: ReportStatus.opened,
-//         buildingId: buildingId,
-//         buildingSpot: buildingSpot,
-//         priority: priority,
-//         title: title,
-//         description: description,
-//         maintenanceDescription: '',
-//         photoUrls: photoUrls ?? [],
-//         maintenancePhotoUrls: [],
-//       );
+    final responseBody = await response.stream.bytesToString();
 
-//       _reportsCache.add(newReport);
-//       _reportsStreamController.add(_reportsCache);
-//     } else {
-//       throw Exception("Failed to add report: ${response.body}");
-//     }
-//   }
+    if (response.statusCode == 201) {
+      final data = json.decode(responseBody)['data'];
+      return Report.fromJson(data, currentUser.assignedBuildings);
+    } else {
+      throw Exception('Failed to create report');
+    }
+  }
 
-//   @override
-//   Future<void> updateReport({
-//     required Report report,
-//     String? buildingId,
-//     String? buildingSpot,
-//     PriorityLevel? priority,
-//     String? title,
-//     String? description,
-//     ReportStatus? status,
-//     List<String>? photoUrls,
-//     String? assignedTo,
-//     String? maintenanceDescription,
-//     List<String>? maintenancePhotoUrls,
-//   }) async {
-//     final url = Uri.parse("$_baseUrl/api/reports/${report.id}");
-//     final response = await http.post(
-//       url,
-//       headers: {'Authorization': 'Bearer $_token'},
-//       body: {
-//         "building_id": buildingId ?? report.buildingId,
-//         "building_spot": buildingSpot ?? report.buildingSpot,
-//         "priority": priority?.toString() ?? report.priority.toString(),
-//         "title": title ?? report.title,
-//         "description": description ?? report.description,
-//         "status": status?.toString() ?? report.status.toString(),
-//         "photos": photoUrls ?? report.photoUrls,
-//         "assigned_to": assignedTo ?? report.assignedTo,
-//         "maintenance_description":
-//             maintenanceDescription ?? report.maintenanceDescription,
-//         "maintenance_photos": maintenancePhotoUrls ?? report.maintenancePhotoUrls,
-//       },
-//     );
+  @override
+  Future<void> deleteReport(String reportId) async {
+    final response = await http.delete(
+      Uri.parse('$_baseUrl/api/reports/$reportId'),
+      headers: _headers,
+    );
 
-//     if (response.statusCode == 200) {
-//       final index = _reportsCache.indexOf(report);
-//       if (index != -1) {
-//         _reportsCache[index] = report.copyWith(
-//           buildingId: buildingId,
-//           buildingSpot: buildingSpot,
-//           priority: priority,
-//           title: title,
-//           description: description,
-//           status: status,
-//           photoUrls: photoUrls,
-//           assignedTo: assignedTo,
-//           maintenanceDescription: maintenanceDescription,
-//           maintenancePhotoUrls: maintenancePhotoUrls,
-//         );
-//         _reportsStreamController.add(_reportsCache);
-//       }
-//     } else {
-//       throw Exception("Failed to update report: ${response.body}");
-//     }
-//   }
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete report');
+    }
+  }
 
-//   @override
-//   Future<void> deleteReport(Report report) async {
-//     final url = Uri.parse("$_baseUrl/api/reports/${report.id}");
-//     final response = await http.delete(
-//       url,
-//       headers: {'Authorization': 'Bearer $_token'},
-//     );
+  @override
+  Future<Report> updateReport({
+    required UserProfile currentUser,
+    required String reportId,
+    ReportStatus? status,
+    String? title,
+    String? description,
+    Building? building,
+    String? buildingSpot,
+    PriorityLevel? priority,
+    List<String>? photosUrls,
+    List<File>? newPhotos,
+    String? maintenanceDescription,
+    List<String>? maintenancePhotoUrls,
+    List<File>? newMaintenancePhotos,
+  }) async {
+    // Inizializza una richiesta Multipart
+    var request =
+        http.MultipartRequest('POST', Uri.parse('$_baseUrl/api/reports/$reportId'));
 
-//     if (response.statusCode == 200) {
-//       _reportsCache.remove(report);
-//       _reportsStreamController.add(_reportsCache);
-//     } else {
-//       throw Exception("Failed to delete report: ${response.body}");
-//     }
-//   }
+    // Aggiungi i campi solo se non sono null
+    if (status != null) request.fields['status'] = status.name;
+    if (title != null) request.fields['subject'] = title;
+    if (description != null) request.fields['description'] = description;
+    if (building != null) request.fields['structure_id'] = building.id;
+    if (buildingSpot != null) request.fields['site'] = buildingSpot;
+    if (priority != null) request.fields['priority'] = priority.name;
+    if (maintenanceDescription != null) {
+      request.fields['maintenance_description'] = maintenanceDescription;
+    }
 
-//   @override
-//   Future<void> completeReport(Report report) async {
-//     if (report.status != ReportStatus.assigned) {
-//       throw Exception("Only assigned reports can be completed.");
-//     }
+    // Gestisci le foto del report
+    if (photosUrls != null) {
+      if (photosUrls.isEmpty) {
+        request.fields['report_pictures[]'] = "";
+      } else {
+        for (var url in photosUrls) {
+          request.fields['report_pictures[]'] = url;
+        }
+      }
+    }
+    if (newPhotos != null && newPhotos.isNotEmpty) {
+      for (var photo in newPhotos) {
+        request.files.add(await http.MultipartFile.fromPath(
+          'upload_report_pictures[]', // Campo di caricamento per le nuove foto
+          photo.path,
+          filename: basename(photo.path),
+          contentType:
+              MediaType.parse(lookupMimeType(photo.path) ?? 'application/octet-stream'),
+        ));
+      }
+    }
 
-//     if (report.maintenanceDescription.isEmpty && report.maintenancePhotoUrls.isEmpty) {
-//       throw Exception("At least repair description or photos must be provided.");
-//     }
+    // Gestisci le foto di manutenzione
+    if (maintenancePhotoUrls != null) {
+      if (maintenancePhotoUrls.isEmpty) {
+        request.fields['maintenance_pictures[]'] = "";
+      } else {
+        for (var url in maintenancePhotoUrls) {
+          request.fields['maintenance_pictures[]'] = url;
+        }
+      }
+    }
+    if (newMaintenancePhotos != null) {
+      for (var photo in newMaintenancePhotos) {
+        request.files.add(await http.MultipartFile.fromPath(
+          'upload_maintenance_pictures[]', // Campo di caricamento per le nuove foto di riparazione
+          photo.path,
+          filename: basename(photo.path),
+          contentType:
+              MediaType.parse(lookupMimeType(photo.path) ?? 'application/octet-stream'),
+        ));
+      }
+    }
 
-//     await updateReport(
-//       report: report,
-//       status: ReportStatus.completed,
-//     );
-//   }
+    // Aggiungi l’header di autorizzazione
+    request.headers['Authorization'] = 'Bearer $userToken';
 
-//   @override
-//   Future<void> assignReportToOperator({
-//     required Report report,
-//     required String operatorId,
-//   }) async {
-//     if (report.status != ReportStatus.opened) {
-//       throw Exception("Report is already assigned.");
-//     }
+    // Invia la richiesta
+    final response = await request.send();
 
-//     await updateReport(
-//       report: report,
-//       status: ReportStatus.assigned,
-//       assignedTo: operatorId,
-//     );
-//   }
+    final responseBody = await response.stream.bytesToString();
 
-//   @override
-//   Future<void> unassignReportFromOperator(Report report) async {
-//     if (report.status != ReportStatus.assigned) {
-//       throw Exception("Only assigned reports can be unassigned.");
-//     }
+    if (response.statusCode == 200) {
+      final data = json.decode(responseBody)['data'];
+      return Report.fromJson(data, currentUser.assignedBuildings);
+    } else {
+      throw Exception('Failed to update report');
+    }
+  }
 
-//     await updateReport(
-//       report: report,
-//       status: ReportStatus.opened,
-//       assignedTo: '',
-//     );
-//   }
+  @override
+  Future<void> assignReportToOperator({
+    required UserProfile currentUser,
+    required String reportId,
+  }) async {
+    await updateReport(
+      currentUser: currentUser,
+      reportId: reportId,
+      status: ReportStatus.assigned,
+    );
+  }
 
-//   // Metodi privati per parsing e filtraggio
+  @override
+  Future<void> unassignReportFromOperator({
+    required UserProfile currentUser,
+    required String reportId,
+  }) async {
+    await updateReport(
+      currentUser: currentUser,
+      reportId: reportId,
+      status: ReportStatus.opened,
+    );
+  }
 
-//   List<Report> _parseReportsFromJson(List<dynamic> data) {
-//     return data.map((json) => Report.fromJson(json)).toList();
-//   }
-
-//   List<Report> _filterReports({
-//     required UserProfile userProfile,
-//     required bool showCompleted,
-//     required bool showDeleted,
-//     required bool reverseOrder,
-//     String? buildingId,
-//   }) {
-//     List<Report> filteredReports = _reportsCache.where((report) {
-//       final byUserRole = _filterByUserRole(report, userProfile);
-//       final byBuilding = _filterByBuilding(report, buildingId);
-//       final byStatus = _filterByStatus(report, showCompleted, showDeleted);
-//       return byUserRole && byBuilding && byStatus;
-//     }).toList();
-
-//     filteredReports.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-
-//     if (reverseOrder) {
-//       filteredReports = filteredReports.reversed.toList();
-//     }
-
-//     return filteredReports;
-//   }
-
-//   bool _filterByUserRole(Report report, UserProfile userProfile) {
-//     if (userProfile.role == UserRole.reporter) {
-//       return report.createdBy == userProfile.appUser.uid;
-//     } else if (userProfile.role == UserRole.operator) {
-//       // Controlla se l'ID dell'edificio è presente nella mappa `assignedBuildings`
-//       return userProfile.assignedBuildings.containsKey(report.buildingId);
-//     }
-//     // Se è un admin, mostra tutti i report
-//     return true;
-//   }
-
-//   bool _filterByBuilding(Report report, String? buildingId) {
-//     if (buildingId != null) {
-//       return report.buildingId == buildingId;
-//     }
-//     return true;
-//   }
-
-//   bool _filterByStatus(Report report, bool showCompleted, bool showDeleted) {
-//     if (report.status == ReportStatus.opened || report.status == ReportStatus.assigned) {
-//       return true;
-//     } else if (report.status == ReportStatus.completed) {
-//       return showCompleted;
-//     } else if (report.status == ReportStatus.deleted) {
-//       return showDeleted;
-//     }
-//     return false;
-//   }
-// }
+  @override
+  Future<void> completeReport({
+    required UserProfile currentUser,
+    required String reportId,
+    required String maintenanceDescription,
+    List<String>? maintenancePhotosUrls,
+  }) async {
+    await updateReport(
+      currentUser: currentUser,
+      reportId: reportId,
+      maintenanceDescription: maintenanceDescription,
+      maintenancePhotoUrls: maintenancePhotosUrls,
+      status: ReportStatus.completed,
+    );
+  }
+}

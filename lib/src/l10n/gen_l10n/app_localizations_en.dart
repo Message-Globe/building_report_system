@@ -94,13 +94,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get apply => 'apply';
 
   @override
-  String get local => 'local';
+  String get localReportPhotos => 'local report photos';
 
   @override
-  String get repair => 'repair';
+  String get remoteReportPhotos => 'remote report photos';
 
   @override
-  String get photos => 'photos:';
+  String get localRepairPhotos => 'local repair photos';
+
+  @override
+  String get remoteRepairPhotos => 'remote repair photos';
 
   @override
   String get addPhoto => 'add Photo';

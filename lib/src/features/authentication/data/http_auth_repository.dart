@@ -20,7 +20,7 @@ class HttpAuthRepository with ChangeNotifier implements AuthRepository {
   UserProfile? _currentUser;
   String? _userToken;
 
-  late final String _fcmToken;
+  late final String? _fcmToken;
   late final String _deviceType;
   late final String? _deviceId;
 
@@ -32,7 +32,7 @@ class HttpAuthRepository with ChangeNotifier implements AuthRepository {
   String get userToken => _userToken!;
 
   @override
-  set fcmToken(String fcmToken) => _fcmToken = fcmToken;
+  set fcmToken(String? fcmToken) => _fcmToken = fcmToken;
   @override
   set deviceType(String deviceType) => _deviceType = deviceType;
   @override

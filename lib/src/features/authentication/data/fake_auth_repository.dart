@@ -35,7 +35,7 @@ class FakeAuthRepository with ChangeNotifier implements AuthRepository {
   String get userToken => _fakeUserToken!;
 
   @override
-  set fcmToken(String fcmToken) {}
+  set fcmToken(String? fcmToken) {}
   @override
   set deviceType(String deviceType) {}
   @override

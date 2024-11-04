@@ -74,7 +74,7 @@ GoRouter goRouter(Ref ref) {
               final args = state.extra as PhotoViewGalleryArgs;
               return PhotoViewGalleryScreen(
                 imageUrls: args.imageUrls,
-                imageFiles: args.imageFiles,
+                imageUris: args.imageUris,
                 initialIndex: args.initialIndex,
               );
             },

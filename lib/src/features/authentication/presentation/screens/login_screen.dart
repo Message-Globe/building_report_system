@@ -1,3 +1,5 @@
+import '../../../../common_widgets/primary_button.dart';
+import '../../../../common_widgets/responsive_scrollable_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -86,8 +88,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with EmailPasswordVal
 
     return Scaffold(
       appBar: AppBar(title: const Text('Login')),
-      body: Padding(
-        padding: const EdgeInsets.all(Sizes.p16),
+      body: ResponsiveScrollableCard(
         child: FocusScope(
           node: _node,
           child: Form(
@@ -133,11 +134,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with EmailPasswordVal
                   onEditingComplete: () => _passwordEditingComplete(),
                 ),
                 gapH16,
-                ElevatedButton(
+                PrimaryButton(
+                  isLoading: state.isLoading,
                   onPressed: state.isLoading ? null : _submit,
-                  child: state.isLoading
-                      ? const CircularProgressIndicator()
-                      : const Text('Login'),
+                  text: 'Login',
                 ),
               ],
             ),

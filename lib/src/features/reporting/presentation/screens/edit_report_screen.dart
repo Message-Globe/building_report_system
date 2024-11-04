@@ -11,7 +11,6 @@ import '../widgets/date_display.dart';
 import '../widgets/priority_selection_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'dart:io';
 import '../../../../constants/app_sizes.dart';
 import '../../../../routing/app_router.dart';
 import '../../../authentication/data/auth_repository.dart';
@@ -34,10 +33,10 @@ class _EditReportScreenState extends ConsumerState<EditReportScreen> {
   final _buildingSpotController = TextEditingController();
   late Building _selectedBuilding;
   late PriorityLevel _selectedPriority;
-  final List<File> _localImages = [];
+  final List<String> _localImages = [];
   final List<String> _remoteImages = [];
   final _repairDescriptionController = TextEditingController();
-  final List<File> _repairLocalImages = [];
+  final List<String> _repairLocalImages = [];
   final List<String> _repairRemoteImages = [];
 
   @override

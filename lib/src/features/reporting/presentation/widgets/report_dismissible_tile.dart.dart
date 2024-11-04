@@ -1,11 +1,12 @@
-import 'report_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../../common_widgets/alert_dialogs.dart'; // Importa la tua funzione di dialogo
 import '../../../../constants/app_sizes.dart';
 import '../../../authentication/domain/user_profile.dart';
 import '../../domain/report.dart';
 import '../controllers/report_dismissible_tile_controller.dart';
-import '../../../../common_widgets/alert_dialogs.dart'; // Importa la tua funzione di dialogo
+import 'report_tile.dart';
 
 class ReportDismissibleTile extends ConsumerWidget {
   final Report report;

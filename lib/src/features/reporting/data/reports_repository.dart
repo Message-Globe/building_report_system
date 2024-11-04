@@ -1,7 +1,5 @@
-import 'dart:io';
-
-import 'package:building_report_system/src/features/authentication/data/auth_repository.dart';
-import 'package:building_report_system/src/features/reporting/data/http_reports_repository.dart';
+import '../../authentication/data/auth_repository.dart';
+import 'http_reports_repository.dart';
 
 import '../../authentication/domain/building.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,7 +20,7 @@ abstract class ReportsRepository {
     required Building building,
     required String buildingSpot,
     required PriorityLevel priority,
-    List<File>? photos,
+    List<String>? photos,
   });
 
   Future<void> deleteReport(String reportId);
@@ -37,10 +35,10 @@ abstract class ReportsRepository {
     String? buildingSpot,
     PriorityLevel? priority,
     List<String>? photosUrls,
-    List<File>? newPhotos,
+    List<String>? newPhotos,
     String? maintenanceDescription,
     List<String>? maintenancePhotoUrls,
-    List<File>? newMaintenancePhotos,
+    List<String>? newMaintenancePhotos,
   });
 
   Future<void> assignReportToOperator({

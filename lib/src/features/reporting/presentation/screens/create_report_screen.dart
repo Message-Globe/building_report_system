@@ -1,23 +1,21 @@
-import '../../../authentication/domain/building.dart';
-import '../controllers/create_report_screen_controller.dart';
-import '../../../../l10n/string_extensions.dart';
-
-import '../../../authentication/domain/user_profile.dart';
-import '../../../../utils/context_extensions.dart';
-
-import '../../domain/report.dart';
-import '../widgets/custom_text_field.dart';
-import '../widgets/date_display.dart';
-import '../widgets/priority_selection_dropdown.dart';
-import '../widgets/local_image_gallery.dart';
-import '../../../authentication/data/auth_repository.dart';
-import '../../../../routing/app_router.dart';
-import '../../../../utils/async_value_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'dart:io';
+
 import '../../../../constants/app_sizes.dart';
+import '../../../../l10n/string_extensions.dart';
+import '../../../../routing/app_router.dart';
+import '../../../../utils/async_value_ui.dart';
+import '../../../../utils/context_extensions.dart';
+import '../../../authentication/data/auth_repository.dart';
+import '../../../authentication/domain/building.dart';
+import '../../../authentication/domain/user_profile.dart';
+import '../../domain/report.dart';
+import '../controllers/create_report_screen_controller.dart';
 import '../widgets/building_selection_dropdown.dart';
+import '../widgets/custom_text_field.dart';
+import '../widgets/date_display.dart';
+import '../widgets/local_image_gallery.dart';
+import '../widgets/priority_selection_dropdown.dart';
 
 class CreateReportScreen extends ConsumerStatefulWidget {
   const CreateReportScreen({super.key});
@@ -32,7 +30,7 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
   final _buildingSpotController = TextEditingController();
   Building? _selectedBuilding;
   PriorityLevel _selectedPriority = PriorityLevel.normal;
-  final List<File> _images = [];
+  final List<String> _imageUris = [];
 
   @override
   void dispose() {
@@ -66,7 +64,7 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
           priority: _selectedPriority,
           title: title,
           description: description,
-          photos: _images,
+          photos: _imageUris,
         );
 
     // Ritorna alla schermata precedente dopo la creazione del report
@@ -149,9 +147,9 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
                 // Galleria di immagini locali
                 LocalImageGallery(
                   isOperator: false,
-                  imageFiles: _images,
+                  imageUris: _imageUris,
                   canRemove: true,
-                  onRemove: (file) => setState(() => _images.remove(file)),
+                  onRemove: (file) => setState(() => _imageUris.remove(file)),
                 ),
               ],
             ),

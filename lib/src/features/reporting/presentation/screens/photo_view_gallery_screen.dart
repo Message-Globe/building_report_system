@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import '../../../../l10n/string_extensions.dart';
 
 import '../../../../utils/context_extensions.dart';
@@ -9,29 +7,29 @@ import 'package:photo_view/photo_view_gallery.dart';
 
 class PhotoViewGalleryArgs {
   final List<String>? imageUrls; // Lista di URL
-  final List<File>? imageFiles; // Lista di file locali
+  final List<String>? imageUris; // Lista di file locali
   final int initialIndex;
 
   PhotoViewGalleryArgs({
     this.imageUrls,
-    this.imageFiles,
+    this.imageUris,
     required this.initialIndex,
-  }) : assert(imageUrls != null || imageFiles != null,
-            'One of imageUrls or imageFiles must be provided');
+  }) : assert(imageUrls != null || imageUris != null,
+            'One of imageUrls or imageUris must be provided');
 }
 
 class PhotoViewGalleryScreen extends StatelessWidget {
   final List<String>? imageUrls;
-  final List<File>? imageFiles;
+  final List<String>? imageUris;
   final int initialIndex;
 
   const PhotoViewGalleryScreen({
     super.key,
     this.imageUrls,
-    this.imageFiles,
+    this.imageUris,
     required this.initialIndex,
-  }) : assert(imageUrls != null || imageFiles != null,
-            'One of imageUrls or imageFiles must be provided');
+  }) : assert(imageUrls != null || imageUris != null,
+            'One of imageUrls or imageUris must be provided');
 
   @override
   Widget build(BuildContext context) {
@@ -42,12 +40,12 @@ class PhotoViewGalleryScreen extends StatelessWidget {
         title: Text(context.loc.photoGallery.capitalizeFirst()),
       ),
       body: PhotoViewGallery.builder(
-        itemCount: isShowingUrls ? imageUrls!.length : imageFiles!.length,
+        itemCount: isShowingUrls ? imageUrls!.length : imageUris!.length,
         pageController: PageController(initialPage: initialIndex),
         builder: (context, index) {
           final imageProvider = isShowingUrls
               ? NetworkImage(imageUrls![index])
-              : FileImage(imageFiles![index]) as ImageProvider;
+              : NetworkImage(imageUris![index]);
 
           return PhotoViewGalleryPageOptions(
             imageProvider: imageProvider,

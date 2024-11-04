@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 import '../../../../constants/app_sizes.dart';
@@ -8,10 +6,10 @@ import '../widgets/remote_image_gallery.dart';
 
 class CombinedImageGallery extends StatelessWidget {
   final bool isOperator;
-  final List<File> localImages;
+  final List<String> localImages;
   final List<String> remoteImages;
   final bool canEdit;
-  final void Function(File) onRemoveLocal;
+  final void Function(String) onRemoveLocal;
   final void Function(String) onRemoveRemote;
 
   const CombinedImageGallery({
@@ -40,7 +38,7 @@ class CombinedImageGallery extends StatelessWidget {
         if (canEdit)
           LocalImageGallery(
             isOperator: isOperator,
-            imageFiles: localImages,
+            imageUris: localImages,
             canRemove: canEdit,
             onRemove: onRemoveLocal, // Passa il callback per rimuovere l'immagine locale
           ),

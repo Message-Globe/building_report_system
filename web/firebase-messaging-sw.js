@@ -17,5 +17,5 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((m) => {
-  console.log("onBackgroundMessage", m);
+  console.log("Messaggio in background in arrivo: ", m);
 });

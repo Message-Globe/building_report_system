@@ -1,4 +1,4 @@
-import 'package:building_report_system/firebase_options.dart';
+import '../firebase_options.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -29,7 +29,8 @@ class AppBootstrap {
     // Inizializzazione di Firebase
     await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
     _configureFirebaseMessaging();
-    await _initializeFirebaseMessagingToken(container);
+    final notificationsPermitted = await _askNotificationsPermision();
+    await _initializeFirebaseMessagingToken(container, notificationsPermitted);
 
     // Altre inizializzazioni globali come setup delle date, localizzazione, ecc.
     await initializeDateFormatting('it_IT', null);
@@ -42,7 +43,7 @@ class AppBootstrap {
   Future<void> _getDeviceInfo(ProviderContainer container) async {
     final deviceInfo = DeviceInfoPlugin();
     String? deviceId;
-    String deviceType = Platform.operatingSystem;
+    String deviceType = kIsWeb ? 'web' : Platform.operatingSystem;
 
     if (Platform.isAndroid) {
       final androidInfo = await deviceInfo.androidInfo;
@@ -52,38 +53,58 @@ class AppBootstrap {
       deviceId = iosInfo.identifierForVendor; // Ottieni l'identifier per iOS
     }
 
-    debugPrint("Device ID: $deviceId', Device Type: $deviceType");
+    debugPrint("Device ID: $deviceId, Device Type: $deviceType");
 
     final authRepository = container.read(authRepositoryProvider);
     authRepository.deviceType = deviceType;
     authRepository.deviceId = deviceId;
   }
 
-  void _configureFirebaseMessaging() {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-    // Richiedi i permessi solo su iOS e Web
-    if (defaultTargetPlatform == TargetPlatform.iOS || kIsWeb) {
-      messaging.requestPermission();
-    }
-
+  void _configureFirebaseMessaging() async {
     // Gestisci le notifiche in foreground
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       // TODO: handle foreground notifications
-      debugPrint("Messaggio in arrivo: ${message.notification?.title}");
+      debugPrint(
+        "Titolo Messaggio in foreground in arrivo: ${message.notification?.title}",
+      );
+      debugPrint(
+        "Contenuto Messaggio in foreground in arrivo: ${message.notification?.body}",
+      );
     });
   }
 
-  Future<void> _initializeFirebaseMessagingToken(ProviderContainer container) async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
+  Future<bool> _askNotificationsPermision() async {
+    // Richiedi i permessi solo su iOS e Web
+    if (defaultTargetPlatform == TargetPlatform.iOS || kIsWeb) {
+      FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-    // Ottieni il token
-    String? fcmToken = await messaging.getToken();
-    if (fcmToken != null) {
-      debugPrint("Token Firebase Messaging: $fcmToken");
-      final authRepository = container.read(authRepositoryProvider);
-      authRepository.fcmToken = fcmToken;
+      NotificationSettings settings = await messaging.requestPermission();
+
+      // Verifica se i permessi sono stati concessi
+      if (settings.authorizationStatus != AuthorizationStatus.authorized &&
+          settings.authorizationStatus != AuthorizationStatus.provisional) {
+        return false;
+      }
     }
+    return true;
+  }
+
+  Future<void> _initializeFirebaseMessagingToken(
+    ProviderContainer container,
+    bool notificationPermitted,
+  ) async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    String? fcmToken;
+
+    if (notificationPermitted) {
+      // Ottieni il token
+      fcmToken = await messaging.getToken();
+      if (fcmToken != null) {
+        debugPrint("Token Firebase Messaging: $fcmToken");
+      }
+    }
+    final authRepository = container.read(authRepositoryProvider);
+    authRepository.fcmToken = fcmToken;
   }
 
   /// Controlla lo user token all'avvio e gestisce gli eventuali errori

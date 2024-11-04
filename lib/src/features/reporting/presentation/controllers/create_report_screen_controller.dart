@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import '../../../authentication/domain/building.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../data/reports_repository.dart';
@@ -23,7 +21,7 @@ class CreateReportScreenController extends _$CreateReportScreenController {
     required PriorityLevel priority,
     required String title,
     required String description,
-    required List<File> photos,
+    required List<String> photos,
   }) async {
     // Mostra lo stato di caricamento per lo screen
     state = const AsyncLoading();

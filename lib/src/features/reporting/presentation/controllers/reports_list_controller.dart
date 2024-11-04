@@ -1,4 +1,4 @@
-import 'package:building_report_system/src/features/authentication/data/auth_repository.dart';
+import '../../../authentication/data/auth_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../authentication/domain/building.dart';

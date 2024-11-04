@@ -116,17 +116,21 @@
     "@apply": {
         "description": "Button label to apply filters or changes"
     },
-    "local": "local",
-    "@local": {
-        "description": "Label for local context"
+    "localReportPhotos": "local report photos",
+    "@localReportPhotos": {
+        "description": "Label for local report photos"
     },
-    "repair": "repair",
-    "@repair": {
-        "description": "Label for repair context"
+    "remoteReportPhotos": "remote report photos",
+    "@remoteReportPhotos": {
+        "description": "Label for remote report photos"
     },
-    "photos": "photos:",
-    "@photos": {
-        "description": "Label for showing photos"
+    "localRepairPhotos": "local repair photos",
+    "@localRepairPhotos": {
+        "description": "Label for local repair photos"
+    },
+    "remoteRepairPhotos": "remote repair photos",
+    "@remoteRepairPhotos": {
+        "description": "Label for remote repair photos"
     },
     "addPhoto": "add Photo",
     "@addPhoto": {

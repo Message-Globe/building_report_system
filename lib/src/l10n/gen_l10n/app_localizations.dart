@@ -269,23 +269,29 @@ abstract class AppLocalizations {
   /// **'apply'**
   String get apply;
 
-  /// Label for local context
+  /// Label for local report photos
   ///
   /// In en, this message translates to:
-  /// **'local'**
-  String get local;
+  /// **'local report photos'**
+  String get localReportPhotos;
 
-  /// Label for repair context
+  /// Label for remote report photos
   ///
   /// In en, this message translates to:
-  /// **'repair'**
-  String get repair;
+  /// **'remote report photos'**
+  String get remoteReportPhotos;
 
-  /// Label for showing photos
+  /// Label for local repair photos
   ///
   /// In en, this message translates to:
-  /// **'photos:'**
-  String get photos;
+  /// **'local repair photos'**
+  String get localRepairPhotos;
+
+  /// Label for remote repair photos
+  ///
+  /// In en, this message translates to:
+  /// **'remote repair photos'**
+  String get remoteRepairPhotos;
 
   /// Button label to add a photo
   ///

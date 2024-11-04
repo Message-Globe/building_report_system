@@ -1,11 +1,10 @@
-import '../l10n/string_extensions.dart';
-
-import 'context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../common_widgets/alert_dialogs.dart';
 import '../exceptions/app_exception.dart';
+import '../l10n/string_extensions.dart';
+import 'context_extensions.dart';
 
 /// A helper [AsyncValue] extension to show an alert dialog on error
 extension AsyncValueUI on AsyncValue {

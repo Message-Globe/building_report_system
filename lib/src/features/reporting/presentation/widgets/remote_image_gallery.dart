@@ -1,9 +1,9 @@
-import 'dart:io';
 import 'dart:typed_data';
-import 'package:building_report_system/src/features/authentication/data/auth_repository.dart';
+import '../../../authentication/data/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:universal_io/io.dart';
 import '../../../../l10n/string_extensions.dart';
 import '../../../../utils/context_extensions.dart';
 import 'package:go_router/go_router.dart';
@@ -26,7 +26,14 @@ class RemoteImageGallery extends ConsumerWidget {
   });
 
   bool _isLocalImage(String url) {
-    return url.startsWith('file://') || File(url).existsSync();
+    print('IM HERE 1');
+    print(url);
+    // TODO: check here with phone
+    // final response = url.startsWith('file://') || File(url).existsSync();
+    final response = url.startsWith('file://');
+    // final response = url.startsWith('file://') || File(url).existsSync();
+    print('IM HERE 2');
+    return response;
   }
 
   Future<Uint8List> _fetchImageWithToken(String url, String token) async {
@@ -49,8 +56,9 @@ class RemoteImageGallery extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-            "${isOperator ? '${context.loc.repair.capitalizeFirst()} ' : ''}${isOperator ? context.loc.photos : context.loc.photos.capitalizeFirst()}"),
+        isOperator
+            ? Text(context.loc.remoteRepairPhotos.capitalizeFirst())
+            : Text(context.loc.remoteReportPhotos.capitalizeFirst()),
         gapH4,
         Wrap(
           spacing: Sizes.p12,

@@ -1,9 +1,9 @@
 {
-    "name": "building_report_system",
-    "short_name": "building_report_system",
+    "name": "Building Report System",
+    "short_name": "BRS",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#hexcode",
+    "background_color": "#hexcode2",
     "theme_color": "#hexcode",
     "description": "A new Flutter project.",
     "orientation": "portrait-primary",

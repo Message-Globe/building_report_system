@@ -12,7 +12,7 @@ abstract class AuthRepository with ChangeNotifier {
   Future<void> signOut();
   UserProfile? get currentUser;
   Future<UserProfile?> checkUserToken();
-  set fcmToken(String fcmToken);
+  set fcmToken(String? fcmToken);
   set deviceType(String deviceType);
   set deviceId(String? deviceId);
   String get userToken;

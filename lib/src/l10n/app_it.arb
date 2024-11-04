@@ -116,17 +116,21 @@
     "@apply": {
         "description": "Etichetta del pulsante per applicare i filtri o le modifiche"
     },
-    "local": "locale",
-    "@local": {
-        "description": "Etichetta per il contesto locale"
+    "localReportPhotos": "foto locali segnalazione",
+    "@localReportPhotos": {
+        "description": "Etichetta per le foto locali della segnalazione"
     },
-    "repair": "riparazione",
-    "@repair": {
-        "description": "Etichetta per il contesto della riparazione"
+    "remoteReportPhotos": "foto remote segnalazione",
+    "@remoteReportPhotos": {
+        "description": "Etichetta per le foto remote della segnalazione"
     },
-    "photos": "foto:",
-    "@photos": {
-        "description": "Etichetta per mostrare le foto"
+    "localRepairPhotos": "foto locali riparazione",
+    "@localRepairPhotos": {
+        "description": "Etichetta per le foto locali della riparazione"
+    },
+    "remoteRepairPhotos": "foto remote riparazione",
+    "@remoteRepairPhotos": {
+        "description": "Etichetta per le foto remote della riparazione"
     },
     "addPhoto": "aggiungi Foto",
     "@addPhoto": {

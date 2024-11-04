@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:convert';
 import '../../../../l10n/string_extensions.dart';
 
 import '../../../../utils/context_extensions.dart';
@@ -12,13 +12,13 @@ import '../screens/photo_view_gallery_screen.dart';
 
 class LocalImageGallery extends StatefulWidget {
   final bool isOperator;
-  final List<File> imageFiles;
+  final List<String> imageUris;
   final bool canRemove;
-  final void Function(File) onRemove; // Funzione per rimuovere l'immagine locale
+  final void Function(String) onRemove; // Funzione per rimuovere l'immagine locale
 
   const LocalImageGallery({
     required this.isOperator,
-    required this.imageFiles,
+    required this.imageUris,
     required this.canRemove,
     required this.onRemove,
     super.key,
@@ -38,8 +38,12 @@ class _LocalImageGalleryState extends State<LocalImageGallery> {
       imageQuality: 80,
     );
     if (pickedFile != null) {
+      final bytes = await pickedFile.readAsBytes();
+      final base64Image = base64Encode(bytes);
+      final dataUri = 'data:image/png;base64,$base64Image';
+
       setState(() {
-        widget.imageFiles.add(File(pickedFile.path));
+        widget.imageUris.add(dataUri);
       });
     }
   }
@@ -50,15 +54,16 @@ class _LocalImageGalleryState extends State<LocalImageGallery> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         // Galleria di immagini locali in un wrap
-        if (widget.imageFiles.isNotEmpty) ...[
-          Text(
-              "${context.loc.local.capitalizeFirst()} ${widget.isOperator ? '${context.loc.repair} ' : ''}${context.loc.photos}"),
+        if (widget.imageUris.isNotEmpty) ...[
+          widget.isOperator
+              ? Text(context.loc.localRepairPhotos.capitalizeFirst())
+              : Text(context.loc.localReportPhotos.capitalizeFirst()),
           gapH4,
           Wrap(
             spacing: Sizes.p12,
             runSpacing: Sizes.p12,
-            children: widget.imageFiles.map(
-              (file) {
+            children: widget.imageUris.map(
+              (uri) {
                 return Stack(
                   children: <Widget>[
                     Consumer(
@@ -67,12 +72,12 @@ class _LocalImageGalleryState extends State<LocalImageGallery> {
                           onTap: () => context.goNamed(
                             AppRoute.photoGallery.name,
                             extra: PhotoViewGalleryArgs(
-                              imageFiles: widget.imageFiles,
-                              initialIndex: widget.imageFiles.indexOf(file),
+                              imageUris: widget.imageUris,
+                              initialIndex: widget.imageUris.indexOf(uri),
                             ),
                           ),
-                          child: Image.file(
-                            file,
+                          child: Image.network(
+                            uri,
                             width: 100,
                             height: 100,
                             fit: BoxFit.cover,
@@ -86,7 +91,7 @@ class _LocalImageGalleryState extends State<LocalImageGallery> {
                         child: IconButton(
                           icon: const Icon(Icons.remove_circle, color: Colors.red),
                           onPressed: () =>
-                              widget.onRemove(file), // Rimuove l'immagine locale
+                              widget.onRemove(uri), // Rimuove l'immagine locale
                         ),
                       ),
                   ],

@@ -1,10 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:building_report_system/src/features/authentication/domain/user_profile.dart';
+import '../../authentication/domain/user_profile.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
-import 'package:mime/mime.dart';
-import 'package:path/path.dart';
 import '../../authentication/domain/building.dart';
 import '../domain/report.dart';
 import 'reports_repository.dart';
@@ -52,7 +49,7 @@ class HttpReportsRepository implements ReportsRepository {
     required PriorityLevel priority,
     required String title,
     required String description,
-    List<File>? photos,
+    List<String>? photos,
   }) async {
     var request = http.MultipartRequest('POST', Uri.parse('$_baseUrl/api/reports'));
 
@@ -64,13 +61,14 @@ class HttpReportsRepository implements ReportsRepository {
     request.fields['description'] = description;
 
     if (photos != null && photos.isNotEmpty) {
-      for (var photo in photos) {
-        final mimeType = lookupMimeType(photo.path) ?? 'application/octet-stream';
-        request.files.add(await http.MultipartFile.fromPath(
+      for (var dataUri in photos) {
+        final base64Data = dataUri.split(',').last;
+        final bytes = base64Decode(base64Data);
+        request.files.add(http.MultipartFile.fromBytes(
           'upload_report_pictures[]',
-          photo.path,
-          filename: basename(photo.path),
-          contentType: MediaType.parse(mimeType),
+          bytes,
+          filename: 'report_picture.png', // Aggiungi un nome di file
+          contentType: MediaType('image', 'png'),
         ));
       }
     }
@@ -112,10 +110,10 @@ class HttpReportsRepository implements ReportsRepository {
     String? buildingSpot,
     PriorityLevel? priority,
     List<String>? photosUrls,
-    List<File>? newPhotos,
+    List<String>? newPhotos,
     String? maintenanceDescription,
     List<String>? maintenancePhotoUrls,
-    List<File>? newMaintenancePhotos,
+    List<String>? newMaintenancePhotos,
   }) async {
     // Inizializza una richiesta Multipart
     var request =
@@ -137,19 +135,22 @@ class HttpReportsRepository implements ReportsRepository {
       if (photosUrls.isEmpty) {
         request.fields['report_pictures[]'] = "";
       } else {
+        // TODO: check fix with Luciano
+        // request.fields['report_pictures[]'] = jsonEncode(photosUrls);
         for (var url in photosUrls) {
           request.fields['report_pictures[]'] = url;
         }
       }
     }
     if (newPhotos != null && newPhotos.isNotEmpty) {
-      for (var photo in newPhotos) {
-        request.files.add(await http.MultipartFile.fromPath(
-          'upload_report_pictures[]', // Campo di caricamento per le nuove foto
-          photo.path,
-          filename: basename(photo.path),
-          contentType:
-              MediaType.parse(lookupMimeType(photo.path) ?? 'application/octet-stream'),
+      for (var dataUri in newPhotos) {
+        final base64Data = dataUri.split(',').last;
+        final bytes = base64Decode(base64Data);
+        request.files.add(http.MultipartFile.fromBytes(
+          'upload_report_pictures[]',
+          bytes,
+          filename: 'report_picture.png', // Aggiungi un nome di file
+          contentType: MediaType('image', 'png'),
         ));
       }
     }
@@ -159,19 +160,22 @@ class HttpReportsRepository implements ReportsRepository {
       if (maintenancePhotoUrls.isEmpty) {
         request.fields['maintenance_pictures[]'] = "";
       } else {
+        // TODO: check fix with Luciano
+        // request.fields['maintenance_pictures[]'] = jsonEncode(maintenancePhotoUrls);
         for (var url in maintenancePhotoUrls) {
           request.fields['maintenance_pictures[]'] = url;
         }
       }
     }
     if (newMaintenancePhotos != null) {
-      for (var photo in newMaintenancePhotos) {
-        request.files.add(await http.MultipartFile.fromPath(
-          'upload_maintenance_pictures[]', // Campo di caricamento per le nuove foto di riparazione
-          photo.path,
-          filename: basename(photo.path),
-          contentType:
-              MediaType.parse(lookupMimeType(photo.path) ?? 'application/octet-stream'),
+      for (var dataUri in newMaintenancePhotos) {
+        final base64Data = dataUri.split(',').last;
+        final bytes = base64Decode(base64Data);
+        request.files.add(http.MultipartFile.fromBytes(
+          'upload_maintenance_pictures[]',
+          bytes,
+          filename: 'maintenance_picture.png', // Aggiungi un nome di file
+          contentType: MediaType('image', 'png'),
         ));
       }
     }

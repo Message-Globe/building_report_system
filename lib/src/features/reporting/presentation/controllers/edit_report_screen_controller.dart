@@ -1,6 +1,4 @@
-import 'dart:io';
-
-import 'package:building_report_system/src/features/authentication/data/auth_repository.dart';
+import '../../../authentication/data/auth_repository.dart';
 
 import '../../../authentication/domain/building.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -24,10 +22,10 @@ class EditReportScreenController extends _$EditReportScreenController {
     String? buildingSpot,
     PriorityLevel? priority,
     List<String>? photosUrls,
-    List<File>? newPhotos,
+    List<String>? newPhotos,
     String? maintenanceDescription,
     List<String>? maintenancePhotoUrls,
-    List<File>? newMaintenancePhotos,
+    List<String>? newMaintenancePhotos,
   }) async {
     state = const AsyncLoading();
 

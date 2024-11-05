@@ -26,7 +26,7 @@ class ReportsListController extends _$ReportsListController {
 
   bool _filterByStatus(Report report, bool showCompleted, bool showDeleted) {
     switch (report.status) {
-      case ReportStatus.completed:
+      case ReportStatus.closed:
         return showCompleted;
       case ReportStatus.deleted:
         return showDeleted;

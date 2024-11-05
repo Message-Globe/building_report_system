@@ -77,7 +77,7 @@ class EditReportScreenController extends _$EditReportScreenController {
       // Aggiorna il controller della lista con il report completato
       ref.read(reportsListControllerProvider.notifier).updateReportInList(
             report.copyWith(
-              status: ReportStatus.completed,
+              status: ReportStatus.closed,
               maintenanceDescription: maintenanceDescription,
               maintenancePhotoUrls: maintenancePhotoUrls,
             ),

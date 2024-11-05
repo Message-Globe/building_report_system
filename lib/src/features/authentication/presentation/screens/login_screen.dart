@@ -36,10 +36,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with EmailPasswordVal
     // _passwordController.text = "password123";
 
     //!RealRepository
-    _emailController.text = "dedalus80@gmail.com";
-    _passwordController.text = "AIP@5q^7^lMc";
-    // _emailController.text = "manutentore@test.it";
+    // _emailController.text = "dedalus80@gmail.com";
     // _passwordController.text = "AIP@5q^7^lMc";
+    _emailController.text = "manutentore@test.it";
+    _passwordController.text = "AIP@5q^7^lMc";
   }
 
   @override

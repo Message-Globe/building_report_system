@@ -22,7 +22,7 @@ class ReportStatusIcon extends StatelessWidget {
           Icons.handyman,
           color: Colors.amber,
         );
-      case ReportStatus.completed:
+      case ReportStatus.closed:
         return const Icon(
           Icons.check_circle,
           color: Colors.green,

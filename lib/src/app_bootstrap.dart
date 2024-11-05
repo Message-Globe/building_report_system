@@ -78,6 +78,8 @@ class AppBootstrap {
     if (defaultTargetPlatform == TargetPlatform.iOS || kIsWeb) {
       FirebaseMessaging messaging = FirebaseMessaging.instance;
 
+      await messaging.deleteToken();
+
       NotificationSettings settings = await messaging.requestPermission();
 
       // Verifica se i permessi sono stati concessi

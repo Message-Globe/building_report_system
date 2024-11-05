@@ -80,7 +80,7 @@ class ReportDismissibleTile extends ConsumerWidget {
     final userRole = userProfile.role;
     final isLoading = ref.watch(reportDismissibleTileControllerProvider).isLoading;
     final canAssignReport = userRole == UserRole.operator &&
-        report.status != ReportStatus.completed &&
+        report.status != ReportStatus.closed &&
         report.status != ReportStatus.deleted &&
         (report.assignedTo == '' || report.assignedTo == userProfile.appUser.uid);
 

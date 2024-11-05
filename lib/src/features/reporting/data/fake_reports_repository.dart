@@ -145,14 +145,14 @@
 //   }) async {
 //     final report = _reports.firstWhere((r) => r.id == reportId);
 //     if (report.status != ReportStatus.assigned) {
-//       throw Exception("Only assigned reports can be completed.");
+//       throw Exception("Only assigned reports can be closed.");
 //     }
 //     if (report.maintenanceDescription.isEmpty && report.maintenancePhotoUrls.isEmpty) {
 //       throw Exception("At least maintenance description or photos must be provided.");
 //     }
 //     updateReport(
 //       reportId: reportId,
-//       status: ReportStatus.completed,
+//       status: ReportStatus.closed,
 //       maintenanceDescription: maintenanceDescription,
 //       maintenancePhotoUrls: maintenancePhotosUrls,
 //     );

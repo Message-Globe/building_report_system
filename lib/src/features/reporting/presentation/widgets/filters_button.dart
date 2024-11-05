@@ -76,7 +76,7 @@ class FiltersButton extends ConsumerWidget {
                         },
                         showAllBuildings: true,
                       ),
-                      // Checkbox per "Show completed Reports"
+                      // Checkbox per "Show closed Reports"
                       CheckboxListTile(
                         title: Text(context.loc.showCompletedReports.capitalizeFirst()),
                         value: tempShowWorked,

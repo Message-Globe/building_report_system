@@ -41,14 +41,16 @@ abstract class ReportsRepository {
     List<String>? newMaintenancePhotos,
   });
 
-  Future<void> assignReportToOperator({
+  Future<Report> assignReportToOperator({
     required UserProfile currentUser,
     required String reportId,
+    required String maintenanceDescription,
   });
 
-  Future<void> unassignReportFromOperator({
+  Future<Report> unassignReportFromOperator({
     required UserProfile currentUser,
     required String reportId,
+    required String maintenanceDescription,
   });
 
   Future<void> completeReport({
@@ -61,10 +63,8 @@ abstract class ReportsRepository {
 
 @riverpod
 ReportsRepository reportsRepository(Ref ref) {
-  // TODO: switch with real repo after completation
   final userToken = ref.watch(authRepositoryProvider).userToken;
   return HttpReportsRepository(userToken: userToken);
-  // return FakeReportsRepository();
 }
 
 @riverpod

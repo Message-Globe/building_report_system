@@ -20,7 +20,5 @@ abstract class AuthRepository with ChangeNotifier {
 
 @Riverpod(keepAlive: true)
 AuthRepository authRepository(Ref ref) {
-  // TODO: switch with real repo after completation
-  // return FakeAuthRepository();
   return HttpAuthRepository();
 }

@@ -86,7 +86,7 @@
     },
     "reportStatusCompleted": "report status Completed",
     "@reportStatusCompleted": {
-        "description": "Message indicating that the report is completed"
+        "description": "Message indicating that the report is closed"
     },
     "datetime": "datetime",
     "@datetime": {
@@ -96,9 +96,9 @@
     "@filterReports": {
         "description": "Label for the filter reports dialog"
     },
-    "showCompletedReports": "show completed Reports",
+    "showCompletedReports": "show closed Reports",
     "@showCompletedReports": {
-        "description": "Option to show completed reports"
+        "description": "Option to show closed reports"
     },
     "showDeletedReports": "show Deleted Reports",
     "@showDeletedReports": {

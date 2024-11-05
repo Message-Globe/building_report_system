@@ -132,15 +132,7 @@ class HttpReportsRepository implements ReportsRepository {
 
     // Gestisci le foto del report
     if (photosUrls != null) {
-      if (photosUrls.isEmpty) {
-        request.fields['report_pictures[]'] = "";
-      } else {
-        // TODO: check fix with Luciano
-        // request.fields['report_pictures[]'] = jsonEncode(photosUrls);
-        for (var url in photosUrls) {
-          request.fields['report_pictures[]'] = url;
-        }
-      }
+      request.fields['report_pictures'] = jsonEncode(photosUrls);
     }
     if (newPhotos != null && newPhotos.isNotEmpty) {
       for (var dataUri in newPhotos) {
@@ -157,15 +149,7 @@ class HttpReportsRepository implements ReportsRepository {
 
     // Gestisci le foto di manutenzione
     if (maintenancePhotoUrls != null) {
-      if (maintenancePhotoUrls.isEmpty) {
-        request.fields['maintenance_pictures[]'] = "";
-      } else {
-        // TODO: check fix with Luciano
-        // request.fields['maintenance_pictures[]'] = jsonEncode(maintenancePhotoUrls);
-        for (var url in maintenancePhotoUrls) {
-          request.fields['maintenance_pictures[]'] = url;
-        }
-      }
+      request.fields['maintenance_pictures'] = jsonEncode(maintenancePhotoUrls);
     }
     if (newMaintenancePhotos != null) {
       for (var dataUri in newMaintenancePhotos) {
@@ -197,26 +181,30 @@ class HttpReportsRepository implements ReportsRepository {
   }
 
   @override
-  Future<void> assignReportToOperator({
+  Future<Report> assignReportToOperator({
     required UserProfile currentUser,
     required String reportId,
+    required String maintenanceDescription,
   }) async {
-    await updateReport(
+    return await updateReport(
       currentUser: currentUser,
       reportId: reportId,
       status: ReportStatus.assigned,
+      maintenanceDescription: maintenanceDescription,
     );
   }
 
   @override
-  Future<void> unassignReportFromOperator({
+  Future<Report> unassignReportFromOperator({
     required UserProfile currentUser,
     required String reportId,
+    required String maintenanceDescription,
   }) async {
-    await updateReport(
+    return await updateReport(
       currentUser: currentUser,
       reportId: reportId,
       status: ReportStatus.opened,
+      maintenanceDescription: maintenanceDescription,
     );
   }
 
@@ -232,7 +220,7 @@ class HttpReportsRepository implements ReportsRepository {
       reportId: reportId,
       maintenanceDescription: maintenanceDescription,
       maintenancePhotoUrls: maintenancePhotosUrls,
-      status: ReportStatus.completed,
+      status: ReportStatus.closed,
     );
   }
 }

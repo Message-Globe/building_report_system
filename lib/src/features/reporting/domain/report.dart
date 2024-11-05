@@ -6,7 +6,7 @@ import '../../authentication/domain/building.dart';
 enum ReportStatus {
   opened,
   assigned,
-  completed,
+  closed,
   deleted,
 }
 
@@ -30,6 +30,7 @@ class Report {
   final String id;
   final String createdBy;
   final String assignedTo;
+  final String nameAuditor;
   final DateTime createdAt;
   final DateTime updatedAt;
   final ReportStatus status;
@@ -46,6 +47,7 @@ class Report {
     required this.id,
     required this.createdBy,
     required this.assignedTo,
+    required this.nameAuditor,
     required this.createdAt,
     required this.updatedAt,
     required this.status,
@@ -72,6 +74,7 @@ class Report {
       id: json['id'].toString(),
       createdBy: json['created_by']?.toString() ?? '',
       assignedTo: json['assigned_to']?.toString() ?? '',
+      nameAuditor: json['name_auditor'] ?? '',
       createdAt: DateTime.fromMillisecondsSinceEpoch(json['created_at'] * 1000),
       updatedAt: DateTime.fromMillisecondsSinceEpoch(json['updated_at'] * 1000),
       status: ReportStatus.values.byName(json['status']),
@@ -93,6 +96,7 @@ class Report {
     String? id,
     String? createdBy,
     String? assignedTo,
+    String? nameAuditor,
     DateTime? createdAt,
     DateTime? updatedAt,
     ReportStatus? status,
@@ -109,6 +113,7 @@ class Report {
       id: id ?? this.id,
       createdBy: createdBy ?? this.createdBy,
       assignedTo: assignedTo ?? this.assignedTo,
+      nameAuditor: nameAuditor ?? this.nameAuditor,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       status: status ?? this.status,
@@ -125,7 +130,7 @@ class Report {
 
   @override
   String toString() {
-    return 'Report(id: $id, createdBy: $createdBy, assignedTo: $assignedTo, createdAt: $createdAt, updatedAt: $updatedAt, status: $status, building: $building, buildingSpot: $buildingSpot, priority: $priority, title: $title, description: $description, maintenanceDescription: $maintenanceDescription, photoUrls: $photoUrls, maintenancePhotoUrls: $maintenancePhotoUrls)';
+    return 'Report(id: $id, createdBy: $createdBy, assignedTo: $assignedTo, nameAuditor: $nameAuditor, createdAt: $createdAt, updatedAt: $updatedAt, status: $status, building: $building, buildingSpot: $buildingSpot, priority: $priority, title: $title, description: $description, maintenanceDescription: $maintenanceDescription, photoUrls: $photoUrls, maintenancePhotoUrls: $maintenancePhotoUrls)';
   }
 
   @override
@@ -135,6 +140,7 @@ class Report {
     return other.id == id &&
         other.createdBy == createdBy &&
         other.assignedTo == assignedTo &&
+        other.nameAuditor == nameAuditor &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt &&
         other.status == status &&
@@ -153,6 +159,7 @@ class Report {
     return id.hashCode ^
         createdBy.hashCode ^
         assignedTo.hashCode ^
+        nameAuditor.hashCode ^
         createdAt.hashCode ^
         updatedAt.hashCode ^
         status.hashCode ^

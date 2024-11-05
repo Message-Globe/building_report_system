@@ -25,16 +25,19 @@ class ReportDismissibleTileController extends _$ReportDismissibleTileController 
     state = await AsyncValue.guard(
       () async {
         // Chiama il backend per assegnare il report
-        await ref.read(reportsRepositoryProvider).assignReportToOperator(
-              currentUser: currentUser,
-              reportId: report.id,
-            );
+        final updatedReport =
+            await ref.read(reportsRepositoryProvider).assignReportToOperator(
+                  currentUser: currentUser,
+                  reportId: report.id,
+                  maintenanceDescription: report.maintenanceDescription,
+                );
 
         // Notifica il controller della lista che il report è stato aggiornato
         ref.read(reportsListControllerProvider.notifier).updateReportInList(
               report.copyWith(
                 assignedTo: operatorId,
                 status: ReportStatus.assigned,
+                nameAuditor: updatedReport.nameAuditor,
               ),
             );
 
@@ -54,16 +57,19 @@ class ReportDismissibleTileController extends _$ReportDismissibleTileController 
     state = await AsyncValue.guard(
       () async {
         // Chiama il backend per disassegnare il report
-        await ref.read(reportsRepositoryProvider).unassignReportFromOperator(
-              currentUser: currentUser,
-              reportId: report.id,
-            );
+        final updatedReport =
+            await ref.read(reportsRepositoryProvider).unassignReportFromOperator(
+                  currentUser: currentUser,
+                  reportId: report.id,
+                  maintenanceDescription: report.maintenanceDescription,
+                );
 
         // Notifica il controller della lista che il report è stato aggiornato
         ref.read(reportsListControllerProvider.notifier).updateReportInList(
               report.copyWith(
                 assignedTo: '', // Nessun operatore assegnato
                 status: ReportStatus.opened, // Cambia lo stato a 'opened'
+                nameAuditor: updatedReport.nameAuditor,
               ),
             );
 

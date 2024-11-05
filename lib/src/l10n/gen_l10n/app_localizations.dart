@@ -221,7 +221,7 @@ abstract class AppLocalizations {
   /// **'swipe to complete report:'**
   String get swipeToComplete;
 
-  /// Message indicating that the report is completed
+  /// Message indicating that the report is closed
   ///
   /// In en, this message translates to:
   /// **'report status Completed'**
@@ -239,10 +239,10 @@ abstract class AppLocalizations {
   /// **'filter Reports'**
   String get filterReports;
 
-  /// Option to show completed reports
+  /// Option to show closed reports
   ///
   /// In en, this message translates to:
-  /// **'show completed Reports'**
+  /// **'show closed Reports'**
   String get showCompletedReports;
 
   /// Option to show deleted reports

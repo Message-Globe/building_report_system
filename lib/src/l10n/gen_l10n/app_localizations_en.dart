@@ -79,7 +79,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get filterReports => 'filter Reports';
 
   @override
-  String get showCompletedReports => 'show completed Reports';
+  String get showCompletedReports => 'show closed Reports';
 
   @override
   String get showDeletedReports => 'show Deleted Reports';

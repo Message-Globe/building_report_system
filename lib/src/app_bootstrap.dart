@@ -1,4 +1,3 @@
-import '../firebase_options.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:universal_io/io.dart';
 
+import '../firebase_options.dart';
 import 'app.dart';
 import 'exceptions/error_logger.dart';
 import 'features/authentication/data/auth_repository.dart';
@@ -63,7 +63,6 @@ class AppBootstrap {
   void _configureFirebaseMessaging() async {
     // Gestisci le notifiche in foreground
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      // TODO: handle foreground notifications
       debugPrint(
         "Titolo Messaggio in foreground in arrivo: ${message.notification?.title}",
       );

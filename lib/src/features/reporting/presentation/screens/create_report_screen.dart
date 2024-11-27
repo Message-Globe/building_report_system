@@ -1,3 +1,4 @@
+import '../widgets/category_selection_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,6 +12,7 @@ import '../../../authentication/domain/building.dart';
 import '../../../authentication/domain/user_profile.dart';
 import '../../domain/report.dart';
 import '../controllers/create_report_screen_controller.dart';
+import '../widgets/building_area_selection_list.dart';
 import '../widgets/building_selection_dropdown.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/date_display.dart';
@@ -25,30 +27,29 @@ class CreateReportScreen extends ConsumerStatefulWidget {
 }
 
 class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
-  final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _buildingSpotController = TextEditingController();
+  final _resolveByController = TextEditingController();
+  String? _selectedCategory;
   Building? _selectedBuilding;
-  PriorityLevel _selectedPriority = PriorityLevel.normal;
+  Map<String, String>? _selectedArea;
+  PriorityLevel _selectedPriority = PriorityLevel.medium;
   final List<String> _imageUris = [];
 
   @override
   void dispose() {
-    _titleController.dispose();
     _descriptionController.dispose();
-    _buildingSpotController.dispose();
     super.dispose();
   }
 
   void _submitReport(UserProfile userProfile) async {
-    final title = _titleController.text;
     final description = _descriptionController.text;
-    final buildingSpot = _buildingSpotController.text;
+    final resolveBy =
+        _resolveByController.text.isEmpty ? null : _resolveByController.text;
 
-    if (title.isEmpty ||
-        description.isEmpty ||
+    if (description.isEmpty ||
         _selectedBuilding == null ||
-        buildingSpot.isEmpty) {
+        _selectedArea == null ||
+        _selectedCategory == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(context.loc.completeAllFields.capitalizeFirst()),
@@ -59,11 +60,12 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
 
     // Chiama il metodo addReport
     await ref.read(createReportScreenControllerProvider.notifier).createReport(
+          category: _selectedCategory!,
           building: _selectedBuilding!,
-          buildingSpot: buildingSpot,
+          buildingAreaId: _selectedArea!['id']!,
           priority: _selectedPriority,
-          title: title,
           description: description,
+          resolveBy: resolveBy,
           photos: _imageUris,
         );
 
@@ -99,9 +101,10 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
             padding: const EdgeInsets.all(Sizes.p16),
             child: ListView(
               children: <Widget>[
-                CustomTextField(
-                  controller: _titleController,
-                  labelText: context.loc.title.capitalizeFirst(),
+                CategorySelectionDropdown(
+                  selectedCategory: _selectedCategory,
+                  onCategorySelected: (value) =>
+                      setState(() => _selectedCategory = value),
                 ),
                 gapH16,
 
@@ -117,29 +120,56 @@ class _CreateReportScreenState extends ConsumerState<CreateReportScreen> {
                 ),
                 gapH16,
 
+                // Da risolvere entro il
+                CustomTextField(
+                  controller: _resolveByController,
+                  labelText: context.loc.resolveBy.capitalizeFirst(),
+                ),
+                gapH16,
+
                 // Dropdown per selezionare l'edificio
                 BuildingSelectionDropdown(
                   buildings: userProfile.assignedBuildings,
                   selectedBuilding: _selectedBuilding,
-                  onBuildingSelected: (newBuilding) => setState(
-                    () => _selectedBuilding = newBuilding,
-                  ),
+                  onBuildingSelected: (newBuilding) {
+                    setState(
+                      () {
+                        _selectedBuilding = newBuilding;
+                        _selectedArea = null;
+                      },
+                    );
+                    if (newBuilding != null) {
+                      showDialog(
+                        context: context,
+                        builder: (_) => Dialog(
+                          child: BuildingAreaSelectionList(
+                            buildingId: newBuilding.id,
+                            onSelected: (area) {
+                              setState(() {
+                                _selectedArea = area;
+                              });
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ),
+                      );
+                    }
+                  },
                   showAllBuildings: false,
                 ),
                 gapH16,
 
-                // Campo di testo per buildingSpot
-                CustomTextField(
-                  controller: _buildingSpotController,
-                  labelText: context.loc.buildingSpot.capitalizeFirst(),
-                ),
-                gapH16,
+                if (_selectedArea != null) ...[
+                  Text(
+                      '${context.loc.selectedArea.capitalizeFirst()} ${_selectedArea!['name']}'),
+                  gapH16,
+                ],
 
                 // Dropdown per la priorità
                 PrioritySelectionDropdown(
                   selectedPriority: _selectedPriority,
                   onPrioritySelected: (newPriority) => setState(
-                    () => _selectedPriority = newPriority ?? PriorityLevel.normal,
+                    () => _selectedPriority = newPriority ?? PriorityLevel.medium,
                   ),
                 ),
                 gapH16,

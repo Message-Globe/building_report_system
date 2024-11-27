@@ -72,7 +72,7 @@
     "@profile": {
         "description": "Etichetta per la sezione del profilo utente"
     },
-    "selectBuilding": "seleziona Edificio",
+    "selectBuilding": "seleziona Struttura",
     "@selectBuilding": {
         "description": "Etichetta per selezionare un edificio"
     },
@@ -80,7 +80,7 @@
     "@allBuildings": {
         "description": "Etichetta per selezionare tutti gli edifici"
     },
-    "swipeToComplete": "scorri per completare il report:",
+    "swipeToComplete": "scorri per chiudere positivamente la segnalazione:",
     "@swipeToComplete": {
         "description": "Istruzione per scorrere e completare un report"
     },
@@ -144,16 +144,168 @@
     "@error": {
         "description": "Etichetta per mostrare un errore"
     },
-    "buildingReportSystem": "sistema di Segnalazione Edifici",
+    "buildingReportSystem": "DOC fix",
     "@buildingReportSystem": {
         "description": "Titolo dell'app per il Sistema di Segnalazione Edifici"
     },
-    "normal": "normale",
-    "@normal": {
-        "description": "Descrizione del livello di priorità normale di un report"
+    "low": "bassa",
+    "@low": {
+        "description": "Descrizione del livello di priorità basso di un report"
+    },
+    "medium": "media",
+    "@medium": {
+        "description": "Descrizione del livello di priorità medio di un report"
+    },
+    "high": "alta",
+    "@high": {
+        "description": "Descrizione del livello di priorità alta di un report"
     },
     "urgent": "urgente",
     "@urgent": {
         "description": "Descrizione del livello di priorità urgente di un report"
+    },
+    "critical": "critica",
+    "@critical": {
+        "description": "Descrizione del livello di priorità critica di un report"
+    },
+    "reporter": "segnalatore",
+    "@reporter": {
+        "description": "Etichetta per il ruolo di segnalatore"
+    },
+    "operator": "manutentore",
+    "@operator": {
+        "description": "Etichetta per il ruolo di manutentore"
+    },
+    "resolveBy": "da risolvere entro il",
+    "@resolveBy": {
+        "description": "Etichetta che indica la scadenza per risolvere un problema"
+    },
+    "selectedArea": "area selezionata:",
+    "@selectedArea": {
+        "description": "Etichetta per l'area selezionata nel menu a tendina"
+    },
+    "cannotCompleteReport": "non puoi completare la segnalazione se è assegnata all'amministratore",
+    "@cannotCompleteReport": {
+        "description": "Messaggio mostrato quando un utente tenta di completare una segnalazione assegnata all'amministratore"
+    },
+    "failedToLoadReport": "impossibile caricare la segnalazione",
+    "@failedToLoadReport": {
+        "description": "Messaggio mostrato quando una segnalazione non riesce a essere caricata"
+    },
+    "category": "categoria:",
+    "@category": {
+        "description": "Etichetta per la categoria della segnalazione"
+    },
+    "spaceNotUsable": "spazio non utilizzabile!!",
+    "@spaceNotUsable": {
+        "description": "Messaggio che indica che lo spazio non è utilizzabile"
+    },
+    "reportNotSolvable": "segnalazione non risolvibile, contattare l'amministratore!!",
+    "@reportNotSolvable": {
+        "description": "Messaggio mostrato quando una segnalazione non può essere risolta"
+    },
+    "reportNotFound": "segnalazione non trovata",
+    "@reportNotFound": {
+        "description": "Messaggio mostrato quando una segnalazione non è trovata"
+    },
+    "errorLoadingAreas": "errore nel caricamento delle aree",
+    "@errorLoadingAreas": {
+        "description": "Messaggio mostrato quando c'è un errore nel recupero delle aree"
+    },
+    "selectCategory": "seleziona una categoria",
+    "@selectCategory": {
+        "description": "Etichetta che invita l'utente a selezionare una categoria"
+    },
+    "confirmDelete": "conferma eliminazione",
+    "@confirmDelete": {
+        "description": "Titolo della finestra di dialogo per confermare l'eliminazione di una segnalazione"
+    },
+    "confirmDeleteReport": "sei sicuro di voler eliminare questa segnalazione?",
+    "@confirmDeleteReport": {
+        "description": "Messaggio che chiede la conferma per eliminare una segnalazione"
+    },
+    "delete": "elimina",
+    "@delete": {
+        "description": "Etichetta per il pulsante di eliminazione"
+    },
+    "confirmAssignation": "conferma assegnazione",
+    "@confirmAssignation": {
+        "description": "Titolo della finestra di dialogo per confermare l'assegnazione di una segnalazione"
+    },
+    "confirmAssignReport": "sei sicuro di voler assegnare questa segnalazione a te stesso?",
+    "@confirmAssignReport": {
+        "description": "Messaggio che chiede la conferma per assegnare una segnalazione"
+    },
+    "assign": "assegna",
+    "@assign": {
+        "description": "Etichetta per il pulsante di assegnazione"
+    },
+    "confirmUnassignation": "conferma de-assegnazione",
+    "@confirmUnassignation": {
+        "description": "Titolo della finestra di dialogo per confermare la de-assegnazione di una segnalazione"
+    },
+    "confirmUnassignReport": "sei sicuro di voler de-assegnare questa segnalazione da te stesso?",
+    "@confirmUnassignReport": {
+        "description": "Messaggio che chiede la conferma per de-assegnare una segnalazione"
+    },
+    "unassign": "de-assegna",
+    "@unassign": {
+        "description": "Etichetta per il pulsante di de-assegnazione"
+    },
+    "assignedTo": "assegnata a:",
+    "@assignedTo": {
+        "description": "Etichetta che indica a chi è assegnata la segnalazione"
+    },
+    "failedToLoadBuildingAreas": "impossibile caricare le aree dell'edificio",
+    "@failedToLoadBuildingAreas": {
+        "description": "Messaggio mostrato quando si verifica un errore nel caricamento delle aree dell'edificio"
+    },
+    "failedToLoadReportsSuccessFlag": "impossibile caricare i report: flag di successo falso",
+    "@failedToLoadReportsSuccessFlag": {
+        "description": "Messaggio mostrato quando il caricamento dei report fallisce a causa di un flag di successo falso"
+    },
+    "failedToLoadReports": "impossibile caricare i report",
+    "@failedToLoadReports": {
+        "description": "Messaggio mostrato quando il caricamento dei report fallisce"
+    },
+    "failedToCreateReport": "impossibile creare il report",
+    "@failedToCreateReport": {
+        "description": "Messaggio mostrato quando si verifica un errore nella creazione di un report"
+    },
+    "failedToDeleteReport": "impossibile eliminare il report",
+    "@failedToDeleteReport": {
+        "description": "Messaggio mostrato quando si verifica un errore nell'eliminazione di un report"
+    },
+    "failedToUpdateReport": "impossibile aggiornare il report",
+    "@failedToUpdateReport": {
+        "description": "Messaggio mostrato quando si verifica un errore nell'aggiornamento di un report"
+    },
+    "selectOperator": "seleziona manutentore",
+    "@selectOperator": {
+        "description": "Etichetta per il menu a tendina per selezionare un manutentore"
+    },
+    "selectOperatorBeforeAssigning": "seleziona un manutentore prima di assegnare",
+    "@selectOperatorBeforeAssigning": {
+        "description": "Messaggio mostrato quando è necessario selezionare un manutentore prima di assegnare"
+    },
+    "oldPassword": "vecchia password",
+    "@oldPassword": {
+        "description": "Etichetta per il campo dove inserire la password attuale"
+    },
+    "repeatOldPassword": "ripeti vecchia password",
+    "@repeatOldPassword": {
+        "description": "Etichetta per il campo dove reinserire la password attuale"
+    },
+    "newPassword": "nuova password",
+    "@newPassword": {
+        "description": "Etichetta per il campo dove inserire la nuova password"
+    },
+    "sendLink": "invia link",
+    "@sendLink": {
+        "description": "Etichetta per il pulsante per inviare il link di reset della password"
+    },
+    "forgotPassword": "password dimenticata?",
+    "@forgotPassword": {
+        "description": "Etichetta per il pulsante che porta al flusso di reset della password"
     }
 }

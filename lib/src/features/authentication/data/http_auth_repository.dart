@@ -74,6 +74,7 @@ class HttpAuthRepository with ChangeNotifier implements AuthRepository {
       name: data['name'],
       assignedBuildings: assignedBuildings, // Assegna la mappa di edifici
       role: _mapRoleToUserRole(data['role']),
+      isMaintenanceLead: data['ability'] == 'maintenance_lead',
     );
   }
 
@@ -154,6 +155,38 @@ class HttpAuthRepository with ChangeNotifier implements AuthRepository {
       throw WrongCredentials();
     } else {
       throw Exception('Login failed: ${response.body}');
+    }
+  }
+
+  @override
+  Future<void> sendResetPasswordEmail(String email) async {
+    final response = await http.post(
+      Uri.parse('$_baseUrl/api/user/password/reset'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'email': email}),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to send reset password email');
+    }
+  }
+
+  @override
+  Future<void> resetPassword(String oldPassword, String newPassword) async {
+    final response = await http.post(
+      Uri.parse('$_baseUrl/api/user/password/change'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $_userToken',
+      },
+      body: jsonEncode({
+        'old_password': oldPassword,
+        'new_password': newPassword,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to change password');
     }
   }
 

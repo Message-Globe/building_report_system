@@ -1,8 +1,7 @@
-import '../../../authentication/data/auth_repository.dart';
-
-import '../../../authentication/domain/building.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../authentication/data/auth_repository.dart';
+import '../../../authentication/domain/building.dart';
 import '../../data/reports_repository.dart';
 import '../../domain/report.dart';
 import 'reports_list_controller.dart';
@@ -16,14 +15,18 @@ class EditReportScreenController extends _$EditReportScreenController {
 
   Future<void> updateReport({
     required Report report,
-    String? title,
+    String? category,
+    // String? title,
     String? description,
+    String? resolveBy,
     Building? building,
-    String? buildingSpot,
+    String? buildingAreaId,
     PriorityLevel? priority,
     List<String>? photosUrls,
     List<String>? newPhotos,
     String? maintenanceDescription,
+    bool? escalatedToAdmin,
+    bool? areaNotAvailable,
     List<String>? maintenancePhotoUrls,
     List<String>? newMaintenancePhotos,
   }) async {
@@ -35,15 +38,19 @@ class EditReportScreenController extends _$EditReportScreenController {
       // Effettua la chiamata al backend per aggiornare il report
       final updatedReport = await ref.read(reportsRepositoryProvider).updateReport(
             currentUser: currentUser,
+            category: category,
             reportId: report.id,
             building: building,
-            buildingSpot: buildingSpot,
+            buildingAreaId: buildingAreaId,
             priority: priority,
-            title: title,
+            // title: title,
             description: description,
+            resolveBy: resolveBy,
             photosUrls: photosUrls,
             newPhotos: newPhotos,
             maintenanceDescription: maintenanceDescription,
+            escalatedToAdmin: escalatedToAdmin,
+            areaNotAvailable: areaNotAvailable,
             maintenancePhotoUrls: maintenancePhotoUrls,
             newMaintenancePhotos: newMaintenancePhotos,
           );

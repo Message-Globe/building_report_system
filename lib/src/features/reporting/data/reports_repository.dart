@@ -11,16 +11,31 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'reports_repository.g.dart';
 
 abstract class ReportsRepository {
+  Future<List<Map<String, String>>> fetchBuildingAreas({
+    required String buildingId,
+    required int page,
+  });
+
+  Future<List<String>> fetchReportCategories();
+
+  Future<List<Map<String, String>>> fetchMaintenanceTeams(String reportId);
+
   Future<List<Report>> fetchReportsList(UserProfile currentUser);
 
-  Future<Report> addReport({
+  Future<Report> fetchReport({
     required UserProfile currentUser,
-    required String title,
+    required String reportId,
+  });
+
+  Future<Report> addReport({
+    required String category,
+    required UserProfile currentUser,
     required String description,
     required Building building,
-    required String buildingSpot,
+    required String buildingAreaId,
     required PriorityLevel priority,
     List<String>? photos,
+    String? resolveBy,
   });
 
   Future<void> deleteReport(String reportId);
@@ -28,12 +43,17 @@ abstract class ReportsRepository {
   Future<Report> updateReport({
     required UserProfile currentUser,
     required String reportId,
+    String operatorId,
     ReportStatus? status,
+    String? category,
     String? title,
     String? description,
+    String? resolveBy,
     Building? building,
-    String? buildingSpot,
+    String? buildingAreaId,
     PriorityLevel? priority,
+    bool? escalatedToAdmin,
+    bool? areaNotAvailable,
     List<String>? photosUrls,
     List<String>? newPhotos,
     String? maintenanceDescription,
@@ -41,9 +61,15 @@ abstract class ReportsRepository {
     List<String>? newMaintenancePhotos,
   });
 
+  Future<void> assignReportToUser({
+    required String reportId,
+    required int userId,
+  });
+
   Future<Report> assignReportToOperator({
     required UserProfile currentUser,
     required String reportId,
+    required String operatorId,
     required String maintenanceDescription,
   });
 

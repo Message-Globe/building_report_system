@@ -18,6 +18,7 @@ List<UserProfile> kTestUsers = <UserProfile>[
       hospitalBuilding,
     ],
     role: UserRole.reporter,
+    isMaintenanceLead: false,
   ),
   UserProfile(
     appUser: AppUser(
@@ -30,6 +31,7 @@ List<UserProfile> kTestUsers = <UserProfile>[
       hospitalBuilding,
     ],
     role: UserRole.operator,
+    isMaintenanceLead: false,
   ),
   UserProfile(
     appUser: AppUser(
@@ -42,6 +44,7 @@ List<UserProfile> kTestUsers = <UserProfile>[
       hospitalBuilding,
     ],
     role: UserRole.admin,
+    isMaintenanceLead: false,
   ),
 ];
 

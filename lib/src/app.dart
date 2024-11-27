@@ -29,18 +29,18 @@ class MyApp extends ConsumerWidget {
         useMaterial3: true,
         primarySwatch: Colors.grey,
         appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.black87,
+          backgroundColor: Color.fromRGBO(48, 67, 85, 1.0),
           foregroundColor: Colors.white,
           elevation: 0,
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.black, // background (button) color
+            backgroundColor: Color.fromRGBO(48, 67, 85, 1.0),
             foregroundColor: Colors.white, // foreground (text) color
           ),
         ),
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
-          backgroundColor: Colors.black, // background (button) color
+          backgroundColor: Color.fromRGBO(48, 67, 85, 1.0),
           foregroundColor: Colors.white, // foreground (text) color
         ),
       ),

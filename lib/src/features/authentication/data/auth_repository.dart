@@ -9,6 +9,8 @@ part 'auth_repository.g.dart';
 
 abstract class AuthRepository with ChangeNotifier {
   Future<UserProfile?> signInWithEmailAndPassword(String email, String password);
+  Future<void> sendResetPasswordEmail(String email);
+  Future<void> resetPassword(String oldPassword, String newPassword);
   Future<void> signOut();
   UserProfile? get currentUser;
   Future<UserProfile?> checkUserToken();

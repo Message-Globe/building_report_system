@@ -1,3 +1,5 @@
+import '../../../../l10n/string_extensions.dart';
+import '../../../../utils/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -6,6 +8,7 @@ import '../../../../constants/app_sizes.dart';
 import '../../../authentication/domain/user_profile.dart';
 import '../../domain/report.dart';
 import '../controllers/report_dismissible_tile_controller.dart';
+import 'assign_to_operator_dialog.dart';
 import 'report_tile.dart';
 
 class ReportDismissibleTile extends ConsumerWidget {
@@ -24,13 +27,15 @@ class ReportDismissibleTile extends ConsumerWidget {
     Report report,
   ) async {
     final userRole = userProfile.role;
+    final isMaintenanceLead = userProfile.isMaintenanceLead;
+
     if (userRole == UserRole.reporter) {
       final confirm = await showAlertDialog(
         context: context,
-        title: 'Confirm Delete',
-        content: 'Are you sure you want to delete this report?',
-        cancelActionText: 'Cancel',
-        defaultActionText: 'Delete',
+        title: context.loc.confirmDelete.capitalizeFirst(),
+        content: context.loc.confirmDeleteReport.capitalizeFirst(),
+        cancelActionText: context.loc.cancel.capitalizeFirst(),
+        defaultActionText: context.loc.delete.capitalizeFirst(),
       );
 
       if (confirm == true) {
@@ -41,28 +46,45 @@ class ReportDismissibleTile extends ConsumerWidget {
 
       return confirm ?? false;
     } else if (report.status == ReportStatus.opened) {
-      final confirm = await showAlertDialog(
-        context: context,
-        title: 'Confirm Assignation',
-        content: 'Are you sure you want to assign this report to you?',
-        cancelActionText: 'Cancel',
-        defaultActionText: 'Assign',
-      );
+      if (isMaintenanceLead) {
+        // Mostra il dialog con il dropdown per selezionare il manutentore
+        final selectedOperatorId = await showDialog<String>(
+          context: context,
+          builder: (context) => AssignToOperatorDialog(report: report),
+        );
 
-      if (confirm == true) {
-        await ref
-            .read(reportDismissibleTileControllerProvider.notifier)
-            .assignReport(report: report, operatorId: userProfile.appUser.uid);
+        if (selectedOperatorId != null) {
+          await ref
+              .read(reportDismissibleTileControllerProvider.notifier)
+              .assignReport(report: report, operatorId: selectedOperatorId);
+          return true;
+        }
+        return false;
+      } else {
+        // Assegna il report a se stesso
+        final confirm = await showAlertDialog(
+          context: context,
+          title: context.loc.confirmAssignation.capitalizeFirst(),
+          content: context.loc.confirmAssignReport.capitalizeFirst(),
+          cancelActionText: context.loc.cancel.capitalizeFirst(),
+          defaultActionText: context.loc.assign.capitalizeFirst(),
+        );
+
+        if (confirm == true) {
+          await ref
+              .read(reportDismissibleTileControllerProvider.notifier)
+              .assignReport(report: report, operatorId: userProfile.appUser.uid);
+        }
+
+        return confirm ?? false;
       }
-
-      return confirm ?? false;
     } else {
       final confirm = await showAlertDialog(
         context: context,
-        title: 'Confirm Unassignation',
-        content: 'Are you sure you want to unassign this report from you?',
-        cancelActionText: 'Cancel',
-        defaultActionText: 'Unassign',
+        title: context.loc.confirmUnassignation.capitalizeFirst(),
+        content: context.loc.confirmUnassignReport.capitalizeFirst(),
+        cancelActionText: context.loc.cancel.capitalizeFirst(),
+        defaultActionText: context.loc.unassign.capitalizeFirst(),
       );
 
       if (confirm == true) {
@@ -79,10 +101,12 @@ class ReportDismissibleTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userRole = userProfile.role;
     final isLoading = ref.watch(reportDismissibleTileControllerProvider).isLoading;
+    final isMaintenanceLead = userProfile.isMaintenanceLead;
     final canAssignReport = userRole == UserRole.operator &&
         report.status != ReportStatus.closed &&
         report.status != ReportStatus.deleted &&
-        (report.assignedTo == '' || report.assignedTo == userProfile.appUser.uid);
+        (report.assignedTo == '' ||
+            (report.assignedTo == userProfile.appUser.uid && !isMaintenanceLead));
 
     return Dismissible(
       key: ValueKey(report),

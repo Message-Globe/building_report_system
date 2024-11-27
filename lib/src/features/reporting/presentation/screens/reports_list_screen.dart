@@ -57,7 +57,7 @@ class ReportsListScreen extends ConsumerWidget {
           ),
         ),
       ),
-      floatingActionButton: userRole == UserRole.reporter
+      floatingActionButton: userRole == UserRole.reporter || userProfile.isMaintenanceLead
           ? FloatingActionButton(
               onPressed: () => context.goNamed(AppRoute.createReport.name),
               child: const Icon(Icons.add),

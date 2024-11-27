@@ -1,7 +1,7 @@
-import '../../../authentication/data/auth_repository.dart';
-import '../../data/reports_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../authentication/data/auth_repository.dart';
+import '../../data/reports_repository.dart';
 import '../../domain/report.dart';
 import 'reports_list_controller.dart';
 
@@ -29,6 +29,7 @@ class ReportDismissibleTileController extends _$ReportDismissibleTileController 
             await ref.read(reportsRepositoryProvider).assignReportToOperator(
                   currentUser: currentUser,
                   reportId: report.id,
+                  operatorId: operatorId,
                   maintenanceDescription: report.maintenanceDescription,
                 );
 

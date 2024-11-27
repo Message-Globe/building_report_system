@@ -1,7 +1,7 @@
-import '../../../../l10n/string_extensions.dart';
-
-import '../../../../utils/context_extensions.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../l10n/string_extensions.dart';
+import '../../../../utils/context_extensions.dart';
 import '../../domain/report.dart';
 
 class PrioritySelectionDropdown extends StatelessWidget {

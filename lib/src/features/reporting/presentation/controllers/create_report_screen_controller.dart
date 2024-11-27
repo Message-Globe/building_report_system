@@ -16,12 +16,13 @@ class CreateReportScreenController extends _$CreateReportScreenController {
 
   // Metodo per creare un nuovo report
   Future<void> createReport({
+    required String category,
     required Building building,
-    required String buildingSpot,
+    required String buildingAreaId,
     required PriorityLevel priority,
-    required String title,
     required String description,
     required List<String> photos,
+    String? resolveBy,
   }) async {
     // Mostra lo stato di caricamento per lo screen
     state = const AsyncLoading();
@@ -32,13 +33,14 @@ class CreateReportScreenController extends _$CreateReportScreenController {
 
       // Effettua la chiamata al backend per creare il nuovo report
       final newReport = await ref.read(reportsRepositoryProvider).addReport(
+            category: category,
             currentUser: userProfile,
             building: building,
-            buildingSpot: buildingSpot,
+            buildingAreaId: buildingAreaId,
             priority: priority,
-            title: title,
             description: description,
             photos: photos,
+            resolveBy: resolveBy,
           );
 
       // Aggiorna il controller della lista dei report con il nuovo report

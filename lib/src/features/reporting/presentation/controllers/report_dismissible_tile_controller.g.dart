@@ -7,7 +7,7 @@ part of 'report_dismissible_tile_controller.dart';
 // **************************************************************************
 
 String _$reportDismissibleTileControllerHash() =>
-    r'187eba5af4c435ba8dfd9e37702bafa8bf8f9945';
+    r'3b8675a6669e38e92a296399ab63a25c3bed9969';
 
 /// See also [ReportDismissibleTileController].
 @ProviderFor(ReportDismissibleTileController)

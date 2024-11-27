@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="Building Report System"
+        android:label="DOCFix"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

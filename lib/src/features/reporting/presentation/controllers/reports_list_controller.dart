@@ -1,6 +1,6 @@
-import '../../../authentication/data/auth_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../authentication/data/auth_repository.dart';
 import '../../../authentication/domain/building.dart';
 import '../../data/reports_repository.dart';
 import '../../domain/report.dart';
@@ -47,7 +47,16 @@ class ReportsListController extends _$ReportsListController {
         .toList();
 
     // Ordina i report per data di creazione
-    filteredReports.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+    // filteredReports.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+
+    // Ordina i report per priorità (decrescente) e, in caso di parità, per data di creazione (ascendente)
+    filteredReports.sort((a, b) {
+      final priorityComparison = b.priority.index.compareTo(a.priority.index);
+      if (priorityComparison != 0) {
+        return priorityComparison;
+      }
+      return a.createdAt.compareTo(b.createdAt);
+    });
 
     // Inverte l'ordine se il filtro reverseOrder è attivo
     if (reverseOrder) {

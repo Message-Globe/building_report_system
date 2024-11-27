@@ -1,7 +1,8 @@
-import '../../../exceptions/app_exception.dart';
-import '../../../utils/delay.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../exceptions/app_exception.dart';
+import '../../../utils/delay.dart';
 import '../domain/user_profile.dart';
 import 'auth_repository.dart';
 import 'test_users.dart';
@@ -106,5 +107,17 @@ class FakeAuthRepository with ChangeNotifier implements AuthRepository {
     _currentUser = null;
     notifyListeners();
     await _clearUserToken();
+  }
+
+  @override
+  Future<void> sendResetPasswordEmail(String email) {
+    // TODO: implement fake sendResetPasswordEmail
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> resetPassword(String oldPassword, String newPassword) {
+    // TODO: implement fake resetPassword
+    throw UnimplementedError();
   }
 }

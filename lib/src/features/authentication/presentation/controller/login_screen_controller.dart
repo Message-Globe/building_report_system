@@ -21,6 +21,23 @@ class LoginScreenController extends _$LoginScreenController {
     return state.hasError == false;
   }
 
+  Future<void> sendResetPasswordEmail(String email) async {
+    state = const AsyncValue.loading();
+    final authRepository = ref.read(authRepositoryProvider);
+    state = await AsyncValue.guard(
+      () => authRepository.sendResetPasswordEmail(email),
+    );
+  }
+
+  Future<bool> resetPassword(String oldPassword, String newPassword) async {
+    state = const AsyncLoading();
+    final authRepository = ref.read(authRepositoryProvider);
+    state = await AsyncValue.guard(
+      () => authRepository.resetPassword(oldPassword, newPassword),
+    );
+    return state.hasError == false;
+  }
+
   Future<void> _authenticate(String email, String password) {
     final authRepository = ref.read(authRepositoryProvider);
     return authRepository.signInWithEmailAndPassword(email, password);

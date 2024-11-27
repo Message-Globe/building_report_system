@@ -1,6 +1,6 @@
+import '../features/authentication/presentation/screens/change_password_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../features/reporting/domain/report.dart';
 import '../features/reporting/presentation/screens/create_report_screen.dart';
 import '../features/reporting/presentation/screens/edit_report_screen.dart';
 import '../features/reporting/presentation/screens/photo_view_gallery_screen.dart';
@@ -16,11 +16,11 @@ part 'app_router.g.dart';
 
 enum AppRoute {
   login,
+  changePassword,
   home,
   createReport,
   editReport,
   photoGallery,
-  profile,
 }
 
 @riverpod
@@ -60,11 +60,11 @@ GoRouter goRouter(Ref ref) {
             builder: (context, state) => const CreateReportScreen(),
           ),
           GoRoute(
-            path: "edit-report",
+            path: "edit-report/:id",
             name: AppRoute.editReport.name,
             builder: (context, state) {
-              final report = state.extra as Report;
-              return EditReportScreen(report: report);
+              final reportId = state.pathParameters['id']!;
+              return EditReportScreen(reportId: reportId);
             },
           ),
           GoRoute(
@@ -85,6 +85,11 @@ GoRouter goRouter(Ref ref) {
         path: "/login",
         name: AppRoute.login.name,
         builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: "/change-password",
+        name: AppRoute.changePassword.name,
+        builder: (context, state) => const ChangePasswordScreen(),
       ),
     ],
   );

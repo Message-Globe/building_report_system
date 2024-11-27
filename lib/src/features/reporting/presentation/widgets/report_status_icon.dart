@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../domain/report.dart';
 
 class ReportStatusIcon extends StatelessWidget {

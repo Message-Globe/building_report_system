@@ -1,10 +1,9 @@
-import '../../../../l10n/string_extensions.dart';
-
-import '../../../authentication/data/auth_repository.dart';
-import '../../../../utils/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../l10n/string_extensions.dart';
+import '../../../../utils/context_extensions.dart';
+import '../../../authentication/data/auth_repository.dart';
 import '../../../authentication/domain/building.dart';
 import '../controllers/filters_controllers.dart';
 import 'building_selection_dropdown.dart';

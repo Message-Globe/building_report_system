@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../constants/breakpoints.dart';
 
 /// Reusable widget for showing a child with a maximum content width constraint.

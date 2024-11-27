@@ -26,13 +26,8 @@ class RemoteImageGallery extends ConsumerWidget {
   });
 
   bool _isLocalImage(String url) {
-    print('IM HERE 1');
-    print(url);
-    // TODO: check here with phone
     // final response = url.startsWith('file://') || File(url).existsSync();
     final response = url.startsWith('file://');
-    // final response = url.startsWith('file://') || File(url).existsSync();
-    print('IM HERE 2');
     return response;
   }
 

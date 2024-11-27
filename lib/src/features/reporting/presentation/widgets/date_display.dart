@@ -1,11 +1,9 @@
-import '../../../../l10n/string_extensions.dart';
-
-import '../../../../utils/context_extensions.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../constants/app_sizes.dart';
+import '../../../../l10n/string_extensions.dart';
+import '../../../../utils/context_extensions.dart';
 import '../../../../utils/date_formatter.dart';
 
 class DateDisplay extends ConsumerWidget {

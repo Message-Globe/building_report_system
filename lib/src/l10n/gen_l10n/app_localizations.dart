@@ -314,20 +314,248 @@ abstract class AppLocalizations {
   /// App title for the Building Report System
   ///
   /// In en, this message translates to:
-  /// **'building Report System'**
+  /// **'DOC fix'**
   String get buildingReportSystem;
 
-  /// Description of a report's normal priority level
+  /// Description of a report's low priority level
   ///
   /// In en, this message translates to:
-  /// **'normal'**
-  String get normal;
+  /// **'low'**
+  String get low;
+
+  /// Description of a report's medium priority level
+  ///
+  /// In en, this message translates to:
+  /// **'medium'**
+  String get medium;
+
+  /// Description of a report's high priority level
+  ///
+  /// In en, this message translates to:
+  /// **'high'**
+  String get high;
 
   /// Description of a report's urgent priority level
   ///
   /// In en, this message translates to:
   /// **'urgent'**
   String get urgent;
+
+  /// Description of a report's critical priority level
+  ///
+  /// In en, this message translates to:
+  /// **'critical'**
+  String get critical;
+
+  /// Label for reporter role
+  ///
+  /// In en, this message translates to:
+  /// **'reporter'**
+  String get reporter;
+
+  /// Label for operator role
+  ///
+  /// In en, this message translates to:
+  /// **'operator'**
+  String get operator;
+
+  /// Label indicating the deadline for resolving an issue
+  ///
+  /// In en, this message translates to:
+  /// **'resolve by'**
+  String get resolveBy;
+
+  /// Label for the selected area in the dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'selected area:'**
+  String get selectedArea;
+
+  /// Message shown when a user tries to complete a report assigned to the administrator
+  ///
+  /// In en, this message translates to:
+  /// **'you can\'t complete the report if it\'s assigned to the administrator'**
+  String get cannotCompleteReport;
+
+  /// Message shown when a report fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'failed to load report'**
+  String get failedToLoadReport;
+
+  /// Label for the report category
+  ///
+  /// In en, this message translates to:
+  /// **'category:'**
+  String get category;
+
+  /// Message indicating that the space is not usable
+  ///
+  /// In en, this message translates to:
+  /// **'space not usable!!'**
+  String get spaceNotUsable;
+
+  /// Message shown when a report cannot be solved
+  ///
+  /// In en, this message translates to:
+  /// **'report not solvable, contact the administrator!!'**
+  String get reportNotSolvable;
+
+  /// Message shown when a report is not found
+  ///
+  /// In en, this message translates to:
+  /// **'report not found'**
+  String get reportNotFound;
+
+  /// Message shown when there is an error fetching areas
+  ///
+  /// In en, this message translates to:
+  /// **'error loading areas'**
+  String get errorLoadingAreas;
+
+  /// Label prompting the user to select a category
+  ///
+  /// In en, this message translates to:
+  /// **'select a category'**
+  String get selectCategory;
+
+  /// Dialog title asking for confirmation before deleting a report
+  ///
+  /// In en, this message translates to:
+  /// **'confirm delete'**
+  String get confirmDelete;
+
+  /// Message asking for confirmation to delete a report
+  ///
+  /// In en, this message translates to:
+  /// **'are you sure you want to delete this report?'**
+  String get confirmDeleteReport;
+
+  /// Label for the delete button
+  ///
+  /// In en, this message translates to:
+  /// **'delete'**
+  String get delete;
+
+  /// Dialog title asking for confirmation before assigning a report
+  ///
+  /// In en, this message translates to:
+  /// **'confirm assignation'**
+  String get confirmAssignation;
+
+  /// Message asking for confirmation to assign a report
+  ///
+  /// In en, this message translates to:
+  /// **'are you sure you want to assign this report to you?'**
+  String get confirmAssignReport;
+
+  /// Label for the assign button
+  ///
+  /// In en, this message translates to:
+  /// **'assign'**
+  String get assign;
+
+  /// Dialog title asking for confirmation before unassigning a report
+  ///
+  /// In en, this message translates to:
+  /// **'confirm unassignation'**
+  String get confirmUnassignation;
+
+  /// Message asking for confirmation to unassign a report
+  ///
+  /// In en, this message translates to:
+  /// **'are you sure you want to unassign this report from you?'**
+  String get confirmUnassignReport;
+
+  /// Label for the unassign button
+  ///
+  /// In en, this message translates to:
+  /// **'unassign'**
+  String get unassign;
+
+  /// Label indicating who the report is assigned to
+  ///
+  /// In en, this message translates to:
+  /// **'assigned to:'**
+  String get assignedTo;
+
+  /// Message shown when there is an error fetching building areas
+  ///
+  /// In en, this message translates to:
+  /// **'failed to load building areas'**
+  String get failedToLoadBuildingAreas;
+
+  /// Message shown when reports fail to load due to a false success flag
+  ///
+  /// In en, this message translates to:
+  /// **'failed to load reports: success flag is false'**
+  String get failedToLoadReportsSuccessFlag;
+
+  /// Message shown when reports fail to load
+  ///
+  /// In en, this message translates to:
+  /// **'failed to load reports'**
+  String get failedToLoadReports;
+
+  /// Message shown when there is an error creating a report
+  ///
+  /// In en, this message translates to:
+  /// **'failed to create report'**
+  String get failedToCreateReport;
+
+  /// Message shown when there is an error deleting a report
+  ///
+  /// In en, this message translates to:
+  /// **'failed to delete report'**
+  String get failedToDeleteReport;
+
+  /// Message shown when there is an error updating a report
+  ///
+  /// In en, this message translates to:
+  /// **'failed to update report'**
+  String get failedToUpdateReport;
+
+  /// Label for the dropdown to select an operator
+  ///
+  /// In en, this message translates to:
+  /// **'select operator'**
+  String get selectOperator;
+
+  /// Message shown when an operator must be selected before assigning
+  ///
+  /// In en, this message translates to:
+  /// **'select an operator before assigning'**
+  String get selectOperatorBeforeAssigning;
+
+  /// Label for the field to enter the current password
+  ///
+  /// In en, this message translates to:
+  /// **'old password'**
+  String get oldPassword;
+
+  /// Label for the field to re-enter the current password
+  ///
+  /// In en, this message translates to:
+  /// **'repeat old password'**
+  String get repeatOldPassword;
+
+  /// Label for the field to enter a new password
+  ///
+  /// In en, this message translates to:
+  /// **'new password'**
+  String get newPassword;
+
+  /// Button label to send a password reset link
+  ///
+  /// In en, this message translates to:
+  /// **'send link'**
+  String get sendLink;
+
+  /// Button label to navigate to the password reset flow
+  ///
+  /// In en, this message translates to:
+  /// **'forgot password?'**
+  String get forgotPassword;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

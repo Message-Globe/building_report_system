@@ -1,8 +1,11 @@
 import 'dart:convert';
-import '../../authentication/domain/user_profile.dart';
+
+import '../../../l10n/string_extensions.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+
 import '../../authentication/domain/building.dart';
+import '../../authentication/domain/user_profile.dart';
 import '../domain/report.dart';
 import 'reports_repository.dart';
 
@@ -17,6 +20,81 @@ class HttpReportsRepository implements ReportsRepository {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $userToken',
       };
+
+  @override
+  Future<List<Map<String, String>>> fetchBuildingAreas({
+    required String buildingId,
+    required int page,
+  }) async {
+    final response = await http.get(
+      Uri.parse('$_baseUrl/api/areas/$buildingId?page=$page'),
+      headers: _headers,
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseBody = json.decode(response.body);
+
+      if (responseBody['success'] == true) {
+        if (responseBody['data']['data'] is List) {
+          return [];
+        }
+
+        final data = Map<String, dynamic>.from(responseBody['data']['data']);
+        return data.entries
+            .map((entry) => {'id': entry.key, 'name': entry.value.toString()})
+            .toList();
+      } else {
+        throw Exception('Failed to load building areas'.hardcoded);
+      }
+    } else {
+      throw Exception('Failed to load building areas'.hardcoded);
+    }
+  }
+
+  @override
+  Future<List<String>> fetchReportCategories() async {
+    final response = await http.get(
+      Uri.parse('$_baseUrl/api/reports/categories'),
+      headers: _headers,
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseBody = json.decode(response.body);
+
+      if (responseBody['success'] == true) {
+        final Map<String, dynamic> data = Map<String, dynamic>.from(responseBody['data']);
+
+        return data.values.map((value) => value.toString()).toList();
+      } else {
+        throw Exception('Failed to load report categories: success flag is false');
+      }
+    } else {
+      throw Exception('Failed to load report categories');
+    }
+  }
+
+  @override
+  Future<List<Map<String, String>>> fetchMaintenanceTeams(String reportId) async {
+    final response = await http.get(
+      Uri.parse('$_baseUrl/api/maintenance/teams/$reportId'),
+      headers: _headers,
+    );
+
+    if (response.statusCode == 200) {
+      final responseBody = json.decode(response.body);
+
+      if (responseBody['success'] == true) {
+        final data = Map<String, dynamic>.from(responseBody['data']);
+        return data.entries
+            .map((entry) => {'id': entry.key, 'name': entry.value.toString()})
+            .toList();
+      } else {
+        throw Exception('Failed to fetch maintenance teams: success flag is false');
+      }
+    } else {
+      throw Exception('Failed to fetch maintenance teams');
+    }
+  }
 
   @override
   Future<List<Report>> fetchReportsList(UserProfile currentUser) async {
@@ -34,31 +112,58 @@ class HttpReportsRepository implements ReportsRepository {
             .map((json) => Report.fromJson(json, currentUser.assignedBuildings))
             .toList();
       } else {
-        throw Exception('Failed to load reports: success flag is false');
+        throw Exception('Failed to load reports: success flag is false'.hardcoded);
       }
     } else {
-      throw Exception('Failed to load reports');
+      throw Exception('Failed to load reports'.hardcoded);
+    }
+  }
+
+  @override
+  Future<Report> fetchReport({
+    required UserProfile currentUser,
+    required String reportId,
+  }) async {
+    final response = await http.get(
+      Uri.parse('$_baseUrl/api/reports/$reportId'),
+      headers: _headers,
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseBody = json.decode(response.body);
+
+      if (responseBody['success'] == true) {
+        final data = responseBody['data'];
+
+        return Report.fromJson(data, currentUser.assignedBuildings);
+      } else {
+        throw Exception('Failed to load reports: success flag is false'.hardcoded);
+      }
+    } else {
+      throw Exception('Failed to load reports'.hardcoded);
     }
   }
 
   @override
   Future<Report> addReport({
+    required String category,
     required UserProfile currentUser,
     required Building building,
-    required String buildingSpot,
+    required String buildingAreaId,
     required PriorityLevel priority,
-    required String title,
     required String description,
     List<String>? photos,
+    String? resolveBy,
   }) async {
     var request = http.MultipartRequest('POST', Uri.parse('$_baseUrl/api/reports'));
 
+    request.fields['category_name'] = category;
     request.fields['created_by'] = currentUser.appUser.uid;
     request.fields['structure_id'] = building.id;
-    request.fields['site'] = buildingSpot;
-    request.fields['priority'] = priority.toString().split('.').last;
-    request.fields['subject'] = title;
+    request.fields['structure_area_id'] = buildingAreaId;
+    request.fields['priority'] = (priority.index + 1).toString();
     request.fields['description'] = description;
+    if (resolveBy != null) request.fields['resolve_by'] = resolveBy;
 
     if (photos != null && photos.isNotEmpty) {
       for (var dataUri in photos) {
@@ -83,7 +188,7 @@ class HttpReportsRepository implements ReportsRepository {
       final data = json.decode(responseBody)['data'];
       return Report.fromJson(data, currentUser.assignedBuildings);
     } else {
-      throw Exception('Failed to create report');
+      throw Exception('Failed to create report'.hardcoded);
     }
   }
 
@@ -95,7 +200,7 @@ class HttpReportsRepository implements ReportsRepository {
     );
 
     if (response.statusCode != 200) {
-      throw Exception('Failed to delete report');
+      throw Exception('Failed to delete report'.hardcoded);
     }
   }
 
@@ -103,12 +208,17 @@ class HttpReportsRepository implements ReportsRepository {
   Future<Report> updateReport({
     required UserProfile currentUser,
     required String reportId,
+    String? operatorId,
     ReportStatus? status,
+    String? category,
     String? title,
     String? description,
+    String? resolveBy,
     Building? building,
-    String? buildingSpot,
+    String? buildingAreaId,
     PriorityLevel? priority,
+    bool? escalatedToAdmin,
+    bool? areaNotAvailable,
     List<String>? photosUrls,
     List<String>? newPhotos,
     String? maintenanceDescription,
@@ -120,12 +230,21 @@ class HttpReportsRepository implements ReportsRepository {
         http.MultipartRequest('POST', Uri.parse('$_baseUrl/api/reports/$reportId'));
 
     // Aggiungi i campi solo se non sono null
+    if (operatorId != null) request.fields['assigned_to'] = operatorId;
     if (status != null) request.fields['status'] = status.name;
+    if (category != null) request.fields['category_name'] = category;
     if (title != null) request.fields['subject'] = title;
     if (description != null) request.fields['description'] = description;
+    if (resolveBy != null) request.fields['resolve_by'] = resolveBy;
     if (building != null) request.fields['structure_id'] = building.id;
-    if (buildingSpot != null) request.fields['site'] = buildingSpot;
-    if (priority != null) request.fields['priority'] = priority.name;
+    if (buildingAreaId != null) request.fields['structure_area_id'] = buildingAreaId;
+    if (priority != null) request.fields['priority'] = (priority.index + 1).toString();
+    if (escalatedToAdmin != null) {
+      request.fields['escalated_to_admin'] = escalatedToAdmin ? '1' : '0';
+    }
+    if (areaNotAvailable != null) {
+      request.fields['area_not_available'] = areaNotAvailable ? '1' : '0';
+    }
     if (maintenanceDescription != null) {
       request.fields['maintenance_description'] = maintenanceDescription;
     }
@@ -176,7 +295,29 @@ class HttpReportsRepository implements ReportsRepository {
       final data = json.decode(responseBody)['data'];
       return Report.fromJson(data, currentUser.assignedBuildings);
     } else {
-      throw Exception('Failed to update report');
+      throw Exception('Failed to update report'.hardcoded);
+    }
+  }
+
+  @override
+  Future<void> assignReportToUser({
+    required String reportId,
+    required int userId,
+  }) async {
+    final response = await http.post(
+      Uri.parse('$_baseUrl/api/reports/$reportId/assign-to'),
+      headers: _headers,
+      body: jsonEncode({
+        'assign_user': userId,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      final responseBody = json.decode(response.body);
+      throw Exception(
+        'Failed to assign report: ${responseBody['message'] ?? 'Unknown error'}'
+            .hardcoded,
+      );
     }
   }
 
@@ -184,11 +325,13 @@ class HttpReportsRepository implements ReportsRepository {
   Future<Report> assignReportToOperator({
     required UserProfile currentUser,
     required String reportId,
+    required String operatorId,
     required String maintenanceDescription,
   }) async {
     return await updateReport(
       currentUser: currentUser,
       reportId: reportId,
+      operatorId: operatorId,
       status: ReportStatus.assigned,
       maintenanceDescription: maintenanceDescription,
     );

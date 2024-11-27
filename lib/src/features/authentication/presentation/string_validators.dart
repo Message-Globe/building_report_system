@@ -58,6 +58,14 @@ class EmailSubmitRegexValidator extends RegexValidator {
   EmailSubmitRegexValidator() : super(regexSource: '^\\S+@\\S+\\.\\S+\$');
 }
 
+class PasswordSubmitRegexValidator extends RegexValidator {
+  PasswordSubmitRegexValidator()
+      : super(
+          regexSource:
+              r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$',
+        );
+}
+
 class NonEmptyStringValidator extends StringValidators {
   @override
   bool isValid(String value) {

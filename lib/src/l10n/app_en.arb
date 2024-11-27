@@ -144,16 +144,168 @@
     "@error": {
         "description": "Label for showing an error"
     },
-    "buildingReportSystem": "building Report System",
+    "buildingReportSystem": "DOC fix",
     "@buildingReportSystem": {
         "description": "App title for the Building Report System"
     },
-    "normal": "normal",
-    "@normal": {
-        "description": "Description of a report's normal priority level"
+    "low": "low",
+    "@low": {
+        "description": "Description of a report's low priority level"
+    },
+    "medium": "medium",
+    "@medium": {
+        "description": "Description of a report's medium priority level"
+    },
+    "high": "high",
+    "@high": {
+        "description": "Description of a report's high priority level"
     },
     "urgent": "urgent",
     "@urgent": {
         "description": "Description of a report's urgent priority level"
+    },
+    "critical": "critical",
+    "@critical": {
+        "description": "Description of a report's critical priority level"
+    },
+    "reporter": "reporter",
+    "@reporter": {
+        "description": "Label for reporter role"
+    },
+    "operator": "operator",
+    "@operator": {
+        "description": "Label for operator role"
+    },
+    "resolveBy": "resolve by",
+    "@resolveBy": {
+        "description": "Label indicating the deadline for resolving an issue"
+    },
+    "selectedArea": "selected area:",
+    "@selectedArea": {
+        "description": "Label for the selected area in the dropdown"
+    },
+    "cannotCompleteReport": "you can't complete the report if it's assigned to the administrator",
+    "@cannotCompleteReport": {
+        "description": "Message shown when a user tries to complete a report assigned to the administrator"
+    },
+    "failedToLoadReport": "failed to load report",
+    "@failedToLoadReport": {
+        "description": "Message shown when a report fails to load"
+    },
+    "category": "category:",
+    "@category": {
+        "description": "Label for the report category"
+    },
+    "spaceNotUsable": "space not usable!!",
+    "@spaceNotUsable": {
+        "description": "Message indicating that the space is not usable"
+    },
+    "reportNotSolvable": "report not solvable, contact the administrator!!",
+    "@reportNotSolvable": {
+        "description": "Message shown when a report cannot be solved"
+    },
+    "reportNotFound": "report not found",
+    "@reportNotFound": {
+        "description": "Message shown when a report is not found"
+    },
+    "errorLoadingAreas": "error loading areas",
+    "@errorLoadingAreas": {
+        "description": "Message shown when there is an error fetching areas"
+    },
+    "selectCategory": "select a category",
+    "@selectCategory": {
+        "description": "Label prompting the user to select a category"
+    },
+    "confirmDelete": "confirm delete",
+    "@confirmDelete": {
+        "description": "Dialog title asking for confirmation before deleting a report"
+    },
+    "confirmDeleteReport": "are you sure you want to delete this report?",
+    "@confirmDeleteReport": {
+        "description": "Message asking for confirmation to delete a report"
+    },
+    "delete": "delete",
+    "@delete": {
+        "description": "Label for the delete button"
+    },
+    "confirmAssignation": "confirm assignation",
+    "@confirmAssignation": {
+        "description": "Dialog title asking for confirmation before assigning a report"
+    },
+    "confirmAssignReport": "are you sure you want to assign this report to you?",
+    "@confirmAssignReport": {
+        "description": "Message asking for confirmation to assign a report"
+    },
+    "assign": "assign",
+    "@assign": {
+        "description": "Label for the assign button"
+    },
+    "confirmUnassignation": "confirm unassignation",
+    "@confirmUnassignation": {
+        "description": "Dialog title asking for confirmation before unassigning a report"
+    },
+    "confirmUnassignReport": "are you sure you want to unassign this report from you?",
+    "@confirmUnassignReport": {
+        "description": "Message asking for confirmation to unassign a report"
+    },
+    "unassign": "unassign",
+    "@unassign": {
+        "description": "Label for the unassign button"
+    },
+    "assignedTo": "assigned to:",
+    "@assignedTo": {
+        "description": "Label indicating who the report is assigned to"
+    },
+    "failedToLoadBuildingAreas": "failed to load building areas",
+    "@failedToLoadBuildingAreas": {
+        "description": "Message shown when there is an error fetching building areas"
+    },
+    "failedToLoadReportsSuccessFlag": "failed to load reports: success flag is false",
+    "@failedToLoadReportsSuccessFlag": {
+        "description": "Message shown when reports fail to load due to a false success flag"
+    },
+    "failedToLoadReports": "failed to load reports",
+    "@failedToLoadReports": {
+        "description": "Message shown when reports fail to load"
+    },
+    "failedToCreateReport": "failed to create report",
+    "@failedToCreateReport": {
+        "description": "Message shown when there is an error creating a report"
+    },
+    "failedToDeleteReport": "failed to delete report",
+    "@failedToDeleteReport": {
+        "description": "Message shown when there is an error deleting a report"
+    },
+    "failedToUpdateReport": "failed to update report",
+    "@failedToUpdateReport": {
+        "description": "Message shown when there is an error updating a report"
+    },
+    "selectOperator": "select operator",
+    "@selectOperator": {
+        "description": "Label for the dropdown to select an operator"
+    },
+    "selectOperatorBeforeAssigning": "select an operator before assigning",
+    "@selectOperatorBeforeAssigning": {
+        "description": "Message shown when an operator must be selected before assigning"
+    },
+    "oldPassword": "old password",
+    "@oldPassword": {
+        "description": "Label for the field to enter the current password"
+    },
+    "repeatOldPassword": "repeat old password",
+    "@repeatOldPassword": {
+        "description": "Label for the field to re-enter the current password"
+    },
+    "newPassword": "new password",
+    "@newPassword": {
+        "description": "Label for the field to enter a new password"
+    },
+    "sendLink": "send link",
+    "@sendLink": {
+        "description": "Button label to send a password reset link"
+    },
+    "forgotPassword": "forgot password?",
+    "@forgotPassword": {
+        "description": "Button label to navigate to the password reset flow"
     }
 }

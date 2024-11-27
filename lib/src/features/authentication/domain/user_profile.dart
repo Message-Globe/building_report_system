@@ -1,8 +1,8 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
-import 'package:building_report_system/src/features/authentication/domain/building.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
+import 'building.dart';
+import '../../../utils/context_extensions.dart';
 
 import 'app_user.dart';
 
@@ -10,6 +10,19 @@ enum UserRole {
   operator,
   reporter,
   admin,
+}
+
+extension UserRoleLocalization on UserRole {
+  String toLocalizedString(BuildContext context) {
+    switch (this) {
+      case UserRole.operator:
+        return context.loc.operator;
+      case UserRole.reporter:
+        return context.loc.reporter;
+      case UserRole.admin:
+        return UserRole.admin.name;
+    }
+  }
 }
 
 class UserProfile {
@@ -20,12 +33,14 @@ class UserProfile {
   final String name;
   final List<Building> assignedBuildings;
   final UserRole role;
+  final bool isMaintenanceLead;
 
   const UserProfile({
     required this.appUser,
     required this.name,
     required this.assignedBuildings,
     required this.role,
+    required this.isMaintenanceLead,
   });
 
   UserProfile copyWith({
@@ -33,45 +48,20 @@ class UserProfile {
     String? name,
     List<Building>? assignedBuildings,
     UserRole? role,
+    bool? isMaintenanceLead,
   }) {
     return UserProfile(
       appUser: appUser ?? this.appUser,
       name: name ?? this.name,
       assignedBuildings: assignedBuildings ?? this.assignedBuildings,
       role: role ?? this.role,
+      isMaintenanceLead: isMaintenanceLead ?? this.isMaintenanceLead,
     );
   }
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'appUser': appUser.toMap(),
-      'name': name,
-      'assignedBuildings': assignedBuildings.map((x) => x.toMap()).toList(),
-      'role': role.name,
-    };
-  }
-
-  factory UserProfile.fromMap(Map<String, dynamic> map) {
-    return UserProfile(
-      appUser: AppUser.fromMap(map['appUser'] as Map<String, dynamic>),
-      name: map['name'] as String,
-      assignedBuildings: List<Building>.from(
-        (map['assignedBuildings'] as List<int>).map<Building>(
-          (x) => Building.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
-      role: UserRole.values.byName(map['role']),
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory UserProfile.fromJson(String source) =>
-      UserProfile.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'UserProfile(appUser: $appUser, name: $name, assignedBuildings: $assignedBuildings, role: $role)';
+    return 'UserProfile(appUser: $appUser, name: $name, assignedBuildings: $assignedBuildings, role: $role, isMaintenanceLead: $isMaintenanceLead)';
   }
 
   @override
@@ -81,11 +71,16 @@ class UserProfile {
     return other.appUser == appUser &&
         other.name == name &&
         listEquals(other.assignedBuildings, assignedBuildings) &&
-        other.role == role;
+        other.role == role &&
+        other.isMaintenanceLead == isMaintenanceLead;
   }
 
   @override
   int get hashCode {
-    return appUser.hashCode ^ name.hashCode ^ assignedBuildings.hashCode ^ role.hashCode;
+    return appUser.hashCode ^
+        name.hashCode ^
+        assignedBuildings.hashCode ^
+        role.hashCode ^
+        isMaintenanceLead.hashCode;
   }
 }

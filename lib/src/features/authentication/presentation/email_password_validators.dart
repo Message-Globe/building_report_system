@@ -1,8 +1,11 @@
+import '../../../l10n/string_extensions.dart';
+
 import 'string_validators.dart';
 
 mixin EmailPasswordValidators {
   final StringValidators emailSubmitValidator = EmailSubmitRegexValidator();
   final StringValidators passwordSubmitValidator = NonEmptyStringValidator();
+  final StringValidators complexPasswordSubmitValidator = PasswordSubmitRegexValidator();
 
   bool canSubmitEmail(String email) {
     return emailSubmitValidator.isValid(email);
@@ -10,6 +13,10 @@ mixin EmailPasswordValidators {
 
   bool canSubmitPassword(String password) {
     return passwordSubmitValidator.isValid(password);
+  }
+
+  bool complexCanSubmitPassword(String password) {
+    return complexPasswordSubmitValidator.isValid(password);
   }
 
   String? emailErrorText(String email) {
@@ -24,5 +31,10 @@ mixin EmailPasswordValidators {
     final String errorText =
         password.isEmpty ? 'Password cannot be empty' : 'Password is too short';
     return showErrorText ? errorText : null;
+  }
+
+  String? complexPasswordErrorText(String password) {
+    final bool showErrorText = !complexCanSubmitPassword(password);
+    return showErrorText ? 'Password non valida'.hardcoded : null;
   }
 }

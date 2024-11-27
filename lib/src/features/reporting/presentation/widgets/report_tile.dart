@@ -1,4 +1,6 @@
-import 'package:building_report_system/src/l10n/string_extensions.dart';
+import '../../../../utils/context_extensions.dart';
+
+import '../../../../l10n/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -27,27 +29,37 @@ class ReportTile extends ConsumerWidget {
         borderRadius: BorderRadius.circular(Sizes.p12),
         onTap: () => context.goNamed(
           AppRoute.editReport.name,
-          extra: report,
+          pathParameters: {'id': report.id},
         ),
         child: ListTile(
           leading: ReportStatusIcon(status: report.status),
           titleAlignment: ListTileTitleAlignment.center,
           title: Text(
-            report.title,
+            '[${report.category}] - ID: ${report.id}',
             overflow: TextOverflow.ellipsis,
           ),
           isThreeLine: true,
-          subtitle: Text(
-            '${report.building.name} - ${report.buildingSpot}\n'
-                    'Assigned to: ${report.nameAuditor}'
-                .hardcoded,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                '${report.building.name} - ${report.buildingSpot}',
+                style: TextStyle(overflow: TextOverflow.ellipsis),
+              ),
+              Text('${context.loc.assignedTo.capitalizeFirst()} ${report.nameAuditor}'),
+            ],
           ),
-          trailing: report.priority == PriorityLevel.urgent
-              ? const Icon(
-                  Icons.priority_high,
-                  color: Colors.red,
+          trailing: report.priority.index >= 2
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: List.generate(
+                    report.priority.index - 1, // Da 3 (una priorità media-alta) in su
+                    (index) => const Icon(
+                      Icons.priority_high,
+                      color: Colors.red,
+                      size: 20, // Puoi regolare la dimensione se necessario
+                    ),
+                  ),
                 )
               : null,
         ),

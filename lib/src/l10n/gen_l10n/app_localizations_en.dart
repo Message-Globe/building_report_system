@@ -115,11 +115,125 @@ class AppLocalizationsEn extends AppLocalizations {
   String get error => 'error';
 
   @override
-  String get buildingReportSystem => 'building Report System';
+  String get buildingReportSystem => 'DOC fix';
 
   @override
-  String get normal => 'normal';
+  String get low => 'low';
+
+  @override
+  String get medium => 'medium';
+
+  @override
+  String get high => 'high';
 
   @override
   String get urgent => 'urgent';
+
+  @override
+  String get critical => 'critical';
+
+  @override
+  String get reporter => 'reporter';
+
+  @override
+  String get operator => 'operator';
+
+  @override
+  String get resolveBy => 'resolve by';
+
+  @override
+  String get selectedArea => 'selected area:';
+
+  @override
+  String get cannotCompleteReport => 'you can\'t complete the report if it\'s assigned to the administrator';
+
+  @override
+  String get failedToLoadReport => 'failed to load report';
+
+  @override
+  String get category => 'category:';
+
+  @override
+  String get spaceNotUsable => 'space not usable!!';
+
+  @override
+  String get reportNotSolvable => 'report not solvable, contact the administrator!!';
+
+  @override
+  String get reportNotFound => 'report not found';
+
+  @override
+  String get errorLoadingAreas => 'error loading areas';
+
+  @override
+  String get selectCategory => 'select a category';
+
+  @override
+  String get confirmDelete => 'confirm delete';
+
+  @override
+  String get confirmDeleteReport => 'are you sure you want to delete this report?';
+
+  @override
+  String get delete => 'delete';
+
+  @override
+  String get confirmAssignation => 'confirm assignation';
+
+  @override
+  String get confirmAssignReport => 'are you sure you want to assign this report to you?';
+
+  @override
+  String get assign => 'assign';
+
+  @override
+  String get confirmUnassignation => 'confirm unassignation';
+
+  @override
+  String get confirmUnassignReport => 'are you sure you want to unassign this report from you?';
+
+  @override
+  String get unassign => 'unassign';
+
+  @override
+  String get assignedTo => 'assigned to:';
+
+  @override
+  String get failedToLoadBuildingAreas => 'failed to load building areas';
+
+  @override
+  String get failedToLoadReportsSuccessFlag => 'failed to load reports: success flag is false';
+
+  @override
+  String get failedToLoadReports => 'failed to load reports';
+
+  @override
+  String get failedToCreateReport => 'failed to create report';
+
+  @override
+  String get failedToDeleteReport => 'failed to delete report';
+
+  @override
+  String get failedToUpdateReport => 'failed to update report';
+
+  @override
+  String get selectOperator => 'select operator';
+
+  @override
+  String get selectOperatorBeforeAssigning => 'select an operator before assigning';
+
+  @override
+  String get oldPassword => 'old password';
+
+  @override
+  String get repeatOldPassword => 'repeat old password';
+
+  @override
+  String get newPassword => 'new password';
+
+  @override
+  String get sendLink => 'send link';
+
+  @override
+  String get forgotPassword => 'forgot password?';
 }

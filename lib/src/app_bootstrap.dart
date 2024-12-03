@@ -79,7 +79,11 @@ class AppBootstrap {
     if (defaultTargetPlatform == TargetPlatform.iOS || kIsWeb) {
       FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-      //await messaging.deleteToken();
+      try {
+        await messaging.deleteToken();
+      } catch (e) {
+        debugPrint("Error deleting Firebase messaging token: $e");
+      }
 
       NotificationSettings settings = await messaging.requestPermission();
 

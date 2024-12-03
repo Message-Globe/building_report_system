@@ -104,10 +104,21 @@ class AppBootstrap {
     String? fcmToken;
 
     if (notificationPermitted) {
-      // Ottieni il token
-      fcmToken = await messaging.getToken();
-      if (fcmToken != null) {
-        debugPrint("Token Firebase Messaging: $fcmToken");
+      try {
+        // Ensure APNS token is available
+        String? apnsToken = await messaging.getAPNSToken();
+        if (apnsToken == null) {
+          debugPrint("APNS token not yet available.");
+          return; // Exit early until APNS token is ready
+        }
+
+        // Get the FCM token
+        fcmToken = await messaging.getToken();
+        if (fcmToken != null) {
+          debugPrint("Firebase Messaging Token: $fcmToken");
+        }
+      } catch (e) {
+        debugPrint("Error initializing Firebase Messaging token: $e");
       }
     }
     final authRepository = container.read(authRepositoryProvider);

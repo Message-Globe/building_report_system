@@ -64,7 +64,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '391687245600',
     projectId: 'building-report-system',
     storageBucket: 'building-report-system.appspot.com',
-    iosBundleId: 'com.example.buildingReportSystem',
+    iosBundleId: 'com.msgglobe.bldro',
   );
 
   static FirebaseOptions macos = FirebaseOptions(

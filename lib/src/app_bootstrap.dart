@@ -27,7 +27,9 @@ class AppBootstrap {
     await _getDeviceInfo(container);
 
     // Inizializzazione di Firebase
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    await Firebase.initializeApp(
+        name: 'building-report-system',
+        options: DefaultFirebaseOptions.currentPlatform);
     _configureFirebaseMessaging();
     final notificationsPermitted = await _askNotificationsPermision();
     await _initializeFirebaseMessagingToken(container, notificationsPermitted);
@@ -77,7 +79,7 @@ class AppBootstrap {
     if (defaultTargetPlatform == TargetPlatform.iOS || kIsWeb) {
       FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-      await messaging.deleteToken();
+      //await messaging.deleteToken();
 
       NotificationSettings settings = await messaging.requestPermission();
 

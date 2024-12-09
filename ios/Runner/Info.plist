@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>NSCameraUsageDescription</key>
-	<string>We need access to your photo library to allow you to upload and share images.</string>
+	<string>L&apos;accesso alla fotocamera è necessario per petmetterti di caricare foto documentative per gli interventi di manutenzione.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We need access to your photo library to allow you to upload and share images.</string>
+	<string>L&apos;accesso alla fotocamera è necessario per petmetterti di caricare foto documentative per gli interventi di manutenzione.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>

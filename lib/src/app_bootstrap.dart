@@ -98,31 +98,79 @@ class AppBootstrap {
 
   Future<void> _initializeFirebaseMessagingToken(
     ProviderContainer container,
-    bool notificationPermitted,
-  ) async {
+    bool notificationPermitted, {
+    int maxRetries = 5, // Maximum number of retries
+    Duration retryDelay = const Duration(seconds: 2), // Delay between retries
+  }) async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     String? fcmToken;
+    int retryCount = 0;
 
-    if (notificationPermitted) {
+    if (!notificationPermitted) {
+      debugPrint(
+          "Notification permissions not granted. Token initialization skipped.");
+      return;
+    }
+    while (retryCount < maxRetries) {
       try {
-        // Ensure APNS token is available
-        String? apnsToken = await messaging.getAPNSToken();
-        if (apnsToken == null) {
-          debugPrint("APNS token not yet available.");
-          return; // Exit early until APNS token is ready
+        // Check APNs token only on iOS
+        if (Platform.isIOS) {
+          String? apnsToken = await messaging.getAPNSToken();
+          if (apnsToken == null) {
+            debugPrint("APNS token not yet available. Retrying...");
+            retryCount++;
+            if (retryCount >= maxRetries) {
+              debugPrint(
+                  "APNS token could not be retrieved after $maxRetries retries.");
+              return; // Exit if retries are exhausted
+            }
+            await Future.delayed(retryDelay);
+            continue; // Retry
+          }
+          debugPrint("APNS Token: $apnsToken");
         }
 
         // Get the FCM token
         fcmToken = await messaging.getToken();
         if (fcmToken != null) {
           debugPrint("Firebase Messaging Token: $fcmToken");
+          break; // Exit the retry loop on success
+        } else {
+          debugPrint("Failed to retrieve FCM token. Retrying...");
+          retryCount++;
+          if (retryCount >= maxRetries) {
+            debugPrint(
+                "FCM token could not be retrieved after $maxRetries retries.");
+            return; // Exit if retries are exhausted
+          }
+          await Future.delayed(retryDelay);
         }
       } catch (e) {
         debugPrint("Error initializing Firebase Messaging token: $e");
+        retryCount++;
+        if (retryCount >= maxRetries) {
+          debugPrint(
+              "Token initialization failed after $maxRetries retries: $e");
+          return; // Exit if retries are exhausted
+        }
+        await Future.delayed(retryDelay);
       }
     }
-    final authRepository = container.read(authRepositoryProvider);
-    authRepository.fcmToken = fcmToken;
+
+    // Update the auth repository if the token is successfully retrieved
+    if (fcmToken != null) {
+      final authRepository = container.read(authRepositoryProvider);
+      authRepository.fcmToken = fcmToken;
+
+      // Listen for token refresh
+      FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
+        debugPrint("Refreshed FCM Token: $newToken");
+        authRepository.fcmToken = newToken;
+      });
+    } else {
+      debugPrint(
+          "Firebase Messaging token is null. Token was not set in AuthRepository.");
+    }
   }
 
   /// Controlla lo user token all'avvio e gestisce gli eventuali errori
